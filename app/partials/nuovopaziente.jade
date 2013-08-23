@@ -1,0 +1,26 @@
+div(ng-app='ng-app')
+  h1(style='color: rgb(0, 68, 204);') Nuovo Paziente 
+  form.form-horizontal.css-form(name='myForm',ng-controller='PazientiNuovoCtrl')
+      .control-group
+        label.control-label(for='inputNome') Nome
+        .controls
+          input#inputNome(type='text', placeholder='Nome',ng-model='user.nome', required)
+      .control-group
+        label.control-label(for='inputCognome') Cognome
+        .controls
+          input#inputCognome(type='text', placeholder='Cognome',ng-model='user.cognome',required)
+      .control-group
+        label.control-label(for='inputData') Data di Nascita
+        .controls
+          input#inputData(type='text', placeholder='Data di nascita',ng-model='user.datadinascita',required)
+      .control-group
+        .controls
+          label.radio.inline
+            input#rdGenderM(type='radio',name='rdGender', ng-model='user.gender', value='M', checked='checked')
+            | M
+          label.radio.inline
+            input#rdGenderF(type='radio',name='rdGender', ng-model='user.gender', value='F')
+            | F 
+      .offset2
+        button.btn-primary(ng-click='reset()', ng-disabled='isUnchanged(user)', style='width:90px') Pulisci
+        button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='myForm.$invalid || isUnchanged(user)') Salva

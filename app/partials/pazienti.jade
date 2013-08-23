@@ -1,0 +1,29 @@
+div
+  h2(style='color: rgb(0, 68, 204);') Pazienti 
+  div(ng-controller='PazientiElencoCtrl')
+    form
+      .input-append
+        input.input-medium.span3(type='text', ng-model='query', placeholder='ricerca rapida')   
+        span.add-on
+          i.icon-search
+    table.table-striped.table-bordered.table-hover
+      thead(style='background-color: rgba(82, 168, 236, 0.8);')
+        tr
+          th Cod.
+          th Nome
+          th Data Nascita
+          th Data diagnosi
+          th Malattia
+          th Data inizio terapia
+          th Visualizza
+      tbody
+        tr(ng-repeat='paziente in pazienti | filter:query | orderBy:orderProp ')
+          td.span1(align='center') {{paziente.idPaziente}}
+          td.span3 {{paziente.NOME}} {{paziente.COGNOME}}
+          td.span2(align='right')  {{paziente.DATA_NASCITA}}
+          td.span2(align='right')  {{paziente.DATA_DIAGNOSI}}
+          td.span3 &nbsp;&nbsp;{{paziente.MALATTIA}}
+          td.span2(align='right')   {{paziente.DATA_INIZIO_TERAPIA}}
+          td.span1(align='center') 
+            a(ng-href='#/pazienti/{{paziente.idPaziente}}') dettaglio
+    

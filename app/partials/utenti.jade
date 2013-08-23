@@ -1,0 +1,22 @@
+div(ng-app='ng-app')
+  h2(style='color: rgb(0, 68, 204);') Nuovo Utente
+  form.form-horizontal.css-form(name='myForm',ng-controller='UtentiNuovoCtrl')
+      .control-group
+        label.control-label(for='inputNome') Nome
+        .controls
+          input#inputNome(type='text', placeholder='Nome',ng-model='utente.nome', required)
+      .control-group
+        label.control-label(for='inputCognome') Cognome
+        .controls
+          input#inputCognome(type='text', placeholder='Cognome',ng-model='utente.cognome',required)
+      .control-group
+        label.control-label(for='inputUsername') Username
+        .controls
+          input#inputUsername(type='text', placeholder='nome utente',ng-model='utente.username',required)
+      .control-group
+        label.control-label(for='inputPass') Password
+        .controls
+          input#inputPass.input-small(type='password', placeholder='Password',ng-model='utente.password', required)
+      .offset2
+        button.btn-primary(style='width:90px') Pulisci
+        button.btn-primary(style='width:90px') Salva
