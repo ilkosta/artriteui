@@ -2,15 +2,19 @@
 
 var App = angular.module('app', 
   [ 'ngCookies', 
-    'ngResource', 
+    'ngResource',    
     'app.controllers', 
     'app.directives', 
     'app.filters', 
     'app.services', 
+    'restangular',
     'partials']);
 
 App.config([
-  '$routeProvider', '$locationProvider', function($routeProvider, $locationProvider, config) {
+  '$routeProvider', '$locationProvider', 'RestangularProvider', 
+  function($routeProvider, $locationProvider, RestangularProvider, config) {
+    RestangularProvider.setBaseUrl('/data');
+    
     $routeProvider.when('/pazienti', {
       templateUrl: '/partials/pazienti.html'
     }).when('/nuovopaziente', {
@@ -22,6 +26,6 @@ App.config([
     }).otherwise({
       redirectTo: '/pazienti'
     });
-    return $locationProvider.html5Mode(false);
+    $locationProvider.html5Mode(false);
   }
 ]);

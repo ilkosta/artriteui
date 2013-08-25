@@ -34,17 +34,18 @@ function dateConverter(record) {
 }
 
 var PazientiElencoCtrl = [
-  '$scope', '$http', function($scope, $http) {
-    
-    $http.get('data/pazienti.json').success(function(data) {
+  '$scope', 'Restangular', function($scope, Restangular) {
+    Restangular.setBaseUrl('/data');
+    Restangular.all('pazienti').getList().then( function(pazienti) {
       var dates = ['DATA_DIAGNOSI', 'DATA_TERAPIA','DATA_NASCITA'];
-      var pazienti = _(data).each(function(paziente) {        
+      var pazienti = _(pazienti).each(function(paziente) {        
         _(dates).each(dateConverter(paziente));
         if(paziente.DATA_DIAGNOSI != null )
           paziente.dalla_data_diagnosi = moment(paziente.DATA_DIAGNOSI).fromNow();
       }).value();
-      return $scope.pazienti = pazienti;
+      $scope.pazienti = pazienti;
     });
+
     
   }
 ];
