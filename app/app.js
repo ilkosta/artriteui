@@ -3,7 +3,7 @@
 var App = angular.module('app', 
   [ 'ngCookies', 
     'ngResource',    
-    'app.controllers', 
+//    'app.controllers', 
     'app.directives', 
     'app.filters', 
     'app.services', 
@@ -22,7 +22,10 @@ App.config([
     }).when('/utenti', {
       templateUrl: '/partials/utenti.html'
     }).when('/pazienti/:idPaziente', {
-      templateUrl: '/partials/pazientedettaglio.html'
+      templateUrl: '/partials/pazientedettaglio.html',
+      controller: 'PazienteDettaglioCtrl'
+    }).when('/pazienti/:idPaziente/Diagnosi', {
+      
     }).otherwise({
       redirectTo: '/pazienti'
     });

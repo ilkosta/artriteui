@@ -45,8 +45,6 @@ var PazientiElencoCtrl = [
       }).value();
       $scope.pazienti = pazienti;
     });
-
-    
   }
 ];
 

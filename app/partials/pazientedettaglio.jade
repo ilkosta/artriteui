@@ -1,6 +1,18 @@
-div
-  h3  Dati Paziente 
-  div(ng-controller='PazienteDettaglioCtrl')
-    //form.form-inline
-    label Cognome: {{nome}}
-  
+div(ng-controller='PazienteDettaglioCtrl')
+  h3
+    i.icon-user
+    | &nbsp;&nbsp;
+    | {{ paziente.NOME }} {{ paziente.COGNOME }}
+    
+    include paziente/_dati_anagrafici.jade 
+    
+  ul.nav.nav-pills
+    li.active
+      a(href='#/pazienti/{{paziente.idPAZIENTE}}/Diagnosi', data-toggle='pill') Diagnosi
+    li
+      a(href='#Terapia', data-toggle='pill') Terapia
+      
+  .tab-content
+    .tab-pane.active.fade(ng-controller='PazienteDiagnosiCtrl', id='#/pazienti/{{paziente.idPaziente}}/Diagnosi')
+      p Diagnosi
+    .tab-pane.fade
