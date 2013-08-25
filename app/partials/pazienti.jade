@@ -1,5 +1,5 @@
 div
-  h2(style='color: rgb(0, 68, 204);') Pazienti 
+  h2(style='color: rgb(0, 68, 204);') Pazienti
   div(ng-controller='PazientiElencoCtrl')
     form
       .input-append
@@ -11,19 +11,19 @@ div
         tr
           th Cod.
           th Nome
-          th Data Nascita
+          th Età
           th Data diagnosi
           th Malattia
           th Data inizio terapia
-          th Visualizza
+          th Visualizza 
       tbody
-        tr(ng-repeat='paziente in pazienti | filter:query | orderBy:orderProp ')
-          td.span1(align='center') {{paziente.idPaziente}}
-          td.span3 {{paziente.NOME}} {{paziente.COGNOME}}
-          td.span2(align='right')  {{paziente.DATA_NASCITA}}
-          td.span2(align='right')  {{paziente.DATA_DIAGNOSI}}
+        tr(ng-repeat='paziente in pazienti | filter:query')
+          td.span1(align='center') {{paziente.idPAZIENTE}}
+          td.span3 {{ paziente.NOME }} {{ paziente.COGNOME }}
+          td.span2(align='right')  {{paziente.eta}} anni
+          td.span2(align='right')  {{ paziente.dalla_data_diagnosi }}
           td.span3 &nbsp;&nbsp;{{paziente.MALATTIA}}
-          td.span2(align='right')   {{paziente.DATA_INIZIO_TERAPIA}}
+          td.span2(align='right')   {{ paziente.DATA_TERAPIA }}
           td.span1(align='center') 
-            a(ng-href='#/pazienti/{{paziente.idPaziente}}') dettaglio
+            a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}') dettaglio
     

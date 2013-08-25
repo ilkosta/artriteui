@@ -16,7 +16,7 @@
     "jade": "~0.33",
     "coffee-script": "~1.6",
 	"coffeelint-brunch":"*",
-	"jshint-brunch":"*",
+	
 	
     "brunch": "~1.7",
 

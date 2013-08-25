@@ -18,11 +18,34 @@ var AppCtrl = [
   }
 ];
 
+
+function dateConverter(record) {
+  var record = record;
+  return function convertDates(field) {
+    
+    function convertDate(date) {
+      return ( date!= null) ? moment(date).format('L') : '';    
+    }
+    
+    record[field]
+    if(record[field] != null)
+      record[field] = convertDate(record[field]);
+  }
+}
+
 var PazientiElencoCtrl = [
   '$scope', '$http', function($scope, $http) {
-    return $http.get('data/pazienti.json').success(function(data) {
-      return $scope.pazienti = data;
+    
+    $http.get('data/pazienti.json').success(function(data) {
+      var dates = ['DATA_DIAGNOSI', 'DATA_TERAPIA','DATA_NASCITA'];
+      var pazienti = _(data).each(function(paziente) {        
+        _(dates).each(dateConverter(paziente));
+        if(paziente.DATA_DIAGNOSI != null )
+          paziente.dalla_data_diagnosi = moment(paziente.DATA_DIAGNOSI).fromNow();
+      }).value();
+      return $scope.pazienti = pazienti;
     });
+    
   }
 ];
 
