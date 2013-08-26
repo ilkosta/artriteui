@@ -11,7 +11,9 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
           ng-model='diagnosi.malattia'
           ng-class='{active:diagnosi.malattia == malattia.descrizione }')
             {{malattia.descrizione}}
+      
       br
+      
       label
         strong Fattore Reumatoide
         | : ({{diagnosi.fattore_reumatoide}})
@@ -22,7 +24,9 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
           ng-model='diagnosi.fattore_reumatoide'
           ng-class='{active:diagnosi.fattore_reumatoide == tipo_risp.risposta }')
           {{tipo_risp.risposta}}
+          
       br
+      
       label 
         strong Anticorpi
         | : ({{diagnosi.anticorpi}})

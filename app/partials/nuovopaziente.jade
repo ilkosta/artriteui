@@ -21,6 +21,6 @@ div(ng-app='ng-app')
           label.radio.inline
             input#rdGenderF(type='radio',name='rdGender', ng-model='user.gender', value='F')
             | F 
-      .offset2
+      .col-md-offset-2
         button.btn-primary(ng-click='reset()', ng-disabled='isUnchanged(user)', style='width:90px') Pulisci
         button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='myForm.$invalid || isUnchanged(user)') Salva

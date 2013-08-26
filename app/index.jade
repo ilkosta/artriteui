@@ -21,23 +21,26 @@ html(lang='en', ng-app='app')
     script(src='/js/vendor.js')
     script(src='/js/partials.js')
     script(src='/js/app.js')
-      
+
   body(ng-controller='AppCtrl')
-    .wrapper
-      .navbar.navbar-static-top
-        .navbar-inner
-          .container
-            button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-              span.icon-bar
-              span.icon-bar
-              span.icon-bar
-            a(href='/index.html').brand Studio Tocilizumab
-            .nav-collapse
-              div(ng-include="'/partials/nav.html'")
-      .container.main-content
-        div(ng-view)
-      .push
+    
+    header.navbar.navbar-inverse.navbar-fixed-top        
+      .container
+        .navbar-header          
+          button.navbar-toggle(data-toggle='collapse', data-target='.navbar-collapse')
+            span.sr-only
+              Abilita navigazione
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a(href='/index.html').navbar-brand Studio Tocilizumab
+        nav.collapse.navbar-collapse.bs-navbar-collapse(role='navigation')
+          div(ng-include="'/partials/nav.html'")
+
+    .container.main-content
+      div(ng-view)
+    .push
 
     footer.footer
       .container
-       
+

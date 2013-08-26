@@ -1,13 +1,15 @@
-div(ng-controller='PazienteDettaglioCtrl')
-  h3
-    i.icon-user
-    | &nbsp;&nbsp;
-    | {{ paziente.NOME }} {{ paziente.COGNOME }}
+.div(ng-controller='PazienteDettaglioCtrl')
+  .page-header
+    .row
+      h1
+        i.glyphicon.glyphicon-user
+        | &nbsp;&nbsp;
+        | {{ paziente.NOME }} {{ paziente.COGNOME }}
     
-  include paziente/_dati_anagrafici.jade 
+  div(ng-include='/partials/paziente/dati_anagrafici.html')  
   br
   tabset
-    tab( heading='Diagnosi')      
-      include paziente/_diagnosi_malattia_form.jade
+    tab( heading='Diagnosi')     
+      div(ng-include='/partials/paziente/diagnosi_malattia_form.html')
     tab( heading='Terapia' )
-      include paziente/_terapia.jade
+      div(ng-include='/partials/paziente/terapia.html')
