@@ -19,3 +19,4 @@ test/test-results.xml
 bower_components/
 
 *conflicted copy*
+.directory

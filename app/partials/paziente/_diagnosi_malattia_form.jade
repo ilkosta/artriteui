@@ -8,7 +8,8 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         button.btn.btn-primary(
           ng-repeat='malattia in malattia_ric'
           btn-radio="'{{malattia.descrizione}}'"
-          ng-model='diagnosi.malattia')
+          ng-model='diagnosi.malattia'
+          ng-class='{active:diagnosi.malattia == malattia.descrizione }')
             {{malattia.descrizione}}
       br
       label
@@ -18,7 +19,8 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         button.btn.btn-primary(
           ng-repeat='tipo_risp in tipo_risposta'
           btn-radio="'{{tipo_risp.risposta}}'"
-          ng-model='diagnosi.fattore_reumatoide')
+          ng-model='diagnosi.fattore_reumatoide'
+          ng-class='{active:diagnosi.fattore_reumatoide == tipo_risp.risposta }')
           {{tipo_risp.risposta}}
       br
       label 
@@ -26,7 +28,8 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         | : ({{diagnosi.anticorpi}})
       .btn-group
         button.btn.btn-primary(
-          ng-repeat='tipo_risp in tipo_risposta'
+          ng-repeat='tipo_risp in tipo_risposta'          
           btn-radio="'{{tipo_risp.risposta}}'"
-          ng-model='diagnosi.anticorpi')
+          ng-model='diagnosi.anticorpi'
+          ng-class='{active:diagnosi.anticorpi == tipo_risp.risposta }')
           {{tipo_risp.risposta}}
