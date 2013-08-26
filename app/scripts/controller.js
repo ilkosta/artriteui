@@ -48,6 +48,7 @@ var PazientiElencoCtrl = [
   }
 ];
 
+
 var PazientiNuovoCtrl =  [
   '$scope', function($scope) {
     $scope.master = {};

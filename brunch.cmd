@@ -1,1 +1,1 @@
-node_modules\.bin\brunch watch --server
+node node_modules\.bin\brunch watch --server

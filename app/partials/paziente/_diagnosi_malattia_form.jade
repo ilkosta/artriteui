@@ -1,0 +1,32 @@
+div( ng-controller='PazienteDiagnosiEditCtrl' )
+  form( novalidate )
+    fieldset
+      label 
+        strong Malattia
+        | : ({{diagnosi.malattia}})
+      .btn-group
+        button.btn.btn-primary(
+          ng-repeat='malattia in malattia_ric'
+          btn-radio="'{{malattia.descrizione}}'"
+          ng-model='diagnosi.malattia')
+            {{malattia.descrizione}}
+      br
+      label
+        strong Fattore Reumatoide
+        | : ({{diagnosi.fattore_reumatoide}})
+      .btn-group
+        button.btn.btn-primary(
+          ng-repeat='tipo_risp in tipo_risposta'
+          btn-radio="'{{tipo_risp.risposta}}'"
+          ng-model='diagnosi.fattore_reumatoide')
+          {{tipo_risp.risposta}}
+      br
+      label 
+        strong Anticorpi
+        | : ({{diagnosi.anticorpi}})
+      .btn-group
+        button.btn.btn-primary(
+          ng-repeat='tipo_risp in tipo_risposta'
+          btn-radio="'{{tipo_risp.risposta}}'"
+          ng-model='diagnosi.anticorpi')
+          {{tipo_risp.risposta}}

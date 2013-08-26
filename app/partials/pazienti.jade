@@ -18,12 +18,16 @@ div
           th Visualizza 
       tbody
         tr(ng-repeat='paziente in pazienti | filter:query')
-          td.span1(align='center') {{paziente.idPAZIENTE}}
-          td.span3 {{ paziente.NOME }} {{ paziente.COGNOME }}
-          td.span2(align='right')  {{paziente.eta}} anni
-          td.span2(align='right')  {{ paziente.dalla_data_diagnosi }}
-          td.span3 &nbsp;&nbsp;{{paziente.MALATTIA}}
+          td.span1(align='center')  {{paziente.idPAZIENTE}}
+          td.span3                  {{ paziente.NOME }} {{ paziente.COGNOME }}
+          td.span1(align='right')   
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA }}')
+              {{paziente.eta}} anni
+          td.span2 &nbsp;&nbsp;     
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI }}')
+              {{ paziente.dalla_data_diagnosi }}
+          td.span3 &nbsp;&nbsp;     {{paziente.MALATTIA}}
           td.span2(align='right')   {{ paziente.DATA_TERAPIA }}
           td.span1(align='center') 
             a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}') dettaglio
-    
+br            

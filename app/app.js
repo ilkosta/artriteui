@@ -8,6 +8,7 @@ var App = angular.module('app',
     'app.filters', 
     'app.services', 
     'restangular',
+    'ui.bootstrap',
     'partials']);
 
 App.config([

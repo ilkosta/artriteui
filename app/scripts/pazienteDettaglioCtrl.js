@@ -1,9 +1,14 @@
 var PazienteDettaglioCtrl =  [
-  '$scope', '$location', '$routeParams','Restangular',
-  function($scope,$location, $routeParams,Restangular) {
-    Restangular.one('pazienti', $routeParams.idPaziente).get()
-      .then(function(paziente){
-        $scope.paziente = paziente[0];
-      });    
+  '$scope', '$routeParams','Restangular',
+  function($scope, $routeParams,Restangular) {
+    
+    Restangular
+      .one('pazienti', $routeParams.idPaziente)
+      .get()
+      .then(function(pazienti){
+        // manage the error (nessun))
+        $scope.paziente = pazienti[0];
+      });  
+      
   }
 ];

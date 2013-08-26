@@ -4,15 +4,10 @@ div(ng-controller='PazienteDettaglioCtrl')
     | &nbsp;&nbsp;
     | {{ paziente.NOME }} {{ paziente.COGNOME }}
     
-    include paziente/_dati_anagrafici.jade 
-    
-  ul.nav.nav-pills
-    li.active
-      a(href='#/pazienti/{{paziente.idPAZIENTE}}/Diagnosi', data-toggle='pill') Diagnosi
-    li
-      a(href='#Terapia', data-toggle='pill') Terapia
-      
-  .tab-content
-    .tab-pane.active.fade(ng-controller='PazienteDiagnosiCtrl', id='#/pazienti/{{paziente.idPaziente}}/Diagnosi')
-      p Diagnosi
-    .tab-pane.fade
+  include paziente/_dati_anagrafici.jade 
+  br
+  tabset
+    tab( heading='Diagnosi')      
+      include paziente/_diagnosi_malattia_form.jade
+    tab( heading='Terapia' )
+      include paziente/_terapia.jade
