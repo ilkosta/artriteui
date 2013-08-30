@@ -1,8 +1,8 @@
 'use strict';
 
 var App = angular.module('app', 
-  [ 'ngCookies', 
-    'ngResource',    
+  [ 'ngLocale',
+    'ngResource',
 //    'app.controllers', 
     'app.directives', 
     'app.filters', 

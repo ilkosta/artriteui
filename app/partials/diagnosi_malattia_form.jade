@@ -1,39 +1,70 @@
 div( ng-controller='PazienteDiagnosiEditCtrl' )
-  form( novalidate )
-    fieldset
-      label 
-        strong Malattia
-        | : ({{diagnosi.malattia}})
-      .btn-group
-        button.btn.btn-primary(
-          ng-repeat='malattia in malattia_ric'
-          btn-radio="'{{malattia.descrizione}}'"
-          ng-model='diagnosi.malattia'
-          ng-class='{active:diagnosi.malattia == malattia.descrizione }')
-            {{malattia.descrizione}}
-      
-      br
-      
-      label
-        strong Fattore Reumatoide
-        | : ({{diagnosi.fattore_reumatoide}})
-      .btn-group
-        button.btn.btn-primary(
-          ng-repeat='tipo_risp in tipo_risposta'
-          btn-radio="'{{tipo_risp.risposta}}'"
-          ng-model='diagnosi.fattore_reumatoide'
-          ng-class='{active:diagnosi.fattore_reumatoide == tipo_risp.risposta }')
-          {{tipo_risp.risposta}}
-          
-      br
-      
-      label 
-        strong Anticorpi
-        | : ({{diagnosi.anticorpi}})
-      .btn-group
-        button.btn.btn-primary(
-          ng-repeat='tipo_risp in tipo_risposta'          
-          btn-radio="'{{tipo_risp.risposta}}'"
-          ng-model='diagnosi.anticorpi'
-          ng-class='{active:diagnosi.anticorpi == tipo_risp.risposta }')
-          {{tipo_risp.risposta}}
+  .content
+    br
+    form( novalidate )
+      fieldset
+        label Data diagnosi
+          .form-horizontal
+            input(  type='text'
+                    datepicker-popup='dd-MM-yyyy'
+                    datepicker-options='dateOptions'
+                    ng-requireid='true'
+                    ng-model='diagnosi.data_diagnosi'
+                    open='calendarOpened'
+                    min="'1990-12-31'" )
+            
+            button.btn(ng-click='openCalendar()')
+              i.glyphicon.glyphicon-calendar  
+        
+        
+        br
+        br
+        
+        span
+          strong Malattia : &nbsp;
+          small ( {{diagnosi.malattia}} )
+        br
+        .btn-group
+          button.btn.btn-primary(
+            ng-repeat='malattia in malattia_ric'
+            btn-radio="'{{malattia.descrizione}}'"
+            ng-model='diagnosi.malattia'
+            ng-class='{active:diagnosi.malattia == malattia.descrizione }')
+              {{malattia.descrizione}}
+        
+        br
+        br
+        
+        span
+          strong Fattore Reumatoide : &nbsp;
+          small ( {{diagnosi.fattore_reumatoide}} )
+        br
+        .btn-group
+          button.btn.btn-primary(
+            ng-repeat='tipo_risp in tipo_risposta'
+            btn-radio="'{{tipo_risp.risposta}}'"
+            ng-model='diagnosi.fattore_reumatoide'
+            ng-class='{active:diagnosi.fattore_reumatoide == tipo_risp.risposta }')
+            {{tipo_risp.risposta}}
+            
+        br
+        br
+        
+        span 
+          strong Anticorpi : &nbsp;
+          small ( {{diagnosi.anticorpi}} )
+        br
+        .btn-group
+          button.btn.btn-primary(
+            ng-repeat='tipo_risp in tipo_risposta'          
+            btn-radio="'{{tipo_risp.risposta}}'"
+            ng-model='diagnosi.anticorpi'
+            ng-class='{active:diagnosi.anticorpi == tipo_risp.risposta }')
+            {{tipo_risp.risposta}}
+  
+  //-----------
+  .modal-footer
+    button.btn.btn-default Annulla
+    button.btn.btn-primary(
+      ng-disabled='isUnchanged(diagnosi)'
+      ng-click='Save()') Salva

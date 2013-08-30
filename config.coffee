@@ -12,6 +12,14 @@ exports.config =
       joinTo:
         'js/app.js': /^app/
         'js/vendor.js': /^(bower_components)/
+      order:
+        before: [
+          'bower_components/angular/angular.js'
+          'bower_components/angular-route/angular-route.js'
+          'bower_components/angular-animate/angular-animate.js'
+          'bower_components/angular-i18n/angular-i18n.js'
+          'bower_components/angular-bootstrap/angular-bootstrap.js'
+          ]
 
     stylesheets:
       joinTo:

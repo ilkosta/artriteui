@@ -1,0 +1,24 @@
+br
+p TERAPIA CON TOCILIZUMAB
+div(ng-controller='TerapiaEditCtrl')
+  .content
+    br
+    form( novalidate )
+      fieldset
+        label Data inizio della terapia 
+          .form-horizontal
+            input(  type='text'
+                    datepicker-popup='dd-MM-yyyy'
+                    datepicker-options='dateOptions'
+                    ng-requireid='true'
+                    ng-model='terapia.data_inizio'
+                    open='calendarOpened'
+                    min="'1990-12-31'" )
+            
+            button.btn(ng-click='openCalendar()')
+              i.glyphicon.glyphicon-calendar  
+            
+        
+        br
+       
+  

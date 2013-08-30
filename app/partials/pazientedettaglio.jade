@@ -6,10 +6,10 @@
         | &nbsp;&nbsp;
         | {{ paziente.NOME }} {{ paziente.COGNOME }}
     
-  div(ng-include='/partials/paziente/dati_anagrafici.html')  
+  div(ng-include="'/partials/dati_anagrafici.html'")  
   br
   tabset
     tab( heading='Diagnosi')     
-      div(ng-include='/partials/paziente/diagnosi_malattia_form.html')
+      div(ng-include="'/partials/diagnosi_malattia_form.html'")
     tab( heading='Terapia' )
-      div(ng-include='/partials/paziente/terapia.html')
+      div(ng-include="'/partials/terapia_form.html'")
