@@ -11,21 +11,22 @@ angular.module('app').factory( 'openCalendar',
 }]);
 
 angular.module('app').factory( 'sameMaster',
-  ['$timeout', // dependencies
-  function($timeout) {
-    return function($scope) { // factory with the know of $scope
-      return function(what) {
-        if( what === undefined ) 
-          return false;
-        
-        var sm = function() { 
-          return angular.equals(what, $scope.master);           
-        };
-        
-        return _.debounce(sm, 200);  
-      }
+  function() {
+  return function($scope) { // factory with the know of $scope
+    //return function(what) {}
+    
+    return function(what) {
+      if( what === undefined ) 
+        return false;
+      
+      //var sm = function() { 
+        return angular.equals(what, $scope.master);           
+      /*};
+      
+      return _.debounce(sm, 200);  */
+    } 
   }
-}]);
+});
 
 var PazienteDiagnosiCtrl = [
   '$scope', '$location', '$routeParams','Restangular',
@@ -76,8 +77,9 @@ var PazienteDiagnosiEditCtrl = [
       
       Restangular.one('pazienti', $routeParams.idPaziente).one('diagnosimalattia').get()
       .then(function(diagnosi_malattia){
-        $scope.diagnosi = diagnosi_malattia;
-        $scope.master   = Restangular.copy($scope.diagnosi);
+        $scope.diagnosi = diagnosi_malattia;  
+        
+        $scope.master   = Restangular.copy($scope.diagnosi);        
       },
       // err
       function(response) {
@@ -115,9 +117,3 @@ var PazienteDiagnosiEditCtrl = [
     
   }
 ];
- 
-
-
-
- 
-     

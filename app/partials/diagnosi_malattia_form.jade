@@ -8,7 +8,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             input(  type='text'
                     datepicker-popup='dd-MM-yyyy'
                     datepicker-options='dateOptions'
-                    ng-requireid='true'
+                    ng-required='true'
                     ng-model='diagnosi.data_diagnosi'
                     open='calendarOpened'
                     min="'1990-12-31'" )
@@ -19,7 +19,6 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         
         br
         br
-        
         span
           strong Malattia : &nbsp;
           small ( {{diagnosi.malattia}} )
