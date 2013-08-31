@@ -11,8 +11,10 @@ div
           i.glyphicon.glyphicon-search
     
     br
- 
-    table.table-striped.table-bordered.table-hover
+    img(src='/img/crying.svg', ng-hide='(pazienti | filter:query).length > 0')
+    
+    table.table-striped.table-bordered.table-hover(
+      ng-hide='(pazienti | filter:query).length == 0')
       thead(style='background-color: rgba(82, 168, 236, 0.8);')
         tr
           th Cod. 
