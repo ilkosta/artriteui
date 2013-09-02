@@ -1,33 +1,3 @@
-angular.module('app').factory( 'openCalendar',
-  ['$timeout', // dependencies
-  function($timeout) {
-    return function($scope) { // factory with the know of $scope
-      return function() {
-        return $timeout( function() {
-          $scope.calendarOpened = true;
-        });
-      }
-  }
-}]);
-
-angular.module('app').factory( 'sameMaster',
-  function() {
-  return function($scope) { // factory with the know of $scope
-    //return function(what) {}
-    
-    return function(what) {
-      if( what === undefined ) 
-        return false;
-      
-      //var sm = function() { 
-        return angular.equals(what, $scope.master);           
-      /*};
-      
-      return _.debounce(sm, 200);  */
-    } 
-  }
-});
-
 var PazienteDiagnosiCtrl = [
   '$scope', '$location', '$routeParams','Restangular',
   function($scope,$location, $routeParams,Restangular) {
