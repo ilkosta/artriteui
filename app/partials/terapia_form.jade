@@ -1,28 +1,37 @@
 br
-p TERAPIA CON TOCILIZUMAB
+h3 TERAPIA CON TOCILIZUMAB
 div(ng-controller='TerapiaEditCtrl')
   .content
     br
     form( novalidate )
       fieldset
-        label Data della terapia 
+        label Data Inizio Terapia
           .form-horizontal
             input(  type='text'
                     datepicker-popup='dd-MM-yyyy'
                     datepicker-options='dateOptions'
-                    ng-requireid='true'
+                    ng-required='true'
                     ng-model='terapia.data_inizio'
-                    open='calendarOpened'
-                    min="'1990-12-31'" )
+                    open='calendarOpened')
             
             button.btn(ng-click='openCalendar()')
-              i.glyphicon.glyphicon-calendar  
-            
-          br
-          span
-          strong FATTORI DI RISCHIO : &nbsp;
-          .btn-group
-          button.btn.btn-primary(
-            ng-repeat='fattore in fattori_rischio'
-            btn-radio="'{{fattore.descrizione}}'")
-              {{fattore.descrizione}}
+              i.glyphicon.glyphicon-calendar
+        label FollowUp
+        label {{ terapia.followUp }}
+      br
+      br
+      h4 Terapia concomitante al Tocilizumab
+      fieldset
+        label Terapie con DMARD
+        div(ng-repeat='terapia_concomitante in terapie_concomitanti')
+          label
+            input(type='checkbox' , ng-model="terapia_concomitante") 
+            | {{terapia_concomitante.nome}}
+            | dose mg : {{terapia_concomitante.dose}}
+          
+        
+        
+          
+        
+      
+  
