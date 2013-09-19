@@ -1,7 +1,7 @@
 {
   "name": "angular-i18n",
   "version": "1.0.7",
-  "main": "angular-locale_it-it.js",
+  "main":"angular-locale_it-it.js",
   "ignore": [
     "**/.*",
     "node_modules",

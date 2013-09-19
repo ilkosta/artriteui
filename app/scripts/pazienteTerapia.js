@@ -13,12 +13,5 @@ var TerapiaEditCtrl = [
         $scope.calendarOpened = true;
       });
     }
-    .each( function(fattori_rischio) {
-        $http({method:'GET', url: '/data/_fattori_rischio', cache:'true'})
-        .success( function(data, status, headers, config) {
-          // this callback will be called asynchronously
-          // when the response is available
-          $scope.fattori_rischio = data;
-        })
-      });
+    
 }];

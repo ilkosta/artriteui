@@ -1,7 +1,6 @@
+
 'use strict';
 
-/* Controllers
-*/
 var AppCtrl = [ 
   '$scope', '$location', '$resource', '$rootScope', function($scope, $location, $resource, $rootScope) {
     $scope.$location = $location;
@@ -17,38 +16,37 @@ var AppCtrl = [
     };
   }
 ];
-
-
-function dateConverter(record) {
-  var record = record;
-  return function convertDates(field) {
-    
-    function convertDate(date) {
-      return ( date!= null) ? moment(date).format('L') : '';    
-    }
-    
-    record[field]
-    if(record[field] != null)
-      record[field] = convertDate(record[field]);
-  }
-}
-
+// da sostituire con i filtriiiiiiiii (poi quelli standard di Angular)
+// function dateConverter(record) {
+//   var record = record;
+//   return function convertDates(field) {
+//     function convertDate(date) {
+//       return ( date!= null) ? moment(date).format('L') : '';
+//     }
+//     record[field]
+//     if(record[field] != null)
+//       record[field] = convertDate(record[field]);
+//   }
+// }
 var PazientiElencoCtrl = [
   '$scope', 'Restangular', function($scope, Restangular) {
     Restangular.setBaseUrl('/data');
     Restangular.all('pazienti').getList().then( function(pazienti) {
-      var dates = ['DATA_DIAGNOSI', 'DATA_TERAPIA','DATA_NASCITA'];
-      var pazienti = _(pazienti).each(function(paziente) {        
-        _(dates).each(dateConverter(paziente));
-        if(paziente.DATA_DIAGNOSI != null )
-          paziente.dalla_data_diagnosi = moment(paziente.DATA_DIAGNOSI).fromNow();
-      }).value();
+        // da togliere... sostituito dai filtri!!
+//       var dates = ['DATA_DIAGNOSI', 'DATA_TERAPIA','DATA_NASCITA'];
+// 
+//       var pazienti = _(pazienti).each(function(paziente) {
+//         _(dates).each(dateConverter(paziente));
+// 
+//         if(paziente.DATA_DIAGNOSI != null )
+//           paziente.dalla_data_diagnosi = 
+// moment(paziente.DATA_DIAGNOSI).fromNow();
+// 
+//       }).value();
       $scope.pazienti = pazienti;
     });
   }
 ];
-
-
 var PazientiNuovoCtrl =  [
   '$scope', function($scope) {
     $scope.master = {};
@@ -61,3 +59,4 @@ var PazientiNuovoCtrl =  [
     return $scope.reset();
   }
 ];
+

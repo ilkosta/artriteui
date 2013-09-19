@@ -61,9 +61,4 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             ng-class='{active:diagnosi.anticorpi == tipo_risp.risposta }')
             {{tipo_risp.risposta}}
   
-  //-----------
-  .modal-footer
-    button.btn.btn-default Annulla
-    button.btn.btn-primary(
-      ng-disabled='isUnchanged(diagnosi)'
-      ng-click='Save()') Salva
+  ng-include('diagnosi_footer.html')

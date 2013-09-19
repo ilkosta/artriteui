@@ -1,21 +1,25 @@
 div( ng-controller='PazienteDiagnosiEditCtrl' )
   .content
     br
-    form( novalidate , role='form' )
+    form( novalidate , role='form', name='form' )
       fieldset
         label Data diagnosi
           .form-horizontal
-            input(  type='text'
-                    datepicker-popup='dd-MM-yyyy'
-                    datepicker-options='dateOptions'
-                    ng-required='true'
-                    ng-model='diagnosi.data_diagnosi'
-                    open='calendarOpened'
-                    min="'1990-12-31'" )
-            
+            input(  
+              name='data_diagnosi'
+              type='text'
+              datepicker-popup='dd-MM-yyyy'
+              datepicker-options='dateOptions'
+              ng-required='true'
+              ng-model='diagnosi.data_diagnosi'
+              open='calendarOpened'
+              ui-validate='dataDiagnosiValida($value)')
+
             button.btn(ng-click='openCalendar()')
-              i.glyphicon.glyphicon-calendar  
-        
+              i.glyphicon.glyphicon-calendar
+              
+        .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )
+          p Data non valida
         
         br
         br
@@ -23,8 +27,8 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         label Malattia
           select.form-control(
             ng-required='true'
-            ng-options='malattia.descrizione as malattia.descrizione for malattia in malattia_ric'
-            ng-model='diagnosi.malattia')
+            ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
+            ng-model='diagnosi.cod_malattia')
             //-option(value='') ----------
         
         //-.form-group    
@@ -43,11 +47,4 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             ng-model='diagnosi.anticorpi')
             //-option(value='') ----------
   
-  //-----------
-  .modal-footer
-    button.btn.btn-default(
-      ng-disabled='isUnchanged(diagnosi)'
-      ng-click='Cancel()') Annulla
-    button.btn.btn-primary(
-      ng-disabled='isUnchanged(diagnosi)'
-      ng-click='Save()') Salva
+  ng-include('diagnosi_footer.html')

@@ -2,7 +2,7 @@
   "name": "moment",
   "version": "2.1.0",
   "scripts": [
-    "moment.js"
+    "moment.js","min/langs.min.js"
   ],
   "main": "moment.js",
   "description": "Parse, validate, manipulate, and display dates in javascript.",

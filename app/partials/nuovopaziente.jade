@@ -2,17 +2,16 @@ div(ng-app='ng-app')
   h1(style='color: rgb(0, 68, 204);') Nuovo Paziente 
   form.form-horizontal.css-form(name='myForm',ng-controller='PazientiNuovoCtrl')
       .control-group
-        label.control-label(for='inputNome') Nome
-        .controls
-          input#inputNome(type='text', placeholder='Nome',ng-model='user.nome', required)
+        label.control-label Nome
+          input(type='text', placeholder='Inserisci il nome', ng-model='user.nome', required)
       .control-group
-        label.control-label(for='inputCognome') Cognome
-        .controls
-          input#inputCognome(type='text', placeholder='Cognome',ng-model='user.cognome',required)
+        label.control-label Cognome
+          input(type='text', placeholder='Cognome', ng-model='user.cognome', required)
+
       .control-group
-        label.control-label(for='inputData') Data di Nascita
-        .controls
-          input#inputData(type='text', placeholder='Data di nascita',ng-model='user.datadinascita',required)
+        label.control-label Data di Nascita
+          input(type='text', placeholder='Data di nascita',ng-model='user.datadinascita',required)
+
       .control-group
         .controls
           label.radio.inline
