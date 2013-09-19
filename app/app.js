@@ -58,10 +58,12 @@ momentFilters.filter('fromNow', function() {
 });
 // moment filter factory
 function getMomentDiffBy(param) {
- return function(dateString) {
-    var a = moment();
-    var b = moment(dateString);
-    return a.diff(b, 'param');
+  return function() {
+    return function(dateString) {
+      var a = moment();
+      var b = moment(dateString);
+      return a.diff(b, param);
+    };
   };
 };
 

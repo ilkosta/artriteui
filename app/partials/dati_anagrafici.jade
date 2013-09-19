@@ -1,3 +1,7 @@
 //-(ng-controller='PazienteDettaglioCtrl')
-p dati anagrafici
-p ...
+.dl-horizontal
+  p 
+    strong Data di nascita: 
+    {{paziente.DATA_NASCITA | date:'dd/MM/yyyy' }},
+    {{paziente.DATA_NASCITA | yearsFromNow }} anni 
+  

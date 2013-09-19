@@ -3,7 +3,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
     br
     form( novalidate , role='form', name='form' )
       fieldset
-        label Data diagnosi
+        label Data diagnosi  ( {{ diagnosi.data_diagnosi | fromNow }} )
           .form-horizontal
             input(  
               name='data_diagnosi'
@@ -14,11 +14,13 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
               ng-model='diagnosi.data_diagnosi'
               open='calendarOpened'
               ui-validate='dataDiagnosiValida($value)')
-
+            
             button.btn(ng-click='openCalendar()')
               i.glyphicon.glyphicon-calendar
-              
-        .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )
+            
+            
+        .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )       
+        
           p Data non valida
         
         br
