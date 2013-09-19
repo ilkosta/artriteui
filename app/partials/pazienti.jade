@@ -2,8 +2,7 @@ div
   .page-header
     .row
       h1(style='color: rgb(0, 68, 204);') Pazienti
-        br
-        small Elenco dei pazienti
+      lead Elenco dei pazienti
   div(ng-controller='PazientiElencoCtrl')    
     form.row
       .input-group.col-md-3
@@ -30,13 +29,13 @@ div
           td.col-md-1(align='center')  {{paziente.idPAZIENTE}}
           td                  {{ paziente.NOME }} {{ paziente.COGNOME }}
           td.col-md-1(align='right')   
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA | date:"dd/MM/yyyy" }}')
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA }}')
               {{paziente.eta}} anni
           td.col-md-2 &nbsp;
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI | date:"dd/MM/yy" }}')
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI }}')
               {{ paziente.DATA_DIAGNOSI | fromNow }}
           td.col-md-2 &nbsp;     {{paziente.MALATTIA}}
-          td.col-md-1(align='right')   {{ paziente.DATA_TERAPIA | date:"dd/MM/yy" }}
+          td.col-md-1(align='right')   {{ paziente.DATA_TERAPIA }}
           td.col-md-1(align='center') 
             a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}') dettaglio
 br            

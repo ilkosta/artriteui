@@ -32,17 +32,15 @@ var PazientiElencoCtrl = [
   '$scope', 'Restangular', function($scope, Restangular) {
     Restangular.setBaseUrl('/data');
     Restangular.all('pazienti').getList().then( function(pazienti) {
+      var dates = ['DATA_DIAGNOSI', 'DATA_TERAPIA','DATA_NASCITA'];
+      var pazienti = _(pazienti).each(function(paziente) {        
+        _(dates).each(dateConverter(paziente));
+        
         // da togliere... sostituito dai filtri!!
-//       var dates = ['DATA_DIAGNOSI', 'DATA_TERAPIA','DATA_NASCITA'];
-// 
-//       var pazienti = _(pazienti).each(function(paziente) {
-//         _(dates).each(dateConverter(paziente));
-// 
 //         if(paziente.DATA_DIAGNOSI != null )
 //           paziente.dalla_data_diagnosi = 
 // moment(paziente.DATA_DIAGNOSI).fromNow();
-// 
-//       }).value();
+      }).value();
       $scope.pazienti = pazienti;
     });
   }

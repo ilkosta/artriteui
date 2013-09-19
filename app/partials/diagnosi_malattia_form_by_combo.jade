@@ -3,7 +3,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
     br
     form( novalidate , role='form', name='form' )
       fieldset
-        label Data diagnosi  ( {{ diagnosi.data_diagnosi | fromNow }} )
+        label Data diagnosi
           .form-horizontal
             input(  
               name='data_diagnosi'
@@ -12,11 +12,17 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
               datepicker-options='dateOptions'
               ng-required='true'
               ng-model='diagnosi.data_diagnosi'
-              open='calendarOpened')
-            
+              open='calendarOpened'
+              min="'1990-12-31'" 
+              max="{{ today.format('YYYY-MM-DD') }}"
+              ui-validate='dataDiagnosiValida($value)')
+
             button.btn(ng-click='openCalendar()')
               i.glyphicon.glyphicon-calendar
-          
+              
+        .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )
+          p Data non valida
+        
         br
         br
         //-.form-group
@@ -26,8 +32,8 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
             ng-model='diagnosi.cod_malattia')
             //-option(value='') ----------
-
-        //-.form-group
+        
+        //-.form-group    
         label Fattore Reumatoide
           select.form-control(
             ng-required='true'
