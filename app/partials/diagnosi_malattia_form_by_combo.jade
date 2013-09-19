@@ -12,17 +12,11 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
               datepicker-options='dateOptions'
               ng-required='true'
               ng-model='diagnosi.data_diagnosi'
-              open='calendarOpened'
-              ui-validate='dataDiagnosiValida($value)')
+              open='calendarOpened')
             
             button.btn(ng-click='openCalendar()')
               i.glyphicon.glyphicon-calendar
-            
-            
-        .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )       
-        
-          p Data non valida
-        
+          
         br
         br
         //-.form-group
@@ -32,8 +26,8 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
             ng-model='diagnosi.cod_malattia')
             //-option(value='') ----------
-        
-        //-.form-group    
+
+        //-.form-group
         label Fattore Reumatoide
           select.form-control(
             ng-required='true'

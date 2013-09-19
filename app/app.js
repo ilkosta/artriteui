@@ -53,7 +53,7 @@ var momentFilters = angular.module('momentFilters',[]);
 
 momentFilters.filter('fromNow', function() {
   return function(dateString) {
-    return moment(new Date(dateString)).fromNow()
+    return moment().fromNow()
   };
 });
 // moment filter factory
