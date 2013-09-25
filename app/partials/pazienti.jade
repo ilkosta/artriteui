@@ -11,7 +11,7 @@ div
           i.glyphicon.glyphicon-search
     
     br
-    img(src='/img/crying.svg', ng-hide='(pazienti | filter:query).length > 0')
+    img(src='/img/crying.svg', ng-hide='(pazienti.length == 0) || (pazienti | filter:query).length > 0')
     
     table.table-striped.table-bordered.table-hover(
       ng-hide='(pazienti | filter:query).length == 0')
@@ -29,13 +29,13 @@ div
           td.col-md-1(align='center')  {{paziente.idPAZIENTE}}
           td                  {{ paziente.NOME }} {{ paziente.COGNOME }}
           td.col-md-1(align='right')   
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA }}')
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA | date:"dd/MM/yyyy" }}')
               {{paziente.eta}} anni
           td.col-md-2 &nbsp;
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI }}')
-              {{ paziente.dalla_data_diagnosi }}
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI | date:"dd/MM/yyyy"}}')
+              {{ paziente.DATA_DIAGNOSI | fromNow }}
           td.col-md-2 &nbsp;     {{paziente.MALATTIA}}
-          td.col-md-1(align='right')   {{ paziente.DATA_TERAPIA }}
+          td.col-md-1(align='right')   {{ paziente.DATA_TERAPIA | date:"dd/MM/yyyy"}}
           td.col-md-1(align='center') 
             a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}') dettaglio
 br            

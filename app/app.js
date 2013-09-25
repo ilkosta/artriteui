@@ -1,63 +1,27 @@
 'use strict';
 
+// global config
+moment.lang('it');
+
 var utils = angular.module('utils', []);
 
 var App = angular.module('app', 
   [ 'ngLocale',
     'ngResource',
 //    'app.controllers', 
-    'app.directives', 
-    'app.filters', 
-    'app.services', 
+//    'app.directives', 
+//    'app.filters', 
+//    'app.services', 
     'restangular',
     'ui.bootstrap',
+    'ui.event',
     'utils',
     'utils_forms',
     'utils_bootstrap',
-    'partials']);
-
-/*
-var checkDB = ['$http', '$location', 
-  function($http,$location) {
-    return function() {
-      $http({method:'GET', url: '/data/pazienti'})
-        .success( function(data, status, headers, config) {
-          // all seems ok...
-          return true;
-        })
-        .error(function(data, status, headers, config) {
-          // called asynchronously if an error occurs
-          // or server returns response with an error status.        
-          console.log('errore invocando: GET ' + '/data/pazienti');
-          _([data, status, headers, config]).each(console.log);
-          
-          $location.url = '/no_connessione_DB';
-          return false;
-        });
-    }
-  }];
-  
-var checkServer = ['$http', '$location', function($http, $location) {
-    return function() {
-      $http({method:'GET', url: '/data/ping.json'})
-        .success( function(data, status, headers, config) {
-          if(data.length === 1 && data[0].it_work)
-            return checkDB();
-          else 
-            $location.url = '/no_connessione';
-        })
-        .error(function(data, status, headers, config) {
-          // called asynchronously if an error occurs
-          // or server returns response with an error status.        
-          console.log('errore invocando: GET ' + '/data/ping.json');
-          _([data, status, headers, config]).each(console.log);
-          
-          $location.url = '/no_connessione';
-          return false;
-        });
-    }
-  }];
-*/
+    'partials'
+// custom filters
+  , 'momentFilters'
+  ]);
 
 App.config([
   '$routeProvider', '$locationProvider', 'RestangularProvider',
@@ -84,3 +48,32 @@ App.config([
     $locationProvider.html5Mode(false);
   }
 ]);
+
+var momentFilters = angular.module('momentFilters',[]);
+
+momentFilters.filter('fromNow', function() {
+  return function(dateString) {
+    return moment().fromNow()
+  };
+});
+// moment filter factory
+function getMomentDiffBy(param) {
+  return function() {
+    return function(dateString) {
+      var a = moment();
+      var b = moment(dateString);
+      return a.diff(b, param);
+    };
+  };
+};
+
+
+
+// yearsFromNow, monthsFromNow, daysFromNow
+_([
+  {filter_name:'yearsFromNow', param: 'year'}
+, {filter_name:'monthsFromNow', param: 'month'}
+, {filter_name:'daysFromNow', param: 'day'}
+]).each( function(filter_params) {
+  momentFilters.filter( filter_params.filter_name, getMomentDiffBy(filter_params.param) );
+});

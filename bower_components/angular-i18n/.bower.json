@@ -6,7 +6,7 @@
     "node_modules",
     "components"
   ],
-  "main": "angular-locale_it-it.js",
+  "main":"angular-locale_it-it.js",
   "homepage": "https://github.com/angular/bower-angular-i18n",
   "_release": "1.0.7",
   "_resolution": {
