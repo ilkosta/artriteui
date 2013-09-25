@@ -16,19 +16,23 @@ div(ng-controller='TerapiaEditCtrl')
             
             button.btn(ng-click='openCalendar()')
               i.glyphicon.glyphicon-calendar
-        label FollowUp
+        label FollowUp M
         label {{ terapia.followUp }}
       br
       br
       h4 Terapia concomitante al Tocilizumab
       fieldset
-        label Terapie con DMARD
-        div(ng-repeat='terapia_concomitante in terapie_concomitanti')
-          label
-            input(type='checkbox' , ng-model="terapia_concomitante") 
-            | {{terapia_concomitante.nome}}
-            | dose mg : {{terapia_concomitante.dose}}
-          
+        .col-xs-3
+          label Terapie con DMARD
+          div(ng-repeat='terapia_concomitante in terapie_concomitanti')
+            .row
+              .col-xs-2
+                .input-group
+                  span.input-group-addon
+                    input(type='checkbox') 
+                      |{{terapia_concomitante.nome}}
+                      | dose mg : {{terapia_concomitante.dose}}
+            
         
         
           
