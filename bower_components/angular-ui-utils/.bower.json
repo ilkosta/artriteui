@@ -4,7 +4,7 @@
   "description": "AngularUI Utilities - Companion Suite for AngularJS",
   "version": "0.0.4",
   "homepage": "http://angular-ui.github.com",
-  "main": ["./modules/utils.js","./modules/event/event.js"],
+  "main": ["./modules/utils.js", "./modules/event/event.js","./modules/inflector/inflector.js","./modules/mask/mask.js","./modules/showhide/showhide.js","./modules/format/format.js","./modules/jq/jq.js","./modules/reset/reset.js*","./modules/highlight/highlight.js","./modules/unique/unique.js","./modules/keypress/keypress.js","./modules/route/route.js","./modules/utils.js","./modules/ie-shiv/ie-shiv.js","./modules/indeterminate/indeterminate.js","./modules/scrollfix/scrollfix.js","./modules/validate/validate.js"],
   "dependencies": {
     "angular": ">= 1.0.2"
   },

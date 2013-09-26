@@ -18,10 +18,11 @@
 <v t="costa.20130907100240.3465" a="E"><vh>@thin ~/Dropbox/sistema/common_settings.txt</vh></v>
 </v>
 <v t="costa.20130906221923.5440" a="E"><vh>@path ../../</vh>
-<v t="costa.20130906230357.5539" a="E"><vh>gestione db</vh>
+<v t="costa.20130906230357.5539"><vh>gestione db</vh>
 <v t="costa.20130906230357.5540"><vh>backup</vh></v>
 <v t="costa.20130906230357.5541"><vh>restore</vh></v>
 </v>
+<v t="costa.20130921145330.3382"><vh>riflessioni sulla base dati</vh></v>
 <v t="costa.20130906221923.8713"><vh>/server/</vh>
 <v t="costa.20130919202408.3359" a="M"><vh>.gitignore</vh></v>
 <v t="costa.20130919202408.3358" a="M"><vh>/db/</vh></v>
@@ -1131,5 +1132,31 @@ Diff...
     });
   }
 ];</t>
+<t tx="costa.20130921145330.3382">terapie pregresse e terapie concomitanti
+----------------------------------------
+le due entità, anche se vengono censite separatamente e con un livello di interesse diverso (le concomitanti sono + importanti ed infatti vengono chieste più informazioni a riguardo), sono in relatà collegate tra loro:
+in un'ottica temporale di medio termine (dai 2 ai 5 anni), una terapia concomintante può diventare pregressa e viceversa.
+
+In quest'ottica è evidente che manca il contesto storico alle form pensate.
+
+carattere temporale dei dati
+----------------------------
+
+esiste un contesto temporale in:
+- terapie concomitanti
+- terapie pregresse
+- valutazione dello stato del paziente
+- eventi
+  - sospensione del farmaco
+  - eventi avversi
+  
+----------------------------
+esistono quindi delle entità da tracciare nel tempo
+- terapia
+- evento
+
+che vanno legate al paziente
+----------------------------
+</t>
 </tnodes>
 </leo_file>
