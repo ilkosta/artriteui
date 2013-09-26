@@ -1,6 +1,10 @@
 var TerapiaEditCtrl = [
-  '$scope','$routeParams', 'Restangular', '$timeout','openCalendar', '$http','loadDataListIntoScope',
-    function($scope, $routeParams, Restangular, $timeout, openCalendar,$http,loadDataListIntoScope) {
+  '$scope','$routeParams', 'Restangular', 
+  '$timeout','openCalendar', '$http','loadDataListIntoScope',
+  '$window',
+    function($scope, $routeParams, Restangular, 
+        $timeout, openCalendar,$http,loadDataListIntoScope,
+        $window) {
       Restangular
        .one('pazienti', $routeParams.idPaziente).one('terapia_farmaco').get()
        .then(function(terapia){
@@ -29,8 +33,11 @@ var TerapiaEditCtrl = [
 
 
 
-     $scope.tc_aggiungi ={};     
+     $scope.tc_aggiungi ={};   
      $scope.aggiungi_tc = function() {
+      if(!$scope.tc_aggiungi.dose)  return;
+      if(!$scope.tc_aggiungi.id_tipo_farmaco)  return;
+
       if(_.find($scope.terapie_concomitanti, function(t){
         return t.id_tipo_farmaco ==$scope.tc_aggiungi.id_tipo_farmaco;
       })) 
@@ -49,5 +56,13 @@ var TerapiaEditCtrl = [
       $scope.terapie_concomitanti.push(tc_nuova);
       
      };
+
+     $scope.elimina_tc = function(t) {
+      $window._.remove($scope.terapie_concomitanti, function(tc) {
+        return tc.id_tipo_farmaco === t.id_tipo_farmaco;
+      });
+     };
+
+
     }    
 ];

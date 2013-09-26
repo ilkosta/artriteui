@@ -4,52 +4,58 @@ div(ng-controller='TerapiaEditCtrl')
     br
     form( novalidate , name ='formTerapia')
       fieldset
-        label Data Inizio Terapia
-          .form-horizontal
-            input(  type='text'
-                    datepicker-popup='dd-MM-yyyy'
-                    datepicker-options='dateOptions'
-                    ng-required='true'
-                    ng-model='terapia.data_inizio'
-                    open='calendarOpened')
-            
-            button.btn(ng-click='openCalendar()')
-              i.glyphicon.glyphicon-calendar
-        label FollowUp M
-        label {{ terapia.followUp }}
+        .col-xs-6
+          label Data Inizio Terapia
+            .form-horizontal
+              input(  type='text'
+                      datepicker-popup='dd-MM-yyyy'
+                      datepicker-options='dateOptions'
+                      ng-required='true'
+                      ng-model='terapia.data_inizio'
+                      open='calendarOpened')
+              
+              button.btn(ng-click='openCalendar()')
+                i.glyphicon.glyphicon-calendar
+          label 
+            | &nbsp;&nbsp; FollowUp Mesi 
+          label {{ terapia.followUp }}
       br
+    form.form-inline(novalidate , name='form_concomitante')  
       h4 Terapia concomitante al Tocilizumab - DMARD
       br
-      fieldset
-                
-        .col-xs-2
-          label Farmaco
-            select.form-control(
-            ng-required='true'
+      .form-group               
+        
+        label Farmaco
+          select.form-control(
             ng-options='farmaco.idtipo_farmaco as farmaco.nome for farmaco in farmaci_dimard'
             ng-model='tc_aggiungi.id_tipo_farmaco')
         
-        .col-xs-2
-          label dose (mg)
-            input(type='text', ng-model ='tc_aggiungi.dose' )
-        button(ng-click='aggiungi_tc()')
+        label(style='padding-left:10px;') Dose (mg)
+          br
+          input(type='number',min='0.0000',max='100', step='0.01', ng-model ='tc_aggiungi.dose' )
+      
+        button.btn.btn-info.btn-xs(style='margin-left:10px;',ng-click='aggiungi_tc()')
           i.glyphicon.glyphicon-plus-sign
-      br
-     
-      .col-xs-5(ng-hide='(terapie_concomitanti).length == 0')
-        h5 elementi esistenti ( nr. {{(terapie_concomitanti).length}} )
-        table.table-striped.table-bordered.table-hover
-          thead(style='background-color: rgba(82, 168, 236, 0.8);')
-            tr
-              th Farmaco
-              th Dose
-              th  
-          tbody
-            tr(ng-repeat='t in terapie_concomitanti')
-              td.col-md-1(align='center')  {{t.nome}}
-              td.col-md-1(align='right')   {{t.dose}}
-              td.col-md-1(align='center') 
-                a(ng-href='#/pazienti/xxxx/{{t.idterapia_concomitante}}') Elimina
+          | &nbsp; Aggiungi
+      
+
+
+      .row
+        .col-xs-5(ng-hide='(terapie_concomitanti).length == 0')
+          h5 elementi esistenti ( nr. {{(terapie_concomitanti).length}} )
+          table.table-striped.table-bordered.table-hover
+            thead(style='background-color: rgba(82, 168, 236, 0.8);')
+              tr
+                th Farmaco
+                th Dose
+                th  
+            tbody
+              tr(ng-repeat='t in terapie_concomitanti')
+                td.col-md-1(align='center')  {{t.nome}}
+                td.col-md-1(align='right')   {{t.dose}}
+                td.col-md-1(align='center') 
+                  button.btn.btn-danger.btn-xs(ng-click='elimina_tc(t)') 
+                    i.glyphicon.glyphicon-remove-circle
      br 
      br 
      br 
