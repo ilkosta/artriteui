@@ -1,9 +1,8 @@
-br
-h3 TERAPIA CON TOCILIZUMAB
+h4 TERAPIA CON TOCILIZUMAB
 div(ng-controller='TerapiaEditCtrl')
   .content
     br
-    form( novalidate )
+    form( novalidate , name ='formTerapia')
       fieldset
         label Data Inizio Terapia
           .form-horizontal
@@ -19,23 +18,40 @@ div(ng-controller='TerapiaEditCtrl')
         label FollowUp M
         label {{ terapia.followUp }}
       br
+      h4 Terapia concomitante al Tocilizumab - DMARD
       br
-      h4 Terapia concomitante al Tocilizumab
       fieldset
-        .col-xs-3
-          label Terapie con DMARD
-          div(ng-repeat='terapia_concomitante in terapie_concomitanti')
-            .row
-              .col-xs-2
-                .input-group
-                  span.input-group-addon
-                    input(type='checkbox') 
-                      |{{terapia_concomitante.nome}}
-                      | dose mg : {{terapia_concomitante.dose}}
-            
+                
+        .col-xs-2
+          label Farmaco
+            select.form-control(
+            ng-required='true'
+            ng-options='farmaco.idtipo_farmaco as farmaco.nome for farmaco in farmaci_dimard'
+            ng-model='tc_aggiungi.id_tipo_farmaco')
         
-        
-          
-        
+        .col-xs-2
+          label dose (mg)
+            input(type='text', ng-model ='tc_aggiungi.dose' )
+        button(ng-click='aggiungi_tc()')
+          i.glyphicon.glyphicon-plus-sign
+      br
+     
+      .col-xs-5(ng-hide='(terapie_concomitanti).length == 0')
+        h5 elementi esistenti ( nr. {{(terapie_concomitanti).length}} )
+        table.table-striped.table-bordered.table-hover
+          thead(style='background-color: rgba(82, 168, 236, 0.8);')
+            tr
+              th Farmaco
+              th Dose
+              th  
+          tbody
+            tr(ng-repeat='t in terapie_concomitanti')
+              td.col-md-1(align='center')  {{t.nome}}
+              td.col-md-1(align='right')   {{t.dose}}
+              td.col-md-1(align='center') 
+                a(ng-href='#/pazienti/xxxx/{{t.idterapia_concomitante}}') Elimina
+     br 
+     br 
+     br 
       
-  
+    
