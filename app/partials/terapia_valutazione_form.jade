@@ -1,0 +1,64 @@
+br
+h4 Valutazione clinica del paziente in terapia con TOCILIZUMAB
+div(ng-controller='TerapiaValutazioneCtrl')
+  .content
+    br
+    .row
+      form.col-md-6.form-horizontal( novalidate , name ='formTerapiaValutazione')
+        fieldset
+          .form-group
+            .col-md-3
+              label Tempo
+            .col-md-3
+                input(type='number', min ='0', max='600', step='6')
+          .form-group
+            .col-md-4
+              label
+          .form-group
+            .col-md-4
+              label N. articol. dolenti
+            .col-md-4
+              input(type='number', min ='0', max='50', step='1')
+          .form-group
+            .col-md-4
+              label N. articol. tumefatte
+            .col-md-4
+              input(type='number', min ='0', max='50', step='1')
+          .form-group
+            .col-md-4
+              label PCR (mg/dl)
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+          .form-group
+            .col-md-4
+              label VES (mm/h)
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+          .form-group
+            .col-md-4
+              label VAS paziente (cm)
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+          .form-group
+            .col-md-4
+              label VAS medico (cm)
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+          .form-group
+            .col-md-4
+              label DAS28 
+
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+          .form-group
+            .col-md-4
+              label SDAI 
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+          .form-group
+            .col-md-4
+              label CDAI
+            .col-md-4
+              input(type='number', min ='0', max='50', step='0.1')
+      .col-md-4
+        p testo
