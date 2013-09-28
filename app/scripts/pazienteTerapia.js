@@ -5,6 +5,8 @@ var TerapiaEditCtrl = [
     function($scope, $routeParams, Restangular, 
         $timeout, openCalendar,$http,loadDataListIntoScope,
         $window) {
+
+      // load terapia (da pazienti/:id/terpia_farmaco)
       Restangular
        .one('pazienti', $routeParams.idPaziente).one('terapia_farmaco').get()
        .then(function(terapia){
@@ -13,25 +15,50 @@ var TerapiaEditCtrl = [
           var a = moment();
           var b = moment(terapia[0].data_inizio)
           terapia[0].followUp = a.diff(b, 'month');
-          $scope.master = $scope.terapia = terapia[0];
+          $scope.master   = Restangular.copy(terapia[0]);
+          $scope.terapia  = Restangular.copy(terapia[0]);
          }); 
-      
+
       $scope.openCalendar = openCalendar($scope);
-     // _farmaci_dimard 
+     
+     // parametri: _farmaci_dimard 
      loadDataListIntoScope(
         $scope,
         [ 'farmaci_dimard' ],
         function(p) { return '/data/_' + p;}
       );
 
+      // load terapie_concomitanti (da pazienti/:id/terapie_concomitanti)
       Restangular
-       .one('pazienti', $routeParams.idPaziente).one('terapie_concomitanti').getList()
-       .then(function(terapie_concomitanti){
-            // manage the error (nessun))
-          $scope.master_tc = $scope.terapie_concomitanti = terapie_concomitanti;
-          });    
+      .one('pazienti', $routeParams.idPaziente).one('terapie_concomitanti').getList()
+      .then(function(terapie_concomitanti){
+        // manage the error (nessun))
+        $scope.master_tc =  Restangular.copy(terapie_concomitanti);
+        $scope.terapie_concomitanti =  Restangular.copy(terapie_concomitanti);
+
+        // vado avanti a inizializzare terapie_concomitanti
+        $scope.terapie_concomitanti.unchanged = function() {
+          return angular.equals($scope.terapie_concomitanti, $scope.master_tc);
+        };
+      });    
+
+      
+      // interazioni della form ...
+      $scope.formState = {};
+      $scope.Save = function() {
+        $scope.formState.saving = true;
+
+        // fai controlli di validità
+
+        // allinea gli uiltimi valori prima del salvataggio
+
+        $scope.formState.saving = false;        
+      };
 
 
+      $scope.Cancel = function() {
+        $scope.terapie_concomitanti =  Restangular.copy($scope.master_tc);
+      };
 
      $scope.tc_aggiungi ={};   
      $scope.aggiungi_tc = function() {
@@ -55,13 +82,13 @@ var TerapiaEditCtrl = [
       
       $scope.terapie_concomitanti.push(tc_nuova);
       
-     };
+    };
 
-     $scope.elimina_tc = function(t) {
+    $scope.elimina_tc = function(t) {
       $window._.remove($scope.terapie_concomitanti, function(tc) {
         return tc.id_tipo_farmaco === t.id_tipo_farmaco;
       });
-     };
+    };
 
 
     }    
