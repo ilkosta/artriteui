@@ -1,0 +1,9 @@
+//-----------
+.modal-footer
+  button.btn.btn-default(
+    ng-disabled='isUnchanged(diagnosi)'
+    ng-click='Cancel()') Annulla
+  button.btn.btn-primary(
+    ng-disabled='form.$invalid || formState.saving || isUnchanged(diagnosi)'
+    ng-click='Save()') Salva
+ 

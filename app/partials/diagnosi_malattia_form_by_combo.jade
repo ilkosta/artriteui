@@ -3,9 +3,9 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
     br
     form( novalidate , role='form', name='form' )
       fieldset
-        label Data diagnosi
+        label.inline-field Data diagnosi
           .form-horizontal
-            input(  
+            input( 
               name='data_diagnosi'
               type='text'
               datepicker-popup='dd-MM-yyyy'
@@ -13,8 +13,6 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
               ng-required='true'
               ng-model='diagnosi.data_diagnosi'
               open='calendarOpened'
-              min="'1990-12-31'" 
-              max="{{ today.format('YYYY-MM-DD') }}"
               ui-validate='dataDiagnosiValida($value)')
 
             button.btn(ng-click='openCalendar()')
@@ -26,7 +24,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         br
         br
         //-.form-group
-        label Malattia
+        label.inline-field Malattia
           select.form-control(
             ng-required='true'
             ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
@@ -34,7 +32,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             //-option(value='') ----------
         
         //-.form-group    
-        label Fattore Reumatoide
+        label.inline-field Fattore Reumatoide
           select.form-control(
             ng-required='true'
             ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
@@ -42,11 +40,11 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             //-option(value='') ----------
 
         //-.form-group
-        label Anticorpi
+        label.inline-field Anticorpi
           select.form-control(
             ng-required='true'
             ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
             ng-model='diagnosi.anticorpi')
             //-option(value='') ----------
   
-  ng-include('diagnosi_footer.html')
+  div(ng-include="'/partials/diagnosi_footer.html'")

@@ -3,21 +3,21 @@ div(ng-controller='TerapiaEditCtrl')
     br
     form( novalidate , name ='formTerapia')
       fieldset
-        .col-md-4
-          label Data Inizio Terapia con TCZ
-            .form-horizontal
-              input(  type='text'
-                      datepicker-popup='dd-MM-yyyy'
-                      datepicker-options='dateOptions'
-                      ng-required='true'
-                      ng-model='terapia.data_inizio'
-                      open='calendarOpened')
-              
-              button.btn(ng-click='openCalendar()')
-                i.glyphicon.glyphicon-calendar
-          label 
-            | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi 
-          label {{ terapia.followUp }}
+        
+        label Data Inizio Terapia con TCZ
+          .form-horizontal
+            input(  type='text'
+                    datepicker-popup='dd-MM-yyyy'
+                    datepicker-options='dateOptions'
+                    ng-required='true'
+                    ng-model='terapia.data_inizio'
+                    open='calendarOpened')
+            
+            button.btn(ng-click='openCalendar()')
+              i.glyphicon.glyphicon-calendar
+        label 
+          | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi 
+        label {{ terapia.followUp }}
       br
       br
     form.form-inline(novalidate , name='form_concomitante')  
@@ -25,16 +25,16 @@ div(ng-controller='TerapiaEditCtrl')
       br
       .form-group               
         
-        label Farmaco
+        label.inline-field Farmaco
           select.form-control(
             ng-options='farmaco.idtipo_farmaco as farmaco.nome for farmaco in farmaci_dimard'
             ng-model='tc_aggiungi.id_tipo_farmaco')
         
-        label(style='padding-left:10px;') Dose (mg)
+        label.inline-field Dose (mg)
           br
           input(type='number',min='0.0000',max='100', step='0.01', ng-model ='tc_aggiungi.dose' )
       
-        button.btn.btn-info.btn-xs(style='margin-left:10px;',ng-click='aggiungi_tc()')
+        button.btn.btn-info.btn-xs.inline-field(ng-click='aggiungi_tc()')
           i.glyphicon.glyphicon-plus-sign
           | &nbsp; Aggiungi
       
@@ -54,7 +54,7 @@ div(ng-controller='TerapiaEditCtrl')
                 td.col-md-1(align='center')  {{t.nome}}
                 td.col-md-1(align='right')   {{t.dose}}
                 td.col-md-1(align='center') 
-                  button.btn.btn-danger.btn-xs(ng-click='elimina_tc(t)') 
+                  button.btn.btn-primary.btn-xs(ng-click='elimina_tc(t)') 
                     i.glyphicon.glyphicon-remove-circle
      br 
      br 
