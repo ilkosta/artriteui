@@ -25,7 +25,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         br
         //-.form-group
         label.inline-field Malattia
-          select.form-control(
+          select.selectpicker.form-control(
             ng-required='true'
             ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
             ng-model='diagnosi.cod_malattia')
@@ -33,7 +33,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         
         //-.form-group    
         label.inline-field Fattore Reumatoide
-          select.form-control(
+          select.selectpicker.form-control(
             ng-required='true'
             ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
             ng-model='diagnosi.fattore_reumatoide')
@@ -41,7 +41,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
 
         //-.form-group
         label.inline-field Anticorpi
-          select.form-control(
+          select.selectpicker.form-control(
             ng-required='true'
             ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
             ng-model='diagnosi.anticorpi')
