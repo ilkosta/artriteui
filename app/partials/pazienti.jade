@@ -37,5 +37,6 @@ div
           td.col-md-2 &nbsp;     {{paziente.MALATTIA}}
           td.col-md-1(align='right')   {{ paziente.DATA_TERAPIA | date:"dd/MM/yyyy"}}
           td.col-md-1(align='center') 
-            a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}') dettaglio
+            a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}/diagnosi') dettaglio
+
 br            

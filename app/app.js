@@ -35,9 +35,12 @@ App.config([
       templateUrl: '/partials/nuovopaziente.html'
     }).when('/utenti', {
       templateUrl: '/partials/utenti.html'
-    }).when('/pazienti/:idPaziente', {
-      templateUrl: '/partials/pazientedettaglio.html',
-      controller: 'PazienteDettaglioCtrl'
+    }).when('/pazienti/:idPaziente/diagnosi', {
+      templateUrl: '/partials/pazientedettaglio.html'      
+    }).when('/pazienti/:idPaziente/terapia', {
+      templateUrl: '/partials/pazientedettaglio.html'      
+    }).when('/pazienti/:idPaziente/terapia_val', {
+      templateUrl: '/partials/pazientedettaglio.html'      
     }).when('/no_connessione', {
       templateUrl: '/partials/no_connessione.html'      
     }).when('/no_db', {
