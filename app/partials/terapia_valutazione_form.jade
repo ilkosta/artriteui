@@ -1,5 +1,5 @@
 br
-h4 Valutazione clinica del paziente in terapia con TOCILIZUMAB
+h4.strong VALUTAZIONE CLINICA DEL PAZIENTE IN TERAPIA CON TOCILIZUMAB
 div(ng-controller='TerapiaValutazioneCtrl')
   .content
     br
@@ -7,10 +7,10 @@ div(ng-controller='TerapiaValutazioneCtrl')
       form.col-md-6.form-horizontal( novalidate , name ='formTerapiaValutazione')
         fieldset
           .form-group
-            .col-md-3
+            .col-md-4
               label Tempo
             .col-md-3
-                input(type='number', min ='0', max='600', step='6', ng-model ='tc_aggiungi.tempo')
+                input(type='number', min ='0', max='600', step='6', ng-model ='tv_aggiungi.tempo')
           .form-group
             .col-md-4
               label
@@ -18,52 +18,82 @@ div(ng-controller='TerapiaValutazioneCtrl')
             .col-md-4
               label N. articol. dolenti
             .col-md-4
-              input(type='number', min ='0', max='50', step='1',ng-model ='tc_aggiungi.art_dolenti')
+              input(type='number', min ='0', max='50', step='1',ng-model ='tv_aggiungi.art_dolenti')
           .form-group
             .col-md-4
               label N. articol. tumefatte
             .col-md-4
-              input(type='number', min ='0', max='50', step='1',ng-model ='tc_aggiungi.rt_tumefatte')
+              input(type='number', min ='0', max='50', step='1',ng-model ='tv_aggiungi.art_tumefatte')
           .form-group
             .col-md-4
               label PCR (mg/dl)
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tc_aggiungi.pcr')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.pcr')
           .form-group
             .col-md-4
               label VES (mm/h)
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tc_aggiungi.ves')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.ves')
           .form-group
             .col-md-4
               label VAS paziente (cm)
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tc_aggiungi.vas_paziente')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.vas_paziente')
           .form-group
             .col-md-4
               label VAS medico (cm)
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tc_aggiungi.vas_medico')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.vas_medico')
           .form-group
             .col-md-4
               label DAS28 
 
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tc_aggiungi.das28')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.das28')
           .form-group
             .col-md-4
               label SDAI 
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.sdai')
           .form-group
             .col-md-4
               label CDAI
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1')
+              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.cdai')
           .form-group 
             .col-md-3.col-md-offset-3
             button.btn.btn-info.btn-sm(style='margin-left:10px;',ng-click='aggiungi_t()')
               i.glyphicon.glyphicon-plus-sign
                 | &nbsp; AGGIUNGI
       .col-md-4
-        p testo
+        p Elenco Terapie 
+          h5 elementi esistenti ( nr. {{(terapia_valutazione).length}} )
+          table.table-striped.table-bordered.table-hover
+            thead(style='background-color: rgba(82, 168, 236, 0.8);')
+              tr
+                th Tempo
+                th art. Dolenti
+                th art. Tumefatte
+                th PCR
+                th VES
+                th VAS paziente
+                th VAS medico
+                th DAS28
+                th SDAI
+                th CDAI
+                th 
+            tbody
+              tr(ng-repeat='t in terapia_valutazione')
+                td.col-md-1(align='center')  {{t.tempo}}
+                td.col-md-1(align='right')   {{t.art_dolenti}}
+                td.col-md-1(align='right')   {{t.art_tumefatte}}
+                td.col-md-1(align='right')   {{t.pcr}}
+                td.col-md-1(align='right')   {{t.ves}}
+                td.col-md-1(align='right')   {{t.vas_paziente}}
+                td.col-md-1(align='right')   {{t.vas_medico}}
+                td.col-md-1(align='right')   {{t.das28}}
+                td.col-md-1(align='right')   {{t.sdai}}
+                td.col-md-1(align='right')   {{t.cdai}}
+                td.col-md-1(align='center') 
+                  button.btn.btn-primary.btn-xs(ng-click='elimina_tv(t)') 
+                    i.glyphicon.glyphicon-remove-circle

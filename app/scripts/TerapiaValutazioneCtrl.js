@@ -13,21 +13,29 @@ var TerapiaValutazioneCtrl = [
           });    
 
 
-     $scope.t_aggiungi ={};   
+     $scope.tv_aggiungi ={};   
      $scope.aggiungi_t = function() {
-      debugger;
-      if(!$scope.t_aggiungi.tempo)  return;
+      if(!$scope.tv_aggiungi.tempo)  return;
 
       if(_.find($scope.terapia_valutazione, function(t){
-        return t.tempo ==$scope.t_aggiungi.tempo;
+        return t.tempo ==$scope.tv_aggiungi.tempo;
       })) 
         return;
 
-      var t_nuova = {
-          tempo: t_aggiungi.tempo,
-          id_paziente : t_aggiungi.id_paziente
+      var tv_nuova = {
+          tempo: $scope.tv_aggiungi.tempo,
+          id_paziente :$routeParams.idPaziente, //$scope.tv_aggiungi.id_paziente,
+          art_dolenti:$scope.tv_aggiungi.art_dolenti,
+          art_tumefatte:$scope.tv_aggiungi.art_tumefatte,
+          pcr:$scope.tv_aggiungi.pcr,
+          ves:$scope.tv_aggiungi.ves,
+          vas_paziente:$scope.tv_aggiungi.vas_paziente,
+          vas_medico:$scope.tv_aggiungi.vas_medico,
+          das28:$scope.tv_aggiungi.das28,
+          sdai:$scope.tv_aggiungi.sdai,
+          cdai:$scope.tv_aggiungi.cdai
       };
-      $scope.terapia_valutazione.push(tc_nuova);
+      $scope.terapia_valutazione.push(tv_nuova);
       
      };
 
