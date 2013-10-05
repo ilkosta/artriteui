@@ -8,28 +8,18 @@ var AppCtrl = [
     $scope.$watch('$location.path()', function(path) {
       return $scope.activeNavId = path || '/';
     });
-    
-    return $scope.getClass = function(id) {
-      if ($scope.activeNavId.substring(0, id.length) === id) {
-        return 'active';
-      } else {
-        return '';
-      }
+
+    $scope.getClass = function(id) {
+      var nrParts = (id.split('/').length - 1);
+      var urlParts = $scope.activeNavId.split('/');
+      var urlToValidate = '/' + urlParts.slice(-nrParts,urlParts.length).join('/');
+      return (urlToValidate === id) ? 'active' : '';
     };
+
   }
 ];
-// da sostituire con i filtriiiiiiiii (poi quelli standard di Angular)
-// function dateConverter(record) {
-//   var record = record;
-//   return function convertDates(field) {
-//     function convertDate(date) {
-//       return ( date!= null) ? moment(date).format('L') : '';
-//     }
-//     record[field]
-//     if(record[field] != null)
-//       record[field] = convertDate(record[field]);
-//   }
-// }
+
+
 var PazientiElencoCtrl = [
   '$scope', 'Restangular', function($scope, Restangular) {
     Restangular.setBaseUrl('/data');
@@ -39,6 +29,8 @@ var PazientiElencoCtrl = [
       $scope.pazienti = pazienti;
   });
 }];
+
+
 var PazientiNuovoCtrl =  [
   '$scope', function($scope) {
     $scope.master = {};
