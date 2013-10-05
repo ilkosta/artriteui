@@ -6,6 +6,12 @@ var TerapiaEditCtrl = [
         $timeout, openCalendar,$http,loadDataListIntoScope,
         $window) {
 
+      // constraints
+      var tc_unchanged = function() {
+        return angular.equals($scope.terapie_concomitanti, $scope.master_tc);
+      };
+
+
       // load terapia (da pazienti/:id/terpia_farmaco)
       Restangular
        .one('pazienti', $routeParams.idPaziente).one('terapia_farmaco').get()
@@ -32,14 +38,12 @@ var TerapiaEditCtrl = [
       Restangular
       .one('pazienti', $routeParams.idPaziente).one('terapie_concomitanti').getList()
       .then(function(terapie_concomitanti){
-        // manage the error (nessun))
+        // TODO: manage the error (nessun))
         $scope.master_tc =  Restangular.copy(terapie_concomitanti);
         $scope.terapie_concomitanti =  Restangular.copy(terapie_concomitanti);
 
         // vado avanti a inizializzare terapie_concomitanti
-        $scope.terapie_concomitanti.unchanged = function() {
-          return angular.equals($scope.terapie_concomitanti, $scope.master_tc);
-        };
+        $scope.terapie_concomitanti.unchanged = tc_unchanged;
       });    
 
       
@@ -58,6 +62,7 @@ var TerapiaEditCtrl = [
 
       $scope.Cancel = function() {
         $scope.terapie_concomitanti =  Restangular.copy($scope.master_tc);
+        $scope.terapie_concomitanti.unchanged = tc_unchanged;
       };
 
      $scope.tc_aggiungi ={};   

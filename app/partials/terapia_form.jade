@@ -60,11 +60,11 @@ div(ng-controller='TerapiaEditCtrl')
      br 
      br 
 
-.modal-footer
-  button.btn.btn-default(
-    ng-disabled='terapie_concomitanti.unchanged()'
-    ng-click='Cancel()') Annulla
-  button.btn.btn-primary(
-    ng-disabled='form.$invalid || formState.saving || terapie_concomitanti.unchanged()'
-    ng-click='Save()') Salva      
+  .modal-footer
+    button.btn.btn-default(
+      ng-disabled='terapie_concomitanti.unchanged()'
+      ng-click='Cancel()') Annulla
+    button.btn.btn-primary(
+      ng-disabled='form.$invalid || formState.saving || terapie_concomitanti.unchanged()'
+      ng-click='Save()') Salva      
     
