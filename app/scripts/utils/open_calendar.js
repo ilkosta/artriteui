@@ -1,4 +1,4 @@
-angular.module('app').factory( 'openCalendar',
+angular.module('utils').factory( 'openCalendar',
   ['$timeout', // dependencies
   function($timeout) {
     return function($scope) { // factory with the know of $scope
