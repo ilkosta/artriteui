@@ -13,8 +13,7 @@ module.exports = function(karma) {
 
     // list of files / patterns to load in the browser
     files: [
-        'test/e2e/**/*.js',
-        'test/e2e/**/*.coffee'
+        'test/e2e/**/*.js'
     ],
 
     // list of files to exclude
@@ -70,8 +69,7 @@ module.exports = function(karma) {
     // Plugins to load
     plugins: [
         'karma-ng-scenario',
-        'karma-coffee-preprocessor',
-        'karma-chrome-launcher'
+        'karma-firefox-launcher'
     ],
 
 

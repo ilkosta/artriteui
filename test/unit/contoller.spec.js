@@ -2,7 +2,8 @@
 (function() {
   'use strict';
   describe("controllers", function() {
-    //beforeEach(module("app.controllers"));
+    beforeEach(angular.mock.module("utils"));
+    beforeEach(angular.mock.module("app.controllers"));
 
     describe("AppCtrl", function() {
       it("scope.getClass indica se l'elemento in base alla rotta è attivo o meno", inject( 
@@ -32,9 +33,40 @@
           expect(scope.getClass('/1')).toEqual('');          
         })
       );
+
+
     });
 
 
+    describe('PazienteDettaglioCtrl', function() {
+      it('utilizza scope.getClass per sapere quale è la tab attiva in base alla rotta', inject( 
+        function($rootScope, $controller) {
+          var ctrl, scope;
+          scope = $rootScope.$new(); 
+          
+          ctrl = $controller("PazienteDettaglioCtrl", {
+            $scope: scope,
+            $location:  {}, 
+            $resource:  {},
+            $rootScope: {}
+          });
+
+          // test
+          var rotta = '/lista';
+
+          // simple
+          scope.activeNavId = rotta;
+          expect(scope.getClass('/lista')).toEqual('active');
+
+
+          scope.activeNavId = rotta + '/id_oggetto';
+
+          expect(scope.getClass('/lista')).toEqual('');
+          expect(scope.getClass('/id_oggetto')).toEqual('active');
+          expect(scope.getClass('/1')).toEqual('');          
+        })
+      );
+    });
   });
 
 }).call(this);

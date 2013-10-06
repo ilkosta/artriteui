@@ -8,7 +8,7 @@ var utils = angular.module('utils', []);
 var App = angular.module('app', 
   [ 'ngLocale',
     'ngResource',
-//    'app.controllers', 
+    'app.controllers', 
 //    'app.directives', 
 //    'app.filters', 
 //    'app.services', 

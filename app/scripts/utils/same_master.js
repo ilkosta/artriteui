@@ -1,4 +1,4 @@
-angular.module('app').factory( 'sameMaster',
+angular.module('utils').factory( 'sameMaster',
   function() {
   return function($scope) { // factory with the know of $scope
     //return function(what) {}
