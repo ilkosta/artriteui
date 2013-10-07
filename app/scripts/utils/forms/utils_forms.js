@@ -1,1 +1,3 @@
-//var module = angular.module('utils_forms',[]);
+function() {
+	angular.module('utils_forms',[]);
+}());

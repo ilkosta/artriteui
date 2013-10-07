@@ -3,14 +3,13 @@
   var mod = angular.module('app.controllers');
 
   mod.controller('PazienteDiagnosiEditCtrl', [
-    '$scope', '$location', '$routeParams','Restangular',
-    '$http', 'calendar' , 'sameMaster','loadDataListIntoScope',
-    'decodeCodesInObject',
+    '$scope', '$location', '$routeParams',
+    'Restangular', '$http', 'calendar' , 
+    'loadDataListIntoScope', 'decodeCodesInObject',
     function(
         $scope,$location, $routeParams,
         Restangular, $http, calendar,
-        sameMaster,loadDataListIntoScope,
-        decodeCodesInObject) {
+        loadDataListIntoScope, decodeCodesInObject) {
 
       $scope.formState = {};
 
@@ -82,7 +81,7 @@
           });
       };
 
-      $scope.isUnchanged  = sameMaster($scope);
+      $scope.isUnchanged  = angular.equals($scope.master, $scope.diagnosi);
 
       // calendar management
       var cal = calendar($scope);
