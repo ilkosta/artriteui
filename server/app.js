@@ -72,7 +72,7 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
   mysql_conn.connect();
-  var pazienti;
+  
   // query
     mysql_conn.query('SELECT * from artrite.vdiagnosimalattia where idPaziente =?', [req.params.idPaziente]  , function(err, rows, fields) {
     if (err) throw err;
@@ -85,6 +85,12 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   });
   mysql_conn.end();
 });
+
+
+app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
+  
+});
+
 
 app.get('/data/_malattia_ric', function(req, res, next) {
   // apertura connessione db
