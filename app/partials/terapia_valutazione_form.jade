@@ -38,18 +38,18 @@ div(ng-controller='TerapiaValutazioneCtrl')
             .col-md-4
               label VAS paziente (cm)
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.vas_paziente')
+              input(type='number', min ='0', max='50', step='0.1',ng-required='true',ng-model ='tv_aggiungi.vas_paziente')
           .form-group
             .col-md-4
               label VAS medico (cm)
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.vas_medico')
+              input(type='number', min ='0', max='50', step='0.1',ng-required='true',ng-model ='tv_aggiungi.vas_medico')
           .form-group
             .col-md-4
               label DAS28 
 
             .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.das28')
+              input(type='number', min ='0', max='50', step='0.1',ng-required='true',ng-model ='tv_aggiungi.das28')
           .form-group
             .col-md-4
               label SDAI 
@@ -97,3 +97,7 @@ div(ng-controller='TerapiaValutazioneCtrl')
                 td.col-md-1(align='center') 
                   button.btn.btn-primary.btn-xs(ng-click='elimina_tv(t)') 
                     i.glyphicon.glyphicon-remove-circle
+  .modal-footer
+    button.btn.btn-primary(
+      ng-disabled='formTerapiaValutazione.$invalid || formState.saving'
+      ng-click='Save()') Salva  
