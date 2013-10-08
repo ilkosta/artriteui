@@ -81,7 +81,9 @@
           });
       };
 
-      $scope.isUnchanged  = angular.equals($scope.master, $scope.diagnosi);
+      $scope.isUnchanged  = function(diagnosi) {
+        return angular.equals($scope.master, diagnosi);
+      }
 
       // calendar management
       var cal = calendar($scope);

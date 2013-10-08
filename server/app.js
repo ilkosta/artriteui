@@ -72,7 +72,7 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
   mysql_conn.connect();
-  var pazienti;
+
   // query
     mysql_conn.query('SELECT * from artrite.vdiagnosimalattia where idPaziente =?', [req.params.idPaziente]  , function(err, rows, fields) {
     if (err) throw err;
@@ -85,6 +85,103 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   });
   mysql_conn.end();
 });
+
+
+app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
+  // controllo dei dati ricevuti
+  debugger;
+// anticorpi: "no"
+// cod_malattia: 10
+// cod_tipo_malattia: "ric"
+// cognome: "Giuliodori"
+// data_diagnosi: "2010-08-25T00:00:00.000Z"
+// data_nascita: "1976-04-06T00:00:00.000Z"
+// fattore_reumatoide: "si"
+// idPaziente: 2
+// iddiagnosi_malattia: 4
+// malattia: "artrite psoriasica"
+// nome: "Costantino"
+  function notify_problem(what) {
+    res.send(what); // TODO.... da sistemare
+  }
+
+  if( req.params.idPaziente === req.body.idPaziente )
+    return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
+
+  // controllo delle risposte in tipo_risposta
+  // // uso il motodo più pessimistico possibile... utile solo se le risposte fossero tantissime
+  // // e quindi lo strumento più adatto a cercare in una collezione sia il db con il suo indiice...
+  // // invece in questo caso bastava tirare su l'elenco delle risposte e vedere se c'era...
+
+  // // metodo maniacale...
+  // var risposte_usate = _(['fattore_reumatoide','anticorpi'])
+  //   .map(function(a) { return req.body[a];  })
+  //   .uniq().value();
+
+  // function throw_for_tipo_risposta( risposte , mysql_conn) {
+  //   var riposta = _.first(risposte);
+  //   mysql_conn.query('select * from tipo_risposta where risposta = ?', 
+  //     [riposta], 
+  //     function(err, r, fields) {
+  //       if(err) throw err;
+  //       if(r.lenght !== 1) throw ('trovati più tipi risposta: ' + risposta);
+  //   });
+  //   throw_for_tipo_risposta(_.tail(risposte));
+  // }
+
+  // try {
+  //   throw_for_tipo_risposta(risposte_usate, mysql_conn);
+  // }
+  // catch(err) {
+  //   return notify_problem(err);
+  // }
+  // // FINE metodo maniacale
+
+
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+
+  // INIZIO metodo normale
+
+  // assumo la connessione come aperta...
+  mysql_conn.query('select risposta from tipo_risposta', function(err,r,fileds) {
+    if(err) throw err;
+
+    var risposte_usabili = _.pluck(r,fields[0]);
+    if( _.difference( risposte_usate , risposte_usabili ).length > 0 )
+      return notify_problem(err);
+  });
+  // FINE metodo normale
+
+
+
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+
+  // regola di validità: una diagnosi per paziente?
+  var qry =   'select count(*) as num';
+      qry +=    'min(iddiagnosi_malattia) as first_id';
+      qry +=  'from diagnosi_malattia'; 
+      qry +=  'where id_paziente = ?';
+
+  mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
+    var nr_diagnosi = r[0][fields[0]];
+    if( nr_diagnosi > 1 ) {
+      console.log("trovati più record diagnosi_malattia per idPaziente = ",req.params.idPaziente);
+      throw err;
+    }
+
+    qry =   'UPDATE diagnosi_malattia';
+    qry +=  '';
+    qry +=  'where iddiagnosi_malattia = ?';
+  });
+
+  mysql_conn.end();
+});
+
+
 
 app.get('/data/_malattia_ric', function(req, res, next) {
   // apertura connessione db
