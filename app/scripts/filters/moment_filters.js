@@ -2,7 +2,7 @@ var momentFilters = angular.module('momentFilters',[]);
 
 momentFilters.filter('fromNow', function() {
   return function(dateString) {
-    return moment().fromNow()
+    return moment(dateString).fromNow();
   };
 });
 // moment filter factory

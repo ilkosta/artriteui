@@ -10,7 +10,7 @@ div(ng-controller='TerapiaValutazioneCtrl')
             .col-md-4
               label Tempo
             .col-md-3
-                input(type='number', min ='0', max='600', step='6', ng-model ='tv_aggiungi.tempo')
+                input(type='number', min ='0', max='600', step='6',ng-required='true', ng-model ='tv_aggiungi.tempo')
           .form-group
             .col-md-4
               label
@@ -62,9 +62,13 @@ div(ng-controller='TerapiaValutazioneCtrl')
               input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.cdai')
           .form-group 
             .col-md-3.col-md-offset-3
-            button.btn.btn-info.btn-sm(style='margin-left:10px;',ng-click='aggiungi_t()')
-              i.glyphicon.glyphicon-plus-sign
-                | &nbsp; AGGIUNGI
+            
+            button.btn.btn-primary(
+                ng-click='save()'
+                ng-disabled='formState.saving || !canSave()')
+              i.glyphicon.glyphicon-plus
+                | &nbsp; Aggiungi
+
       .col-md-4
         p Elenco Terapie 
           h5 elementi esistenti ( nr. {{(terapia_valutazione).length}} )
@@ -97,7 +101,3 @@ div(ng-controller='TerapiaValutazioneCtrl')
                 td.col-md-1(align='center') 
                   button.btn.btn-primary.btn-xs(ng-click='elimina_tv(t)') 
                     i.glyphicon.glyphicon-remove-circle
-  .modal-footer
-    button.btn.btn-primary(
-      ng-disabled='formTerapiaValutazione.$invalid || formState.saving'
-      ng-click='Save()') Salva  

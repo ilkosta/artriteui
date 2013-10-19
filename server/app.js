@@ -76,6 +76,7 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   // query
     mysql_conn.query('SELECT * from artrite.vdiagnosimalattia where idPaziente =?', [req.params.idPaziente]  , function(err, rows, fields) {
     if (err) throw err;
+
     if( rows.lenght > 1 ) {
       console.log("trovati più record vdiagnosimalattia per idPaziente = ",req.params.idPaziente);
       throw err;
@@ -113,11 +114,12 @@ app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   // // e quindi lo strumento più adatto a cercare in una collezione sia il db con il suo indiice...
   // // invece in questo caso bastava tirare su l'elenco delle risposte e vedere se c'era...
 
-  // // metodo maniacale...
-  // var risposte_usate = _(['fattore_reumatoide','anticorpi'])
-  //   .map(function(a) { return req.body[a];  })
-  //   .uniq().value();
+  
+   var risposte_usate = _(['fattore_reumatoide','anticorpi'])
+     .map(function(a) { return req.body[a];  })
+     .uniq().value();
 
+  // // metodo maniacale...
   // function throw_for_tipo_risposta( risposte , mysql_conn) {
   //   var riposta = _.first(risposte);
   //   mysql_conn.query('select * from tipo_risposta where risposta = ?', 
@@ -145,7 +147,7 @@ app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   // INIZIO metodo normale
 
   // assumo la connessione come aperta...
-  mysql_conn.query('select risposta from tipo_risposta', function(err,r,fileds) {
+  mysql_conn.query('select risposta from artrite.tipo_risposta', function(err,r,fileds) {
     if(err) throw err;
 
     var risposte_usabili = _.pluck(r,fields[0]);
@@ -156,27 +158,27 @@ app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
 
 
 
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
+  // // apertura connessione db
+  // var mysql_conn = mysql_connector.createConnection();
+  // mysql_conn.connect();
 
-  // regola di validità: una diagnosi per paziente?
-  var qry =   'select count(*) as num';
-      qry +=    'min(iddiagnosi_malattia) as first_id';
-      qry +=  'from diagnosi_malattia'; 
-      qry +=  'where id_paziente = ?';
+  // // regola di validità: una diagnosi per paziente?
+  // var qry =   'select count(*) as num';
+  //     qry +=    'min(iddiagnosi_malattia) as first_id';
+  //     qry +=  'from diagnosi_malattia'; 
+  //     qry +=  'where id_paziente = ?';
 
-  mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
-    var nr_diagnosi = r[0][fields[0]];
-    if( nr_diagnosi > 1 ) {
-      console.log("trovati più record diagnosi_malattia per idPaziente = ",req.params.idPaziente);
-      throw err;
-    }
+  // mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
+  //   var nr_diagnosi = r[0][fields[0]];
+  //   if( nr_diagnosi > 1 ) {
+  //     console.log("trovati più record diagnosi_malattia per idPaziente = ",req.params.idPaziente);
+  //     throw err;
+  //   }
 
-    qry =   'UPDATE diagnosi_malattia';
-    qry +=  '';
-    qry +=  'where iddiagnosi_malattia = ?';
-  });
+  //   qry =   'UPDATE diagnosi_malattia';
+  //   qry +=  '';
+  //   qry +=  'where iddiagnosi_malattia = ?';
+  // });
 
   mysql_conn.end();
 });
@@ -300,6 +302,35 @@ app.get ('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, n
                      ' where tv.id_paziente=?',[req.params.idPaziente] , function(err, rows, fields) {
     if (err) throw err;
     res.send(rows);    
+  });
+  mysql_conn.end();
+});
+
+app.post('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, next) {
+  console.log(req.body);
+
+  
+    if( req.params.idPaziente === req.body.idPaziente )
+    return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
+
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  // query
+ var  query   =   'INSERT INTO artrite.terapia_valutazione( ';
+      query   +=  ' id_paziente, art_dolenti, art_tumefatte, pcr, ves, vas_paziente, vas_medico, das28, sdai, cdai, tempo) ';
+      query   +=  ' VALUES( ?,    ?,          ?,              ?,  ?,    ?,            ?,          ?,    ?,    ?,    ?    )' ;
+
+
+var fields =  [ req.body.id_paziente  ,req.body.art_dolenti, req.body.art_tumefatte
+              , req.body.pcr, req.body.ves, req.body.vas_paziente, req.body.vas_medico
+              , req.body.das28, req.body.sdai, req.body.cdai, req.body.tempo ];
+
+
+  mysql_conn.query(query, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});
+
   });
   mysql_conn.end();
 });
