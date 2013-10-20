@@ -1,5 +1,9 @@
-div(ng-app='ng-app')
-  h1(style='color: rgb(0, 68, 204);') Nuovo Paziente 
+div
+  .page-header
+    .row
+      h1(style='color: rgb(0, 68, 204);') Nuovo Paziente
+      lead Inserimento nuovo paziente
+
   form.col-md-6.form-horizontal.css-form(name='myForm',ng-controller='PazientiNuovoCtrl')
     .row
       .control-group
@@ -52,3 +56,4 @@ div(ng-app='ng-app')
       .col-md-offset-2
         button.btn-primary(ng-click='reset()', ng-disabled='isUnchanged(user)', style='width:90px') Pulisci
         button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='myForm.$invalid || isUnchanged(user)') Salva
+    
