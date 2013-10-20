@@ -296,7 +296,7 @@ app.get ('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, n
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
   mysql_conn.connect();
-  var pazienti;
+  
   // query
     mysql_conn.query('SELECT tv.* FROM artrite.terapia_valutazione tv '+
                      ' where tv.id_paziente=?',[req.params.idPaziente] , function(err, rows, fields) {
@@ -305,6 +305,27 @@ app.get ('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, n
   });
   mysql_conn.end();
 });
+
+app.post('/data/pazienti/:idPaziente/terapia_valutazione/:tempo/cancella' , function(req, res, next) {
+
+  if( req.params.idPaziente !== req.body.id_paziente)
+    res.send(500);
+
+  if( req.params.tempo != req.body.tempo)
+    res.send(500);
+
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  var qry = 'delete from artrite.terapia_valutazione where id_paziente = ? and tempo = ?';
+  mysql_conn.query(qry,[req.params.idPaziente, req.params.tempo] , function(err, rows, fields) {
+    if (err) throw err;
+    res.send(200);    
+  });
+  mysql_conn.end();
+});
+
+
 
 app.post('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, next) {
   console.log(req.body);
