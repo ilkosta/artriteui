@@ -7,10 +7,27 @@ var TerapiaValutazioneCtrl = [
 
       var url_tv = '/data/pazienti/' + $routeParams.idPaziente + '/terapia_valutazione';
 
+      $scope.calculateDAS28 = function () {        
+        var t28   = $scope.tv_aggiungi.art_dolenti
+          , sw28  = $scope.tv_aggiungi.art_tumefatte
+          , ESR   = $scope.tv_aggiungi.ves
+          , GH    = $scope.tv_aggiungi.vas_paziente ;
+
+        $scope.tv_aggiungi.das28 = (!t28 || !sw28 || !ESR || !GH) 
+          ? 0.0 
+          : (0.56*Math.sqrt(t28)) + (0.28*Math.sqrt(sw28)) + (0.70*Math.log(ESR)) + (0.014*GH);
+      }
+
+
       // init: non c'è isogno che sia esposta allo $scope
       function init() {
         $scope.formState    = {};
         $scope.tv_aggiungi  = {};
+
+        // $scope.$watch('tv_aggiungi.art_dolenti'   , calculateDAS28());
+        // $scope.$watch('tv_aggiungi.art_tumefatte' , calculateDAS28());
+        // $scope.$watch('tv_aggiungi.ves'           , calculateDAS28());
+        // $scope.$watch('tv_aggiungi.vas_paziente'  , calculateDAS28());
 
         $http.get(url_tv)
               .success(function(data, status, headers, config) {
@@ -71,14 +88,8 @@ var TerapiaValutazioneCtrl = [
 
         return true;
       };
-      $scope.calculateDAS28 = function() {
-        var t28   = $scope.tv_aggiungi.art_dolenti
-          , sw28  = $scope.tv_aggiungi.art_tumefatte
-          , ESR   = $scope.tv_aggiungi.ves
-          , GH    = $scope.tv_aggiungi.vas_paziente ;
 
-        $scope.tv_aggiungi.das28 = (0.56*Math.sqrt(t28)) + (0.28*Math.sqrt(sw28)) + (0.70*Math.log(ESR)) + (0.014*GH);
-      }
+      
 
       $scope.save = function() {
         // $scope.formState.saving = true;

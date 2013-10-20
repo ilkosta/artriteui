@@ -48,11 +48,11 @@ div(ng-controller='TerapiaValutazioneCtrl')
             .col-md-4
               label DAS28 
 
-            .col-md-4
-              input(ng-required='true'
+            .col-md-3
+              input.form-control(ng-required='true'
                     ng-model='tv_aggiungi.das28')                
               
-              button(ng-click='calculateDAS28()')
+              button(ng-click='calculateDAS28()') calcola                   
                 i.glyphicon.glyphicon-repeat
 
               a(href='http://www.4s-dawn.com/DAS28/') dawn/das28
@@ -72,11 +72,11 @@ div(ng-controller='TerapiaValutazioneCtrl')
           .form-group 
             .col-md-3.col-md-offset-3
             
-            button.btn.btn-primary(
-                ng-click='save()'
-                ng-disabled='formState.saving || !canSave()')
-              i.glyphicon.glyphicon-plus
-                | &nbsp; Aggiungi
+              button.btn.btn-primary(
+                  ng-click='save()'
+                  ng-disabled='formState.saving || !canSave()')
+                i.glyphicon.glyphicon-plus
+                  | &nbsp; Aggiungi
 
       .col-md-4
         p Elenco Terapie 
