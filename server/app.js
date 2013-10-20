@@ -8,7 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
-
+var _    = require('lodash');
 // personal libs
 var mysql_connector = require('./db/config.js');
 
@@ -236,18 +236,7 @@ app.get('/data/_farmaci_biologici', function(req, res, next) {
   mysql_conn.end();
 });
 
-app.get ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var pazienti;
-  // query
-    mysql_conn.query('select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?', [req.params.idPaziente]  , function(err, rows, fields) {
-    if (err) throw err;
-    res.send(rows);    
-  });
-  mysql_conn.end();
-});
+
 
 app.get('/data/pazienti/:idPaziente/terapiepre', function(req, res, next) {
   // apertura connessione db
@@ -274,8 +263,6 @@ app.get ('/data/_fattori_rischio' , function(req, res, next) {
   mysql_conn.end();
 });
 
-
-
 app.get ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, next) {
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
@@ -291,6 +278,120 @@ app.get ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, 
   });
   mysql_conn.end();
 });
+
+app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, next) {
+    if(req.body.lenght > 0 )
+      if( req.params.idPaziente != req.body.id_paziente)
+         res.send(500);
+    else{ res.send(500);}
+    // apertura connessione db
+    var mysql_conn = mysql_connector.createConnection();
+    mysql_conn.connect();
+   
+    var query =   'DELETE FROM artrite.terapia_concomitante ';
+        query +=  'WHERE id_terapia = ? and id_paziente = ?'  
+    var fields =  [ req.body[0].id_terapia,  req.body[0].id_paziente ];
+
+    //insert 
+    var query_ins ='INSERT INTO artrite.terapia_concomitante (id_terapia,id_tipo_farmaco,dose,id_paziente )';
+        query_ins += 'VALUES ( ?, ?, ?, ? )';
+
+
+    function getFieldsIns(r) {
+      return [ r.id_terapia, r.id_tipo_farmaco, r.dose,  r.id_paziente ];
+    }
+
+    debugger;
+    mysql_conn.beginTransaction(function(err) {
+      if (err) { throw err; }
+      mysql_conn.query(query, fields, function(err, result) {
+        if (err) { 
+            mysql_conn.rollback(function() { 
+              throw err;
+            });
+        }
+
+        _.each( req.body, function(r) {
+          if(r)
+            mysql_conn.query(query_ins, getFieldsIns(r), function(err, result) {
+              if (err) { 
+                  mysql_conn.rollback(function() { 
+                    throw err;
+                  });
+              }
+            });
+        });
+        
+        mysql_conn.commit(function(err) {
+          if (err) { 
+            mysql_conn.rollback(function() {
+              throw err;
+            });
+          }
+        });
+        
+      });
+    });
+
+    //mysql_conn.end();
+});
+
+
+
+app.get ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  var pazienti;
+  // query
+  debugger;
+    mysql_conn.query('select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?', [req.params.idPaziente]  
+                , function(err, rows, fields) {
+        if (err) throw err;
+        res.send(rows);    
+  });
+  mysql_conn.end();
+});
+
+app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
+  if( req.params.idPaziente != req.body.id_paziente)
+      res.send(500);
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  
+  req.body.data_inizio =   req.body.data_inizio.substring(0,10);
+  var query =   'INSERT INTO artrite.terapia (id_paziente, data_inizio)';
+      query +=  'VALUES ( ?, ?)'  
+  
+  var fields =  [ req.body.id_paziente , req.body.data_inizio ];
+
+ mysql_conn.query(query, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});  
+  });
+  mysql_conn.end();
+});
+
+app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
+  if( req.params.idPaziente != req.body.id_paziente)
+      res.send(500);
+  // apertura connessione db
+  debugger;
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  
+  req.body.data_inizio =   req.body.data_inizio.substring(0,10);
+  var query  =   'UPDATE artrite.terapia  SET data_inizio = ? where  id_paziente = ? ' ;
+  var fields =  [  req.body.data_inizio ,req.body.id_paziente ];
+
+ mysql_conn.query(query, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});  
+  });
+  mysql_conn.end();
+});
+
 
 app.get ('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, next) {
   // apertura connessione db

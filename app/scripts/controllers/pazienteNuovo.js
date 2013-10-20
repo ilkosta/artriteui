@@ -38,7 +38,7 @@
         $scope.formState.saving = true;
        
         var chk_data = $scope.dataNascitaValida($scope.user.datadinascita);
-        if(!chk_data){$log.error('Anno di Naascita non valido');return false;} 
+        if(!chk_data){$log.error('Anno di Nascita non valido');return false;} 
         if($scope.user.codicefiscale != null){
            var cf_valido = checkCF($scope.user.codicefiscale);
            if(!cf_valido){$log.error('CF non valido');return false;} 

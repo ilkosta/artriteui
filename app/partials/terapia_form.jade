@@ -17,7 +17,7 @@ div(ng-controller='TerapiaEditCtrl')
               i.glyphicon.glyphicon-calendar
         label 
           | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi 
-        label {{ terapia.followUp }}
+        label {{terapia.data_inizio | monthsFromNow }}  
       br
       br
     form.form-inline(novalidate , name='form_concomitante')  
@@ -65,6 +65,5 @@ div(ng-controller='TerapiaEditCtrl')
       ng-disabled='terapie_concomitanti.unchanged()'
       ng-click='Cancel()') Annulla
     button.btn.btn-primary(
-      ng-disabled='form.$invalid || formState.saving || terapie_concomitanti.unchanged()'
       ng-click='Save()') Salva      
     
