@@ -12,5 +12,6 @@
     "commit": "292331685408361864b461d752449eb2efbd196d"
   },
   "_source": "git://github.com/paulmillr/console-polyfill.git",
-  "_target": "~0.1.0"
+  "_target": "~0.1.0",
+  "_originalSource": "console-polyfill"
 }

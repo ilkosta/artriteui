@@ -3,12 +3,12 @@
   "homepage": "https://github.com/angular-ui/bootstrap",
   "version": "0.5.0",
   "_release": "0.5.0",
-  "main":["src/accordion/accordion.js","src/alert/alert.js","src/buttons/buttons.js","src/carousel/carousel.js","src/collapse/collapse.js","src/datepicker/datepicker.js","src/dialog/dialog.js","src/dropdownToggle/dropdownToggle.js","src/modal/modal.js","src/pagination/pagination.js","src/popover/popover.js","src/position/position.js","src/progressbar/progressbar.js","src/rating/rating.js","src/tabs/tabs.js","src/timepicker/timepicker.js","src/tooltip/tooltip.js","src/transition/transition.js","src/typeahead/typeahead.js"],
   "_resolution": {
     "type": "version",
     "tag": "0.5.0",
     "commit": "ceb396f71652730405c7ac0d07abf16262ff88eb"
   },
   "_source": "git://github.com/angular-ui/bootstrap.git",
-  "_target": "0.5.0"
+  "_target": "0.5.0",
+  "_originalSource": "angular-ui-bootstrap"
 }

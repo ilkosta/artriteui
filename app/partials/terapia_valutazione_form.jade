@@ -4,7 +4,7 @@ div(ng-controller='TerapiaValutazioneCtrl')
   .content
     br
     .row
-      form.col-md-6.form-horizontal( novalidate , name ='formTerapiaValutazione')
+      form.col-md-5.form-horizontal( novalidate , name ='formTerapiaValutazione')
         fieldset
           .form-group
             .col-md-4
@@ -48,8 +48,17 @@ div(ng-controller='TerapiaValutazioneCtrl')
             .col-md-4
               label DAS28 
 
-            .col-md-4
-              input(type='number', min ='0', max='50', step='0.1',ng-required='true',ng-model ='tv_aggiungi.das28')
+            .col-md-3
+              input.form-control(ng-required='true'
+                    ng-model='tv_aggiungi.das28')                
+              
+              button(ng-click='calculateDAS28()') calcola                   
+                i.glyphicon.glyphicon-repeat
+
+              a(href='http://www.4s-dawn.com/DAS28/') dawn/das28
+
+
+
           .form-group
             .col-md-4
               label SDAI 
@@ -63,11 +72,11 @@ div(ng-controller='TerapiaValutazioneCtrl')
           .form-group 
             .col-md-3.col-md-offset-3
             
-            button.btn.btn-primary(
-                ng-click='save()'
-                ng-disabled='formState.saving || !canSave()')
-              i.glyphicon.glyphicon-plus
-                | &nbsp; Aggiungi
+              button.btn.btn-primary(
+                  ng-click='save()'
+                  ng-disabled='formState.saving || !canSave()')
+                i.glyphicon.glyphicon-plus
+                  | &nbsp; Aggiungi
 
       .col-md-4
         p Elenco Terapie 

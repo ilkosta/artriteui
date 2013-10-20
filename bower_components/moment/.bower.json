@@ -2,7 +2,7 @@
   "name": "moment",
   "version": "2.1.0",
   "scripts": [
-    "moment.js","min/langs.min.js"
+    "moment.js"
   ],
   "main": "moment.js",
   "description": "Parse, validate, manipulate, and display dates in javascript.",
@@ -26,5 +26,6 @@
     "commit": "05028e20e526b5f38dde3748833e98d7c8e846e8"
   },
   "_source": "git://github.com/timrwood/moment.git",
-  "_target": "2.1.0"
+  "_target": "2.1.0",
+  "_originalSource": "moment"
 }

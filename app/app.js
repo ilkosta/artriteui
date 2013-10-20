@@ -1,20 +1,25 @@
+(function() {
+
 'use strict';
 
-// global config
-moment.lang('it');
 
-var utils = angular.module('utils', []);
+
 
 var App = angular.module('app', 
-  [ 'ngLocale',
+  [ 'ngSanitize',
+    'ngLocale',
     'ngResource',
     'app.controllers', 
 //    'app.directives', 
 //    'app.filters', 
 //    'app.services', 
+// ----- external ------
     'restangular',
     'ui.bootstrap',
-    'ui.event',
+    'angular-growl',
+//    'ui.event',
+
+// ----- custom -------
     'utils',
     'utils_forms',
     'utils_bootstrap',
@@ -23,9 +28,16 @@ var App = angular.module('app',
   , 'momentFilters'
   ]);
 
+
+angular.module('utils_forms',[]);
+var utils = angular.module('utils', []);
+
 App.config([
-  '$routeProvider', '$locationProvider', 'RestangularProvider',
-  function($routeProvider, $locationProvider, RestangularProvider, config) {
+  '$routeProvider', '$locationProvider', 'RestangularProvider', 'growlProvider', 
+  function($routeProvider, $locationProvider, RestangularProvider, growlProvider, config) {
+
+    growlProvider.globalTimeToLive(10000);
+
     RestangularProvider.setBaseUrl('/data');
     RestangularProvider.setErrorInterceptor(utils.checkServer);
     
@@ -52,5 +64,8 @@ App.config([
   }
 ]);
 
+// global config
+moment.lang('it');
 
-angular.module('utils_forms',[]);
+
+})();

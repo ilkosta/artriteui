@@ -17,5 +17,6 @@
     "commit": "b374f23971817d507bded0dc16892e87a6d2fe42"
   },
   "_source": "git://github.com/eternicode/bootstrap-datepicker.git",
-  "_target": "*"
+  "_target": "*",
+  "_originalSource": "bootstrap-datepicker"
 }
