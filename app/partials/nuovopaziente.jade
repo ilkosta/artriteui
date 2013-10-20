@@ -1,25 +1,54 @@
 div(ng-app='ng-app')
   h1(style='color: rgb(0, 68, 204);') Nuovo Paziente 
-  form.form-horizontal.css-form(name='myForm',ng-controller='PazientiNuovoCtrl')
+  form.col-md-6.form-horizontal.css-form(name='myForm',ng-controller='PazientiNuovoCtrl')
+    .row
       .control-group
-        label.control-label Nome
-          input(type='text', placeholder='Inserisci il nome', ng-model='user.nome', required)
+        .col-md-3
+          label.control-label Nome
+        .col-md-8
+          input(type='text', placeholder='Inserisci il nome', ng-model='user.nome', ng-required='true')
+    .row
       .control-group
-        label.control-label Cognome
-          input(type='text', placeholder='Cognome', ng-model='user.cognome', required)
-
+        .col-md-3
+          label.control-label Cognome
+        .col-md-8
+          input(type='text', placeholder='Cognome', ng-model='user.cognome', ng-required='true')
+    .row  
       .control-group
-        label.control-label Data di Nascita
-          input(type='text', placeholder='Data di nascita',ng-model='user.datadinascita',required)
-
+        .col-md-3
+          label.control-label Codice Fiscale
+        .col-md-8
+          input(type='text', placeholder='codicefiscale', ng-model='user.codicefiscale')
+    .row
       .control-group
-        .controls
-          label.radio.inline
-            input#rdGenderM(type='radio',name='rdGender', ng-model='user.gender', value='M', checked='checked')
-            | M
-          label.radio.inline
-            input#rdGenderF(type='radio',name='rdGender', ng-model='user.gender', value='F')
-            | F 
+        .col-md-3
+          label.control-label Data di Nascita
+        .col-md-8
+          .form-horizontal
+            input(type='text'
+                  datepicker-popup='dd-MM-yyyy'
+                  datepicker-options='dateOptions'
+                  ng-required='true'
+                  placeholder='Data di nascita'
+                  open='calendarOpened'
+                  ng-model='user.datadinascita')
+            button.btn(ng-click='openCalendar()')
+              i.glyphicon.glyphicon-calendar
+    .row
+      .control-group
+        .col-md-3
+          label.control-label Sesso
+        .col-md-8
+          .controls
+            label.radio.inline
+              input#rdGenderM(type='radio',name='rdGender', ng-model='user.gender', value='M', checked='checked')
+              | M
+            label.radio.inline
+              input#rdGenderF(type='radio',name='rdGender', ng-model='user.gender', value='F')
+              | F 
+    .row
+      &nbsp;
+    .row
       .col-md-offset-2
         button.btn-primary(ng-click='reset()', ng-disabled='isUnchanged(user)', style='width:90px') Pulisci
         button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='myForm.$invalid || isUnchanged(user)') Salva

@@ -335,6 +335,23 @@ var fields =  [ req.body.id_paziente  ,req.body.art_dolenti, req.body.art_tumefa
   mysql_conn.end();
 });
 
+app.post('/data/pazienti/pazientenuovo', function(req,res,next){
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  debugger;
+  req.body.datadinascita =   req.body.datadinascita.substring(0,10);
+  var query =   'INSERT INTO artrite.paziente (NOME, COGNOME,DATA_NASCITA,CODICE_FISCALE,sesso)';
+      query +=  'VALUES( ?, ?, ?, ? ,? )';
+      var fields =  [ req.body.nome, req.body.cognome
+                      , req.body.datadinascita, req.body.codicefiscale,req.body.gender];
+
+    mysql_conn.query(query, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});
+  });
+  mysql_conn.end();
+});
 
 
 
