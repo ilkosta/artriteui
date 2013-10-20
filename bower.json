@@ -10,31 +10,59 @@
   ],
   "dependencies": {
     "console-polyfill": "~0.1.0",
-    "jquery": "~2.0.3",
-    "angular-bootstrap": "~0.5.0",
-    "angular": "1.0.7",
-    "angular-sanitize": "1.0.7",
-    "angular-resource": "1.0.7",
-    "angular-cookies": "1.0.7",
-    "angular-mocks": "1.0.7",
+    "jquery": "*",
+    
+    "angular": "*",
+    "angular-bootstrap": "*",
+    "angular-cookies": "*",
+    "angular-loader": "*",
+    "angular-resource": "*",
+    "angular-sanitize": "*",
+    "angular-scenario": "*",
+    
     "angular-i18n":  "1.0.7",
     "angular-ui-utils": "*",
     "moment":"2.1.0",
-    "lodash": "2.2.1",
+    "lodash": "*",
     "restangular": "1.1.3",
     "angular-ui-bootstrap": "0.5.0",
     "bootstrap": "3.0.0",
     "bootstrap-datepicker": "*",
-    "bootstrap-select": "*"
+    "bootstrap-select": "*",
+
+    "angular-growl": "*"
   },
   "overrides": {
-    "bootstrap-less": {
-      "ignore": [
-        "*"
-      ]
-    },
+    
+    "angular-i18n": { "main":"angular-locale_it-it.js" },
+    "angular-bootstrap": {"main": [
+      "./ui-bootstrap-tpls.js"
+    ]},
+    "angular-growl": {"main": [
+      "./build/angular-growl.js",
+      "./build/angular-growl.min.css"
+    ]},
+    "angular-ui-bootstrap": {"main": [
+      "./src/datepicker/datepicker.js"
+    ]},
+    "angular-ui-utils": {"main": [
+      "./modules/validate/validate.js"
+    ]},
+    "bootstrap-datepicker": {"main": [
+      "./js/bootstrap-datepicker.js",
+      "./js/locales/bootstrap-datepicker.it.js",
+      "./css/datepicker.css"
+    ]},
     "angular-mocks": {
       "main": "README.md"
-    }
+    },
+    "angular-scenario": {
+      "main": "README.md"
+    },
+    "angular-cookies": {
+      "main": "README.md"
+    },
+    "moment" : {"main": ["moment.js", "min/langs.min.js"]},
+    "restangular" : {"main": "./dist/restangular.js"}
   }
 }

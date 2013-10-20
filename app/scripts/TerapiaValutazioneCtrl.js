@@ -1,9 +1,9 @@
 var TerapiaValutazioneCtrl = [
   '$scope','$routeParams', 
   '$timeout', '$http','loadDataListIntoScope',
-  '$window','$log',
+  '$window','$log', 'growl', 
     function($scope, $routeParams, $timeout, $http, loadDataListIntoScope,
-        $window, $log) {
+        $window, $log, growl) {
 
       var url_tv = '/data/pazienti/' + $routeParams.idPaziente + '/terapia_valutazione';
 
@@ -25,68 +25,92 @@ var TerapiaValutazioneCtrl = [
         $http.post(url_tv + '/' + t.tempo + '/cancella', 
                    {id_paziente: $routeParams.idPaziente, tempo: t.tempo}) 
           .success(function(data, status, headers, config) {
+            growl.addSuccessMessage("Cancellata terapia tempo " + t.tempo);
             init();
           })
           .error(function(data, status, headers, config) {
             $log.error('errore nella cancellazione di\n' + t);
+            growl.addErrorMessage("errore nella cancellazione della terapia tempo " + t.tempo);
           });
       };
      
-      $scope.canSave = function() {
+      $scope.canSave = function(on_save) {
+        
+        var notify_err = function(what) {
+          if(on_save) 
+            $log.error(what);
+        }
+
         //-------------------------------
         // controlli
         //-------------------------------
         // tempo
-        if(!$scope.tv_aggiungi.tempo)  
-          return false;
-
-        if(0 !== ($scope.tv_aggiungi.tempo % 6)) {
-          $log.error('tempo % 6 errato');
+        if(0 != ($scope.tv_aggiungi.tempo % 6)) {
+          notify_err('tempo % 6 errato');
           return false;
         }
 
         if( $window._.some($scope.terapia_valutazione, function(r) { 
           return r.tempo === $scope.tv_aggiungi.tempo}) ) {
-          $log.error('tempo già esistente: ' + $scope.tv_aggiungi.tempo);
+          notify_err('tempo già esistente: ' + $scope.tv_aggiungi.tempo);
           return false;
         }
 
         // dati obbligatori
-        var obbligatori = [ $scope.tv_aggiungi.art_tumefatte,
+        var obbligatori = [ $scope.tv_aggiungi.tempo,
+                            $scope.tv_aggiungi.art_tumefatte,
                             $scope.tv_aggiungi.art_dolenti,
                             $scope.tv_aggiungi.ves,
                             $scope.tv_aggiungi.vas_medico,
                             $scope.tv_aggiungi.vas_paziente,
                             $scope.tv_aggiungi.pcr ];
         if( $window._.some(obbligatori, function(v) { return v == null; })) {
-          $log.error('ci sono valori obbligatori assenti');
+          notify_err('ci sono valori obbligatori assenti');
           return false;
         }
 
         return true;
       };
+      $scope.calculateDAS28 = function() {
+        var t28   = $scope.tv_aggiungi.art_dolenti
+          , sw28  = $scope.tv_aggiungi.art_tumefatte
+          , ESR   = $scope.tv_aggiungi.ves
+          , GH    = $scope.tv_aggiungi.vas_paziente ;
+
+        $scope.tv_aggiungi.das28 = (0.56*Math.sqrt(t28)) + (0.28*Math.sqrt(sw28)) + (0.70*Math.log(ESR)) + (0.014*GH);
+      }
 
       $scope.save = function() {
         // $scope.formState.saving = true;
         // check of diagnosi_malattia before save
         // save on /data/pazienti/:idPaziente/terapia_valutazione
-
-        if(!$scope.canSave()) 
+        var on_save = true;
+        if(!$scope.canSave(on_save)) {
+          growl.addErrorMessage("I dati non possono essere salvati");
           return;
+        }
+
         // disabilito l'aggiungi
         $scope.formState.saving = true;
 
         $scope.tv_aggiungi.id_paziente = $routeParams.idPaziente;
-
+        
+        var msg = '';
         $http.post(url_tv, $scope.tv_aggiungi ).
             success(function(data, status, headers, config) {
-              $log.info('salvataggio avvenuto con successo');
-              $scope.formState.saving = false;
+              msg = 'salvataggio avvenuto con successo del tempo ' + $scope.tv_aggiungi.tempo;
+              $log.info(msg);
+              growl.addSuccessMessage(msg);
+
+              $scope.formState.saving = false;              
               init();
             }).
-            error(function(data, status, headers, config) {              
-              $log.error('salvataggio non riuscito: ');
+            error(function(data, status, headers, config) {   
+              msg = "salvataggio non riuscito del tempo " + $scope.tv_aggiungi.tempo ;
+              growl.addSuccessMessage(msg);
+              $log.error(msg);
               $log.error($scope.tv_aggiungi);
+
               $scope.formState.saving = false;
             });
       };
