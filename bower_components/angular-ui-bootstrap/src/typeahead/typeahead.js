@@ -1,4 +1,4 @@
-angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
+angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position', 'ui.bootstrap.bindHtml'])
 
 /**
  * A helper service that can parse typeahead's syntax (string provided by users)
@@ -29,7 +29,8 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
   };
 }])
 
-  .directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$position', 'typeaheadParser', function ($compile, $parse, $q, $timeout, $document, $position, typeaheadParser) {
+  .directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$position', 'typeaheadParser',
+    function ($compile, $parse, $q, $timeout, $document, $position, typeaheadParser) {
 
   var HOT_KEYS = [9, 13, 27, 38, 40];
 
@@ -142,7 +143,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
 
       //plug into $parsers pipeline to open a typeahead on view changes initiated from DOM
       //$parsers kick-in on all the changes coming from the view as well as manually triggered by $setViewValue
-      modelCtrl.$parsers.push(function (inputValue) {
+      modelCtrl.$parsers.unshift(function (inputValue) {
 
         resetMatches();
         if (inputValue && inputValue.length >= minSearch) {
@@ -158,7 +159,12 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
           }
         }
 
-        return isEditable ? inputValue : undefined;
+        if (isEditable) {
+          return inputValue;
+        } else {
+          modelCtrl.$setValidity('editable', false);
+          return undefined;
+        }
       });
 
       modelCtrl.$formatters.push(function (modelValue) {
@@ -172,12 +178,13 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
           return inputFormatter(originalScope, locals);
 
         } else {
-          locals[parserResult.itemName] = modelValue;
 
           //it might happen that we don't have enough info to properly render input value
           //we need to check for this situation and simply return model value if we can't apply custom formatting
+          locals[parserResult.itemName] = modelValue;
           candidateViewValue = parserResult.viewMapper(originalScope, locals);
-          emptyViewValue = parserResult.viewMapper(originalScope, {});
+          locals[parserResult.itemName] = undefined;
+          emptyViewValue = parserResult.viewMapper(originalScope, locals);
 
           return candidateViewValue!== emptyViewValue ? candidateViewValue : modelValue;
         }
@@ -191,6 +198,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
         locals[parserResult.itemName] = item = scope.matches[activeIdx].model;
         model = parserResult.modelMapper(originalScope, locals);
         $setModelValue(originalScope, model);
+        modelCtrl.$setValidity('editable', true);
 
         onSelectCallback(originalScope, {
           $item: item,
@@ -198,8 +206,9 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
           $label: parserResult.viewMapper(originalScope, locals)
         });
 
-        //return focus to the input element if a mach was selected via a mouse click event
         resetMatches();
+
+        //return focus to the input element if a mach was selected via a mouse click event
         element[0].focus();
       };
 
@@ -234,9 +243,18 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
         }
       });
 
-      $document.bind('click', function(){
-        resetMatches();
-        scope.$digest();
+      // Keep reference to click handler to unbind it.
+      var dismissClickHandler = function (evt) {
+        if (element[0] !== evt.target) {
+          resetMatches();
+          scope.$digest();
+        }
+      };
+
+      $document.bind('click', dismissClickHandler);
+
+      originalScope.$on('$destroy', function(){
+        $document.unbind('click', dismissClickHandler);
       });
 
       element.after($compile(popUpEl)(scope));
@@ -304,6 +322,6 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.position'])
     }
 
     return function(matchItem, query) {
-      return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<strong>$&</strong>') : query;
+      return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<strong>$&</strong>') : matchItem;
     };
   });

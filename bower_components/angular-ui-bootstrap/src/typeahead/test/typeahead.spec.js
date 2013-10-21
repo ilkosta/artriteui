@@ -163,9 +163,26 @@ describe('typeahead tests', function () {
     });
 
     it('should support the editable property to limit model bindings to matches only', function () {
-      var element = prepareInputEl("<div><input ng-model='result' typeahead='item for item in source | filter:$viewValue' typeahead-editable='false'></div>");
+      var element = prepareInputEl("<div>ng-model='result' typeahead='item for item in source | filter:$viewValue' typeahead-editable='false'></div>");
       changeInputValueTo(element, 'not in matches');
       expect($scope.result).toEqual(undefined);
+    });
+
+    it('should set validation erros for non-editable inputs', function () {
+
+      var element = prepareInputEl(
+        "<div><form name='form'>" +
+          "<input name='input' ng-model='result' typeahead='item for item in source | filter:$viewValue' typeahead-editable='false'>" +
+          "</form></div>");
+
+      changeInputValueTo(element, 'not in matches');
+      expect($scope.result).toEqual(undefined);
+      expect($scope.form.input.$error.editable).toBeTruthy();
+
+      changeInputValueTo(element, 'foo');
+      triggerKeyDown(element, 13);
+      expect($scope.result).toEqual('foo');
+      expect($scope.form.input.$error.editable).toBeFalsy();
     });
 
     it('should bind loading indicator expression', inject(function ($timeout) {
@@ -337,6 +354,46 @@ describe('typeahead tests', function () {
 
       var inputEl = findInput(prepareInputEl("<div><input ng-model='result' typeahead='state as state.name + \" \" + state.code for state in states | filter:$viewValue'></div>"));
       expect(inputEl.val()).toEqual('');
+    });
+
+    it('issue 786 - name of internal model should not conflict with scope model name', function () {
+      $scope.state = $scope.states[0];
+      var element = prepareInputEl("<div><input ng-model='state' typeahead='state as state.name for state in states | filter:$viewValue'></div>");
+      var inputEl = findInput(element);
+
+      expect(inputEl.val()).toEqual('Alaska');
+    });
+
+    it('issue 863 - it should work correctly with input type="email"', function () {
+
+      $scope.emails = ['foo@host.com', 'bar@host.com'];
+      var element = prepareInputEl("<div><input type='email' ng-model='email' typeahead='email for email in emails | filter:$viewValue'></div>");
+      var inputEl = findInput(element);
+
+      changeInputValueTo(element, 'bar');
+      expect(element).toBeOpenWithActive(1, 0);
+
+      triggerKeyDown(element, 13);
+
+      expect($scope.email).toEqual('bar@host.com');
+      expect(inputEl.val()).toEqual('bar@host.com');
+    });
+
+    it('does not close matches popup on click in input', function () {
+      var element = prepareInputEl("<div><input ng-model='result' typeahead='item for item in source | filter:$viewValue'></div>");
+      var inputEl = findInput(element);
+
+      // Note that this bug can only be found when element is in the document
+      $document.find('body').append(element);
+      // Extra teardown for this spec
+      this.after(function () { element.remove(); });
+
+      changeInputValueTo(element, 'b');
+
+      inputEl.click();
+      $scope.$digest();
+
+      expect(element).toBeOpenWithActive(2, 0);
     });
   });
 

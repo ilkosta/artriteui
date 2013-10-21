@@ -85,7 +85,7 @@ function TabsetCtrl($scope, $element) {
     templateUrl: 'template/tabs/tabset.html',
     compile: function(elm, attrs, transclude) {
       return function(scope, element, attrs, tabsetCtrl) {
-        scope.vertical = angular.isDefined(attrs.vertical) ? scope.$eval(attrs.vertical) : false;
+        scope.vertical = angular.isDefined(attrs.vertical) ? scope.$parent.$eval(attrs.vertical) : false;
         scope.type = angular.isDefined(attrs.type) ? scope.$parent.$eval(attrs.type) : 'tabs';
         scope.direction = angular.isDefined(attrs.direction) ? scope.$parent.$eval(attrs.direction) : 'top';
         scope.tabsAbove = (scope.direction != 'below');
@@ -293,7 +293,7 @@ function($parse, $http, $templateCache, $compile) {
   }
 }])
 
-.directive('tabsetTitles', function($http) {
+.directive('tabsetTitles', ['$http', function($http) {
   return {
     restrict: 'A',
     require: '^tabset',
@@ -310,7 +310,7 @@ function($parse, $http, $templateCache, $compile) {
       }
     }
   };
-})
+}])
 
 ;
 

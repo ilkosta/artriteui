@@ -35,6 +35,8 @@ var TerapiaValutazioneCtrl = [
               })
               .error(function(data, status, headers, config) {
                 $log.error('lettura di '+ url_tv +' non riuscita!');
+                growl.addErrorMessage("Errore leggendo i dati dal server: " + url_tv 
+                                      + '\nControlla che il server sia attivo!');
               });
       }
       

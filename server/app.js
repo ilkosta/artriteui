@@ -81,16 +81,16 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
       console.log("trovati più record vdiagnosimalattia per idPaziente = ",req.params.idPaziente);
       throw err;
     }
-      
+    
     res.send(rows[0]);    
   });
   mysql_conn.end();
 });
 
 
-app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
+app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
   // controllo dei dati ricevuti
-  debugger;
+  //debugger;
 // anticorpi: "no"
 // cod_malattia: 10
 // cod_tipo_malattia: "ric"
@@ -104,7 +104,7 @@ app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
 // nome: "Costantino"
 
   function notify_problem(what) {
-    res.send(50,{err:what}); // TODO.... da sistemare
+    res.send(500,{err:what}); // TODO.... da sistemare
   }
 
   function getNewConn() {
@@ -153,10 +153,10 @@ app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   // INIZIO metodo normale
 
   // assumo la connessione come aperta...
-  mysql_conn.query('select risposta from artrite.tipo_risposta', function(err,r,fileds) {
+  mysql_conn.query('select risposta from artrite.tipo_risposta', function(err,r,fields) {
     if(err) throw err;
 
-    var risposte_usabili = _.pluck(r,fields[0]);
+    var risposte_usabili = _.pluck(r,fields[0].name);
     if( _.difference( risposte_usate , risposte_usabili ).length > 0 )
       return notify_problem(err);
   });
@@ -166,41 +166,91 @@ app.put('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
 
 
   // regola di validità: una diagnosi per paziente?
-  var qry =   'select count(*) as num';
-      qry +=    'min(iddiagnosi_malattia) as first_id';
-      qry +=  'from artrite.diagnosi_malattia'; 
-      qry +=  'where id_paziente = ?';
+  var qry  =  'select count(*) as num';
+      qry +=  ' , min(iddiagnosi_malattia) as first_id';
+      qry +=  ' from artrite.diagnosi_malattia'; 
+      qry +=  ' where id_paziente = ?';
   
   mysql_conn = getNewConn();
   mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
-    var nr_diagnosi = r[0][fields[0]];
+    if(err) throw err;
+    var nr_diagnosi = r[0][fields[0].name];
     if( nr_diagnosi > 1 ) {
       return notify_problem(err);
     }
   });
   mysql_conn.end();
 
-  qry  = 'update diagnosi_malattia';
-  qry += 'set anticorpi = ?';
-  qry += '  , cod_malattia = ?';
-  qry += '  , data_diagnosi = ?';
-  qry += '  , fattore_reumatoide = ?';
-  qry += '  , iddiagnosi_malattia = ?';
-  qry += 'where id_paziente = ?';
 
   mysql_conn = getNewConn();
-  mysql_conn.query(qry, [ req.body.anticorpi
-                        , req.body.cod_malattia
-                        , req.body.data_diagnosi.substring(0,10)
-                        , req.body.fattore_reumatoide
-                        , req.body.iddiagnosi_malattia
-                        , req.params.idPaziente], function(err, result) {
-    if(err) 
-      notify_problem(err);
-    res.send(200, result);
-  });
+  mysql_conn.beginTransaction( function(err) {
+    if (err) { throw err; }
+    qry  =  "SELECT iddiagnosi_malattia";
+    qry += " FROM   artrite.diagnosi_malattia";
+    qry += " WHERE  id_paziente = ?";
+    mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
+      if (err) { 
+        mysql_conn.rollback(function() {
+          throw err;
+        });
+      }
+      if(r.length === 1) {
+        var id = r[0][fields[0].name];
+        qry  = 'update diagnosi_malattia';
+        qry += ' set anticorpi = ?';
+        qry += '   , cod_malattia = ?';
+        qry += '   , data_diagnosi = ?';
+        qry += '   , fattore_reumatoide = ?';
+        qry += '   , iddiagnosi_malattia = ?';
+        qry += ' where iddiagnosi_malattia = ?';
 
-  mysql_conn.end();
+        mysql_conn.query(qry, [ req.body.anticorpi
+                              , req.body.cod_malattia
+                              , req.body.data_diagnosi.substring(0,10)
+                              , req.body.fattore_reumatoide
+                              , req.body.iddiagnosi_malattia
+                              , id], function(err, result) {
+          if(err) 
+            notify_problem(err);
+
+          mysql_conn.commit(function(err) {
+            if (err) { 
+              mysql_conn.rollback(function() {
+                throw err;
+              });
+            }
+            else 
+              res.send(200, result);
+          });
+        });
+      }
+      else {
+        
+        qry  = 'INSERT INTO diagnosi_malattia';
+        qry += ' (anticorpi, cod_malattia, data_diagnosi, fattore_reumatoide, id_paziente)';
+        qry += ' VALUES(?, ?, ?, ?, ?)';
+
+        mysql_conn.query(qry, [ req.body.anticorpi
+                              , req.body.cod_malattia
+                              , req.body.data_diagnosi.substring(0,10)
+                              , req.body.fattore_reumatoide
+                              , req.params.idPaziente ], function(err, result) {
+          if(err) 
+            notify_problem(err);
+
+          mysql_conn.commit(function(err) {
+            if (err) { 
+              mysql_conn.rollback(function() {
+                throw err;
+              });
+            }
+            else 
+              res.send(200, result);
+          });
+        });
+      }
+    });
+  });
 });
 
 
@@ -308,20 +358,20 @@ app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res,
     var mysql_conn = mysql_connector.createConnection();
     mysql_conn.connect();
    
-    var query =   'DELETE FROM artrite.terapia_concomitante ';
-        query +=  'WHERE id_terapia = ? and id_paziente = ?'  
+    var query =   'DELETE FROM artrite.terapia_concomitante';
+        query +=  ' WHERE id_terapia = ? and id_paziente = ?'  
     var fields =  [ req.body[0].id_terapia,  req.body[0].id_paziente ];
 
     //insert 
     var query_ins ='INSERT INTO artrite.terapia_concomitante (id_terapia,id_tipo_farmaco,dose,id_paziente )';
-        query_ins += 'VALUES ( ?, ?, ?, ? )';
+        query_ins += ' VALUES ( ?, ?, ?, ? )';
 
 
     function getFieldsIns(r) {
       return [ r.id_terapia, r.id_tipo_farmaco, r.dose,  r.id_paziente ];
     }
 
-    debugger;
+    //debugger;
     mysql_conn.beginTransaction(function(err) {
       if (err) { throw err; }
       mysql_conn.query(query, fields, function(err, result) {
@@ -364,7 +414,7 @@ app.get ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next)
   mysql_conn.connect();
   var pazienti;
   // query
-  debugger;
+  //debugger;
     mysql_conn.query('select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?', [req.params.idPaziente]  
                 , function(err, rows, fields) {
         if (err) throw err;
@@ -382,7 +432,7 @@ app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next
   
   req.body.data_inizio =   req.body.data_inizio.substring(0,10);
   var query =   'INSERT INTO artrite.terapia (id_paziente, data_inizio)';
-      query +=  'VALUES ( ?, ?)'  
+      query +=  ' VALUES ( ?, ?)'  
   
   var fields =  [ req.body.id_paziente , req.body.data_inizio ];
 
@@ -397,7 +447,7 @@ app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next)
   if( req.params.idPaziente != req.body.id_paziente)
       res.send(500);
   // apertura connessione db
-  debugger;
+  //debugger;
   var mysql_conn = mysql_connector.createConnection();
   mysql_conn.connect();
   
@@ -481,10 +531,10 @@ app.post('/data/pazienti/pazientenuovo', function(req,res,next){
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
   mysql_conn.connect();
-  debugger;
+  //debugger;
   req.body.datadinascita =   req.body.datadinascita.substring(0,10);
   var query =   'INSERT INTO artrite.paziente (NOME, COGNOME,DATA_NASCITA,CODICE_FISCALE,sesso)';
-      query +=  'VALUES( ?, ?, ?, ? ,? )';
+      query +=  ' VALUES( ?, ?, ?, ? ,? )';
       var fields =  [ req.body.nome, req.body.cognome
                       , req.body.datadinascita, req.body.codicefiscale,req.body.gender];
 

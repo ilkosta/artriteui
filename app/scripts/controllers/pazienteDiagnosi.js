@@ -4,14 +4,16 @@
 
   mod.controller('PazienteDiagnosiEditCtrl', [
     '$scope', '$location', '$routeParams',
-    'Restangular', '$http', 'calendar' , 
+    '$http', 'calendar' , 'growl', 
     'loadDataListIntoScope', 'decodeCodesInObject',
     function(
         $scope,$location, $routeParams,
-        Restangular, $http, calendar,
+        $http, calendar, growl,
         loadDataListIntoScope, decodeCodesInObject) {
 
       $scope.formState = {};
+
+      var data_url = '/data/pazienti/' + $routeParams.idPaziente + '/diagnosimalattia';
 
       var Init = function() {
 
@@ -21,23 +23,20 @@
           function(p) { return '/data/_' + p;}
         );
 
-        Restangular.one('pazienti', $routeParams.idPaziente).one('diagnosimalattia').get()
-        .then(function(diagnosi_malattia){
-          $scope.diagnosi = diagnosi_malattia;
-
-          $scope.master   = Restangular.copy($scope.diagnosi);
-        },
-        // err
-        function(response) {
-          // alert ?
-          // funzione comune ?
-          console.log(response);
-        });
+        $http.get(data_url)
+          .success(function(data, status, headers, config) {
+            $scope.diagnosi = data || {};
+            $scope.master   = angular.copy($scope.diagnosi);
+          })
+          .error(function(data, status, headers, config) {
+            growl.addErrorMessage("Errore nel caricamento della diagnosi del paziente.\nControlla la connessione al server!");
+            $scope.diagnosi = $scope.master = {};
+          });
       };
 
 
       $scope.Cancel = function() {
-        $scope.diagnosi = Restangular.copy( $scope.master );
+        $scope.diagnosi = angular.copy( $scope.master );
         // or call $scope.Init() to reload
       };
       
@@ -67,18 +66,19 @@
           .as('malattia').is_to('descrizione')
           .by('cod_malattia');
 
-        $scope.diagnosi.put()
-          .then(
-            // success
-            function() {
-              console.log('salvataggio avvenuto con successo');
-              $scope.formState.saving = false;
-            },
-            // error
-            function() {
-              console.log('errore nel salvataggio');
-              $scope.formState.saving = false;
-          });
+        $http.post(data_url, $scope.diagnosi)
+          .success(function(data, status, headers, config) {
+                growl.addSuccessMessage("Diagnosi salvata con successo");
+                $scope.formState.saving = false;
+                Init();
+              })
+              .error(function(data, status, headers, config) {
+                var msg  = "Salvataggio della diagnosi fallito!<br>";
+                    msg += "data:   " + data + "<br>";
+                    msg += "status: " + status;
+                growl.addErrorMessage(msg);
+                $scope.formState.saving = false;
+              });
       };
 
       $scope.isUnchanged  = function(diagnosi) {
