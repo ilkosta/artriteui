@@ -16,10 +16,14 @@ npm-debug.log
 test/test-results.xml
 
 # Bower stuff.
-bower_components/*
+bower_components/
 
 *conflicted copy*
 .directory
 
 app/partials/*.html
 
+chestavofacendo.txt
+
+*.tar*
+*.leo

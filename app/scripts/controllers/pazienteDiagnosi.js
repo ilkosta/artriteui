@@ -34,6 +34,22 @@
           });
       };
 
+      $scope.decodeTipoRisposta = function(tr) {
+        var img_txt = '';
+        switch(tr.risposta) {
+          case "si"   : img_txt = 'ok-sign';        break;
+          case "no"   : img_txt = 'minus-sign';     break;
+          case "forse": img_txt = 'question-sign';  break;
+        }
+        return '<i class=\".glyphicon..glyphicon-' + img_txt + '\"></i>&nbsp;' + tr;
+      }
+
+      $scope.getTipiRisposta = function() {
+        var tipi_risp = _.map($scope.tipo_risposta, function(ts) {
+          switch(ts.risposta) {}
+        });
+        return tipi_risp;
+      }
 
       $scope.Cancel = function() {
         $scope.diagnosi = angular.copy( $scope.master );

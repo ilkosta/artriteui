@@ -23,14 +23,14 @@
     "angular-i18n":  "*",
     "angular-ui-utils": "*",
 
-    "moment":"2.1.0",
+    "moment":"*",
     "lodash": "*",
     "restangular": "1.1.3",
     "angular-ui-bootstrap": "*",
 
     "angular-strap": "*",
 
-    "bootstrap": "3.0.0",
+    "bootstrap": ">=3.0.0",
     "bootstrap-datepicker": "*",
     "bootstrap-select": "*",
 
