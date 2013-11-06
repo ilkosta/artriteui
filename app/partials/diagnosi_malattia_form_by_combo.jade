@@ -34,6 +34,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         //-.form-group    
         label.inline-field Fattore Reumatoide
           select.selectpicker.form-control(
+            class='selectpicker'
             ng-required='true'
             ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
             ng-model='diagnosi.fattore_reumatoide')
@@ -42,6 +43,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         //-.form-group
         label.inline-field Anticorpi
           select.selectpicker.form-control(
+            class='selectpicker'
             ng-required='true'
             ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
             ng-model='diagnosi.anticorpi')
