@@ -2,13 +2,17 @@ var momentFilters = angular.module('momentFilters',[]);
 
 momentFilters.filter('fromNow', function() {
   return function(dateString) {
-    return moment(dateString).fromNow();
+    return (dateString != null) ? moment(dateString).fromNow() : '';
   };
 });
 // moment filter factory
 function getMomentDiffBy(param) {
   return function() {
     return function(dateString) {
+      
+      if(dateString == null) 
+        return '';
+
       var a = moment();
       var b = moment(dateString);
       return a.diff(b, param);

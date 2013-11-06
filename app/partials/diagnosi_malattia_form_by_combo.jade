@@ -3,20 +3,37 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
     br
     form( novalidate , role='form', name='form' )
       fieldset
-        label.inline-field Data diagnosi
-          .form-horizontal
-            input( 
-              name='data_diagnosi'
-              type='text'
-              datepicker-popup='dd-MM-yyyy'
-              datepicker-options='dateOptions'
-              ng-required='true'
-              ng-model='diagnosi.data_diagnosi'
-              open='calendarOpened'
-              ui-validate='dataDiagnosiValida($value)')
+        .col-xs-12.col-md-6
+          label.inline-field Data diagnosi
+            .form-horizontal
+              input( 
+                name='data_diagnosi'
+                type='text'
+                datepicker-popup='dd-MM-yyyy'
+                datepicker-options='dateOptions'
+                ng-required='true'
+                ng-model='diagnosi.data_diagnosi'
+                open='calendarOpened'
+                ui-validate='dataDiagnosiValida($value)')
 
-            button.btn(ng-click='openCalendar()')
-              i.glyphicon.glyphicon-calendar
+              button.btn(ng-click='openCalendar()')
+                i.glyphicon.glyphicon-calendar
+
+        .col-xs-12.col-md-6
+          label.inline-field Data infusione
+            .form-horizontal
+              input( 
+                name='data_infusione'
+                type='text'
+                datepicker-popup='dd-MM-yyyy'
+                datepicker-options='dateOptions'
+                ng-required='true'
+                ng-model='diagnosi.data_diagnosi'
+                open='calendarOpened'
+                ui-validate='dataInfusioneValida($value)')
+
+              button.btn(ng-click='openCalendar()')
+                i.glyphicon.glyphicon-calendar
               
         .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )
           p Data non valida
