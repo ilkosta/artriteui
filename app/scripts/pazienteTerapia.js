@@ -1,10 +1,10 @@
 var TerapiaEditCtrl = [
   '$scope','$routeParams', 
   '$timeout','openCalendar', '$http','loadDataListIntoScope',
-  '$window','$log',
+  '$window','$log','growl', 
     function($scope, $routeParams, 
         $timeout, openCalendar,$http,loadDataListIntoScope,
-        $window,$log) {
+        $window,$log, growl) {
 
       // constraints
       var tc_unchanged = function() {
@@ -22,6 +22,8 @@ var TerapiaEditCtrl = [
         })
       .error(function(data, status, headers, config) {
         $log.error('lettura di Terapia Paziente non riuscita!');
+        growl.addErrorMessage("lettura di Terapia Paziente non riuscita! IdPaziente :" + $routeParams.idPaziente 
+                              + ' \nControlla che il server sia attivo!');
         });
 
       $scope.openCalendar = openCalendar($scope);
@@ -46,6 +48,7 @@ var TerapiaEditCtrl = [
         })
       .error(function(data, status, headers, config) {
         $log.error('lettura di Terapia terapie_concomitanti non riuscita!');
+        growl.addErrorMessage('Lettura di Terapia terapie_concomitanti non riuscita! \nControlla che il server sia attivo!');
         });
 
   
@@ -54,8 +57,12 @@ var TerapiaEditCtrl = [
       $scope.Save = function() {
         $scope.formState.saving = true;
         // fai controlli di validità
-        if($scope.terapia.data_inizio == null)
-           {$log.error('data terapia obbligatoria');return false;} 
+        if($scope.terapia.data_inizio == null){
+            $log.error('data terapia obbligatoria');
+            growl.addErrorMessage('Data terapia obbligatoria');
+            $scope.formState.saving=false;
+            return false;
+          } 
 
         if($scope.terapia.id_paziente == null)
             {$scope.terapia.id_paziente = $routeParams.idPaziente;}
@@ -63,11 +70,13 @@ var TerapiaEditCtrl = [
             $http.put('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco', $scope.terapia )
                 .success(function(data, status, headers, config) {
                     $log.info('Aggiornamento avvenuto con successo');
+                    growl.addSuccessMessage("Aggiornamento avvenuto con successo");
                     $scope.formState.saving = false;    
                     salvaTerapiaConcomitante($scope.terapia.idterapia);
                   })
                 .error(function(data, status, headers, config) {              
-                    $log.error('Aggiornamento non riuscito: ');
+                    $log.error('Aggiornamento non riuscito per la terapia del paziente :' + $scope.terapia.id_paziente );
+                    growl.addErrorMessage('Aggiornamento non riuscito per la terapia del paziente :' + $scope.terapia.id_paziente);
                     $scope.formState.saving = false;
 
                 });
@@ -76,11 +85,13 @@ var TerapiaEditCtrl = [
                $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco', $scope.terapia )
               .success(function(data, status, headers, config) {
                   $log.info('salvataggio avvenuto con successo');
+                  growl.addSuccessMessage("Aggiornamento TERAPIA FARMACOLOGICA avvenuta con successo");
                   $scope.formState.saving = false;   
                   salvaTerapiaConcomitante(data.insertId); 
                 })
               .error(function(data, status, headers, config) {              
                   $log.error('salvataggio non riuscito: ');
+                  growl.addErrorMessage('Aggiornamento non riuscito per la terapia farmaco del paziente :' + $scope.terapia.id_paziente);
                   $scope.formState.saving = false;
                 });
         }
