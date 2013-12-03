@@ -1,0 +1,18 @@
+div(ng-controller='fattoriRischioCtrl')
+  .content
+    br
+    form.form-horizontal(novalidate , name='form_fattori_rischio')  
+      h4 Fattori di rischio
+      br
+      .row
+        .col-xs-7
+          .control-group              
+            label.horizontal-field Fattori
+              select.form-control(
+                ng-options='fdr.idtipo_malattia as fdr.descrizione for fdr in fattori_rischio'
+                ng-model='fdr.idtipo_malattia')
+      .row
+        .col-xs-5.col-md-offset-2
+          button.btn.btn-primary(
+            ng-click='salvaFattore(fdr)'
+            ng-disabled='formState.saving') Salva 
