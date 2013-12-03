@@ -347,8 +347,23 @@ app.get ('/data/_fattori_rischio' , function(req, res, next) {
   mysql_conn.end();
 });
 
+//fattori_di_rischio
+app.get ('/data/pazienti/:idPaziente/fattori_di_rischio' , function(req, res, next) {
+    // apertura connessione db
+    var mysql_conn = mysql_connector.createConnection();
+    mysql_conn.connect();
+    // query
+    mysql_conn.query('SELECT a.*, t.descrizione as tipo_malattia '+ 
+                     'FROM artrite.anamnesi a inner join artrite.tipo_malattia t on a.id_tipo_malattia= t.idtipo_malattia '+ 
+                     'where t.cod_tipo_malattia = \'fdr\' and  a.id_paziente=?',[req.params.idPaziente] , function(err, rows, fields) {
+    if (err) throw err;
+    res.send(rows);    
+  });
+  mysql_conn.end();
+});
 
- app.get ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, res, next) {
+
+app.get ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, res, next) {
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
   mysql_conn.connect();
@@ -384,7 +399,6 @@ app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, re
 });
 
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , function(req, res, next) {
- debugger;
   if(req.body!= null ) {
     if( req.params.idPaziente != req.body.id_paziente)
          res.send(500);
