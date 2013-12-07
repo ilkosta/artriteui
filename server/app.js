@@ -9,6 +9,8 @@ var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 var _    = require('lodash');
+var moment = require('moment');
+
 // personal libs
 var mysql_connector = require('./db/config.js');
 
@@ -88,6 +90,192 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
 });
 
 
+app.get('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+
+  // query
+    var qry   =  'SELECT data_infusione from artrite.infusioni_tcz';
+        qry  += ' where id_paziente =?';
+        qry  += ' order by data_infusione desc';
+    mysql_conn.query(qry, [req.params.idPaziente]  , function(err, rows, fields) {
+    if (err) throw err;
+    
+    res.send(rows);    
+  });
+  mysql_conn.end();
+});
+
+app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
+
+  function notify_problem(res,qry,what,conn) {
+    console.log("errore eseguendo: " + qry);
+    console.log(what);
+    res.send(500,{err:what}); // TODO.... da sistemare
+    if(conn) 
+      conn.rollback();
+  }
+
+  // promise that return (r, fields) della query
+  function mkPromiseSelect(conn, qry, params) {
+    // var deferred = Q.defer();
+    // mysql_conn.query(qry, params, function(err, r, fields) {
+    //   if (err) { 
+    //     notify_problem(res,qry,err);
+    //     deferred.reject(err);        
+    //   }
+    //   else deferred.resolve(err, r ,fields);
+    // });
+
+    // return deferred.promise;
+  }
+
+  // function mkPromiseCmd(conn, qry, params) {
+  //   var deferred = Q.defer();
+  //   mysql_conn.query(qry, params, function(err, r) {
+  //     if (err) { 
+  //       notify_problem(res,qry,err);
+  //       deferred.reject(err);
+  //     }
+  //     else deferred.resolve(err, r);
+  //   });
+
+  //   return deferred.promise;
+  // }
+
+
+  // function infusioniPaziente(conn, idPaziente) {
+    
+  //   var qry =   "SELECT data_infusione";
+  //       qry += " FROM   artrite.infusioni_tcz";
+  //       qry += " WHERE  id_paziente = ?";
+    
+  //   return mkPromiseSelect(conn, qry, idPaziente);
+  // }
+
+
+  // function deleteInfusioni(conn, idPaziente, date_infusioni) {
+  //   var qry = "DELETE from artrite.infusioni_tcz WHERE id_paziente = ? and data_infusione in (?)";
+  //   var par = date_infusioni;
+  //   par.splice(0,0,idPaziente);
+  //   //return mkPromiseCmd(conn, qry, par);
+  //   return Q.ninvoke(conn.query, qry, par);
+  // }
+
+
+  // function insInfusioni(conn, idPaziente, date_infusioni) {
+  //   var qry = "INSERT INTO artrite.infusioni_tcz(id_paziente,data_infusione) VALUES(?,?)";
+  //   return Q.all( _.map(date_infusioni, function(d) { 
+  //     //return mkPromiseCmd(cmd, qry, [idPaziente, d]);
+  //     return Q.ninvoke(conn.query, qry, [idPaziente, d]);
+  //   }));
+  // }
+
+  //-------------------------------------
+  // by using conn
+  //   select(qry, params)
+  //     then calculate new_parameters
+  //       then del( qry, params1 )
+  //       and  ins( qry, params2 )
+  //-------------------------------------
+
+
+  // infusioniPaziente(mysql_conn, req.params.idPaziente)
+  //   .then(function(err,r,f) { 
+  //     var vecchie_infusioni       = r
+  //       , infusioni_ricevute      = _.uniq(req.body)
+  //       , infusioni_da_cancellare = _.difference( vecchie_infusioni, infusioni_ricevute)
+  //       , nuove_infusioni         = _.difference( infusioni_ricevute, vecchie_infusioni);
+  //     return (deleteInfusioni(conn, req.params.idPaziente, infusioni_da_cancellare))
+  //       .then(function(err, result) {
+  //         return insInfusioni(conn, idPaziente, nuove_infusioni);
+  //       });
+  //   })    
+  //   .then(function(err, result) {
+  //     return Q.ninvoke(mysql_conn.commit);
+  //   })
+  //   .catch(function(err) {
+  //     notify_problem('','',err);
+  //     return Q.ninvoke(mysql_conn.rollback);
+  //   });
+
+  var isValidDate = function(_d) {
+    if(!_d) return false;
+    var d = moment(_d);
+    var valid = d.isValid();
+    valid = valid && d.isBefore(moment().add('days',1));
+    valid = valid && d.isAfter(moment().subtract('years',10));
+    return valid;
+  };
+
+  if(req.body.length == 0) return;
+
+  var db = mysql_connector.createConnection();
+  db.connect();
+  db.beginTransaction( function(err) {
+    if (err) notify_problem(res,'connection',err);
+
+    var qry =   "SELECT REPLACE( DATE_FORMAT(data_infusione,GET_FORMAT(DATE,'ISO')), \".\",\"-\") AS data_infusione";
+    //var qry =   "SELECT  data_infusione";
+        qry += " FROM   artrite.infusioni_tcz";
+        qry += " WHERE  id_paziente = ?";
+    db.query(qry, [req.params.idPaziente], function(err, r, f) {
+      if (err) notify_problem(res,qry,err,db);
+      
+
+      // var vecchie_infusioni       = _(r).pluck('data_infusione').map(moment_with_format).value();
+      // var infusioni_ricevute      = _(req.body).pluck('data_infusione').filter(isValidDate).uniq().map(moment).map(function(d) { return d.utc().format(); }).value();
+      // var infusioni_eliminate     = _.difference( vecchie_infusioni, infusioni_ricevute);
+      // var nuove_infusioni         = _.difference( infusioni_ricevute, vecchie_infusioni);
+
+      var vecchie_infusioni       = _(r).pluck('data_infusione').value();
+      var infusioni_ricevute      = _(req.body).pluck('data_infusione').value();
+          infusioni_ricevute      = _(infusioni_ricevute).filter(isValidDate).value();
+          infusioni_ricevute      = _(infusioni_ricevute).uniq().map(function(d) { 
+            return moment(d).format('YYYY-MM-DD'); }).value();
+      var infusioni_eliminate     = _.difference( vecchie_infusioni, infusioni_ricevute);
+      var nuove_infusioni         = _.difference( infusioni_ricevute, vecchie_infusioni);
+      
+
+      // --------- allineo il db in parallelo----------
+      if(infusioni_eliminate.length > 0) {
+        qry = "DELETE from artrite.infusioni_tcz WHERE id_paziente = ? and data_infusione in (?)";
+        db.query(qry, [req.params.idPaziente, infusioni_eliminate ], function(err) {
+          if (err) notify_problem(res,qry,err,db);
+          else if(nuove_infusioni.length == 0)
+            db.commit(function(err) {
+              if(err) notify_problem(res,'commit',err,db);
+              else res.send('ok');
+            });
+        });
+      }
+
+      if(nuove_infusioni.length > 0) {
+        qry = "INSERT INTO artrite.infusioni_tcz(id_paziente,data_infusione) VALUES(?,?)";
+        var insNuovaInf = function(data_inf) {
+          if(data_inf.length === 0) 
+            return;
+
+          var d_infusione = data_inf.splice(0,1)[0];
+          db.query(qry, [req.params.idPaziente, d_infusione], function(err) {
+            if(err) notify_problem(res,qry,err,db);
+            if(data_inf.length > 0)
+              return insNuovaInf(data_inf);
+
+            // else  
+            db.commit(function(err) {
+              if(err) notify_problem(res,'commit',err,db);
+              else res.send('ok');
+            });
+          });
+        };   
+        insNuovaInf(nuove_infusioni);
+      }
+    });
+  });
+});
+
 app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
   // controllo dei dati ricevuti
   //debugger;
@@ -108,6 +296,7 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
   }
 
   function getNewConn() {
+    
     var mysql_conn = mysql_connector.createConnection();
     mysql_conn.connect();
     return mysql_conn;
@@ -359,7 +548,7 @@ app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res,
     mysql_conn.connect();
    
     var query =   'DELETE FROM artrite.terapia_concomitante';
-        query +=  ' WHERE id_terapia = ? and id_paziente = ?'  
+        query +=  ' WHERE id_terapia = ? and id_paziente = ?';
     var fields =  [ req.body[0].id_terapia,  req.body[0].id_paziente ];
 
     //insert 
@@ -432,7 +621,7 @@ app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next
   
   req.body.data_inizio =   req.body.data_inizio.substring(0,10);
   var query =   'INSERT INTO artrite.terapia (id_paziente, data_inizio)';
-      query +=  ' VALUES ( ?, ?)'  
+      query +=  ' VALUES ( ?, ?)';
   
   var fields =  [ req.body.id_paziente , req.body.data_inizio ];
 

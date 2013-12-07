@@ -8,7 +8,8 @@ angular.module('utils_bootstrap',[]) // create the module
         init: function(options) {
           $scope.dateOptions = options || {
     //         'year-format': "'yyyy'",
-             'starting-day': 1
+             'starting-day': 1,
+             'month-format': 'MM'
           };
         },
         

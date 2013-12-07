@@ -3,67 +3,160 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
     br
     form( novalidate , role='form', name='form' )
       fieldset
-        .col-xs-12.col-md-6
-          label.inline-field Data diagnosi
-            .form-horizontal
-              input( 
-                name='data_diagnosi'
-                type='text'
-                datepicker-popup='dd-MM-yyyy'
-                datepicker-options='dateOptions'
-                ng-required='true'
-                ng-model='diagnosi.data_diagnosi'
-                open='calendarOpened'
-                ui-validate='dataDiagnosiValida($value)')
-
-              button.btn(ng-click='openCalendar()')
-                i.glyphicon.glyphicon-calendar
-
-        .col-xs-12.col-md-6
-          label.inline-field Data infusione
-            .form-horizontal
-              input( 
-                name='data_infusione'
-                type='text'
-                datepicker-popup='dd-MM-yyyy'
-                datepicker-options='dateOptions'
-                ng-required='true'
-                ng-model='diagnosi.data_diagnosi'
-                open='calendarOpened'
-                ui-validate='dataInfusioneValida($value)')
-
-              button.btn(ng-click='openCalendar()')
-                i.glyphicon.glyphicon-calendar
+        .row
+          .col-xs-12.col-md-6(style="margin-left:20px;")
+            .row 
               
-        .aler.alert-danger( ng-show='form.data_diagnosi.$error.validator' )
-          p Data non valida
-        
-        br
-        br
-        //-.form-group
-        label.inline-field Malattia
-          select.selectpicker.form-control(
-            ng-required='true'
-            ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
-            ng-model='diagnosi.cod_malattia')
-            //-option(value='') ----------
-        
-        //-.form-group    
-        label.inline-field Fattore Reumatoide
-          select.selectpicker.form-control(
-            class='selectpicker'
-            ng-required='true'
-            ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
-            ng-model='diagnosi.fattore_reumatoide')
-            //-option(value='') ----------
+                label.inline-field Data diagnosi
+                .form-horizontal
+                  input( 
+                    name='data_diagnosi'
+                    type='text'
+                    datepicker-popup='dd-MM-yyyy'
+                    datepicker-options='dateOptions'
+                    ng-required='true'
+                    ng-model='diagnosi.data_diagnosi'
+                    open='calendarOpened'
+                    ui-validate='dataDiagnosiValida($value)' )
+            br
+            .row
+              
+                label.inline-field Malattia
+                  select.selectpicker.form-control(
+                    ng-required='true'
+                    ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
+                    ng-model='diagnosi.cod_malattia')
+                    //-option(value='') ----------  
+                //-.form-group    
+                label.inline-field Fattore Reumatoide
+                  select.selectpicker.form-control(
+                    class='selectpicker'
+                    ng-required='true'
+                    ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
+                    ng-model='diagnosi.fattore_reumatoide')
+                    //-option(value='') ----------            
 
-        //-.form-group
-        label.inline-field Anticorpi
-          select.selectpicker.form-control(
-            class='selectpicker'
-            ng-required='true'
-            ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
-            ng-model='diagnosi.anticorpi')
-            //-option(value='') ----------
-  
-  div(ng-include="'/partials/diagnosi_footer.html'")
+                //-.form-group
+                label.inline-field Anticorpi
+                  select.selectpicker.form-control(
+                    class='selectpicker'
+                    ng-required='true'
+                    ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
+                    ng-model='diagnosi.anticorpi')
+                    //-option(value='') ----------          
+            .row
+              .col-md-11(ng-include="'/partials/diagnosi_footer.html'")
+
+          .col-xs-12.col-md-5
+            .row 
+              button.btn(
+                  ng-hide='inQuestoMese(infusioni[0].data_infusione) || formState.ins_infusione'
+                  ng-click='formState.ins_infusione = true'
+                  )
+                i.glyphicon.glyphicon-plus-sign
+                | &nbsp;
+                | Aggiungi Infusione
+              
+
+              // ctrl data di infusione
+              // div(ng-show='formState.ins_infusione')
+                label.inline-field Data infusione
+                  .form-horizontal
+                    input( 
+                      name='data_infusione'
+                      type='text'
+                      datepicker-popup='dd-MM-yyyy'
+                      datepicker-options='dateOptions'
+                      datepicker-month-format='MM'
+                      ng-required='false'
+                      ng-model='nuova_infusione'
+                      open='calendarOpened'
+                      ui-validate='dataInfusioneValida($value)')
+                button.btn.btn-success(
+                  ng-disabled='inQuestoMese(nuova_infusione)'                
+                  ng-click='add_infusione()') ok
+
+              div(ng-show='formState.ins_infusione')
+                label.inline-field Data infusione
+                  .form-horizontal
+                    input( 
+                      name='data_infusione'
+                      type='text'
+                      datepicker-popup='dd-MM-yyyy'
+                      datepicker-options='dateOptions'
+                      datepicker-month-format='MM'
+                      ng-required='false'
+                      ng-model='nuova_infusione'
+                      open='calendarOpened'
+                      ui-validate='dataInfusioneValida($value)')
+                button.btn.btn-success(
+                  ng-click='add_infusione()') ok
+            br
+            .row.alert.alert-info(ng-show='infusioni.length > 0')              
+              .row
+                .col-md-4
+                  p
+                    strong Ultima infusione:
+                  p(ng-show='infusioni.length > 1')
+                    span di &nbsp;
+                      span.badge {{infusioni.length}}      
+                      | &nbsp; infusioni
+
+                  p(ng-show='infusioni.length > 1')
+                    button.btn( 
+                      ng-show='infusioni.length > 1 && !formState.show_infusioni' 
+                      data-toggle='tooltip'
+                      ng-click='formState.show_infusioni = !formState.show_infusioni'
+                      data-original-title='mostra l\'elenco delle infusioni')
+                      i.glyphicon.glyphicon-eye-open
+                      | &nbsp; Mostra 
+
+                    button.btn( 
+                      ng-show='infusioni.length > 1 && formState.show_infusioni' 
+                      data-toggle='tooltip'
+                      ng-click='formState.show_infusioni = !formState.show_infusioni'
+                      data-original-title='nascondi l\'elenco delle infusioni')
+                      i.glyphicon.glyphicon-eye-close
+                      | &nbsp; Nascondi
+
+                .col-md-8
+                  p 
+                    span.lead {{ infusioni[0].data_infusione | date:'EEEE dd/MM/yyyy'}}
+                  p ({{ infusioni[0].data_infusione | daysFromNow }} giorni fa)                  
+                  
+                  // elenco delle infusioni
+                  .fade.in(ng-show='infusioni.length > 1 && formState.show_infusioni' )                  
+                    strong precedenti infusioni: 
+                    button.close(
+                      aria-hiden='true'
+                      data-dismiss='alert')
+                    //ul
+                    ul.list-inline                    
+                      li(ng-repeat='i in infusioni',style="padding-right:10px;")
+                        {{infusioni.length - $index}}) {{i.data_infusione | date:'dd/MM/yyyy'}}
+                        button.btn.btn-xs.btn-danger(
+                          ng-click="setInfToDelete($index)"
+                          data-toggle="modal"
+                          data-target="#cancella_infusione_dlg")
+                          //i.glyphicon.glyphicon-minus-sign
+                          i.glyphicon.glyphicon-trash
+                  
+            
+
+  #cancella_infusione_dlg.modal.fade(
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="cancella_infusione_title"
+    aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type="button", data-dismiss="modal", aria-hidden="true")&times;
+          h4#cancella_infusione_title.modal-title Cancellazione infusione
+        .modal-body
+          p Sei sicuro di voler cancellare l'infusione di 
+            strong {{ infusioni[formState.infusione_da_cancellare].data_infusione | date:"EEEE dd/MM/yyyy"}} 
+            | ?
+        .modal-footer
+          button.btn.btn-default(data-dismiss="modal") Annulla
+          button.btn.btn-danger(data-dismiss="modal", ng-click="cancellaInfusione()") Elimina

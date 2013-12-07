@@ -12,8 +12,34 @@
         loadDataListIntoScope, decodeCodesInObject) {
 
       $scope.formState = {};
+      
+      
+      $scope.$watch('$scope.nuova_infusione', function(n,v) {
+        console.log('data cambiata: ' + n);
+      });
 
-      var data_url = '/data/pazienti/' + $routeParams.idPaziente + '/diagnosimalattia';
+      var dataUrl = {
+        diagnosi: '/data/pazienti/' + $routeParams.idPaziente + '/diagnosimalattia'
+      , infusioni: '/data/pazienti/' + $routeParams.idPaziente + '/infusioni/tcz'
+      };
+
+      // relazione tra modello e vista...
+      var initInfusioni = function() {
+        $scope.formState.ins_infusione = false;
+        $scope.formState.show_infusioni = false;
+
+        //TODO: non funziona l'inzializzazione della data al giorno di oggi
+        //$scope.nuova_infusione = moment(); //.format('DD-MM-YYYY');
+
+        $http.get(dataUrl.infusioni)
+          .success(function(data, status, headers, config) {
+            $scope.infusioni = data || [];
+          })
+          .error(function(data, status, headers, config) {
+            growl.addErrorMessage("Errore nel caricamento delle infusioni del paziente.\nControlla la connessione al server!");
+          });
+      }
+
 
       var Init = function() {
 
@@ -21,9 +47,9 @@
           $scope,
           [ 'tipo_risposta' , 'malattia_ric' ],
           function(p) { return '/data/_' + p;}
-        );
+        );        
 
-        $http.get(data_url)
+        $http.get(dataUrl.diagnosi)
           .success(function(data, status, headers, config) {
             $scope.diagnosi = data || {};
             $scope.master   = angular.copy($scope.diagnosi);
@@ -32,6 +58,9 @@
             growl.addErrorMessage("Errore nel caricamento della diagnosi del paziente.\nControlla la connessione al server!");
             $scope.diagnosi = $scope.master = {};
           });
+
+        initInfusioni();
+        
       };
 
       $scope.decodeTipoRisposta = function(tr) {
@@ -59,7 +88,7 @@
       $scope.dataDiagnosiValida = function(_d) {
         // http://angular-ui.github.io/ui-utils/
         // https://github.com/angular-ui/ui-utils#validate
-        var d = moment(_d, 'dd-mm-YYYY');
+        var d = moment(_d, 'DD-MM-YYYY');
         if( !d.isValid() )
           return false;
 
@@ -72,6 +101,18 @@
           return false;
       };
 
+
+      $scope.inQuestoMese = function(_d) {
+        if(!_d) return false;
+        //var d = moment(_d, 'DD-MM-YYYY');
+        var d = moment(_d);
+        if( !d.isValid() )
+          return false;
+
+        var min = moment().subtract('days',30);
+        return !d.isBefore(min);
+      };
+
       $scope.Save = function() {
         $scope.formState.saving = true;
         // check of diagnosi_malattia before save
@@ -80,9 +121,10 @@
         decodeCodesInObject($scope.diagnosi, $scope.malattia_ric)
           .where('cod_malattia').is_to('idtipo_malattia')
           .as('malattia').is_to('descrizione')
+
           .by('cod_malattia');
 
-        $http.post(data_url, $scope.diagnosi)
+        $http.post(dataUrl.diagnosi, $scope.diagnosi)
           .success(function(data, status, headers, config) {
                 growl.addSuccessMessage("Diagnosi salvata con successo");
                 $scope.formState.saving = false;
@@ -97,9 +139,34 @@
               });
       };
 
+      function save_infusioni(infusioni_da_salvare) {
+        $http.post(dataUrl.infusioni, infusioni_da_salvare)
+          .success(function(data, status,heades,config) {
+            growl.addSuccessMessage("infusioni aggiornate");
+            initInfusioni();
+          })
+          .error(function(data, status, headers, config) {
+            var msg  = "Aggiornamento delle infusioni fallito!<br>";
+                msg += "data:   " + data + "<br>";
+                msg += "status: " + status;
+            growl.addErrorMessage(msg);
+            initInfusioni();
+          });
+      }
+      $scope.setInfToDelete = function(i) { $scope.formState.infusione_da_cancellare = i; }
+      $scope.cancellaInfusione = function() {
+        $scope.infusioni.splice($scope.formState.infusione_da_cancellare,1);
+        save_infusioni($scope.infusioni);
+      }
+      $scope.add_infusione = function() {
+        var infusioni_da_salvare = angular.copy($scope.infusioni);
+        infusioni_da_salvare.push({data_infusione:$scope.nuova_infusione});
+        save_infusioni(infusioni_da_salvare);
+      };
+
       $scope.isUnchanged  = function(diagnosi) {
         return angular.equals($scope.master, diagnosi);
-      }
+      };
 
       // calendar management
       var cal = calendar($scope);
