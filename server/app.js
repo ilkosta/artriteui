@@ -36,6 +36,52 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+var simple_params = [
+  { nome_parametro: 'tipo_risposta',
+    qry: 'SELECT * FROM artrite.tipo_risposta'
+  },
+  { nome_parametro: 'farmaci_dimard',
+    qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'1\' '
+  },
+  { nome_parametro: 'farmaci_biologici',
+    qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'2\''
+  },
+  { nome_parametro: 'malattia_ric',
+    qry: 'SELECT * FROM artrite.tipo_malattia where cod_tipo_malattia=\'ric\''
+  },
+  { nome_parametro: 'malattia_ptc',
+    qry: 'SELECT * FROM artrite.tipo_malattia where cod_tipo_malattia=\'ptc\''
+  },
+  { nome_parametro: 'fattori_rischio',
+    qry: 'select * from artrite.tipo_malattia where cod_tipo_malattia=\'fdr\''
+  },
+  { nome_parametro: 'cod_tipo_sospensione',
+    qry: 'select * from cod_tipo_sospensione'
+  },
+  { nome_parametro: 'tipo_sospensione',
+    qry: 'select * from vsospensione'
+  }
+];
+
+var add_get = function(param) {
+  // inject the route
+  app.get('/data/_' + param.nome_parametro, function(req, res, next) {
+    // apertura connessione db
+    var mysql_conn = mysql_connector.createConnection();
+    mysql_conn.connect();
+    var pazienti;
+    // query
+      mysql_conn.query(param.qry, function(err, rows, fields) {
+      if (err) throw err;
+      res.send(rows);    
+    });
+    mysql_conn.end();
+  });
+};
+
+ _.each(simple_params, add_get);
+//console.log(simple_params);
+
 app.get('/data/pazienti', function(req, res, next) {
   // apertura connessione db
   var mysql_conn = mysql_connector.createConnection();
@@ -456,58 +502,11 @@ app.get('/data/_malattia_ric', function(req, res, next) {
   });
   mysql_conn.end();
 });
-app.get('/data/_tipo_risposta', function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var pazienti;
-  // query
-    mysql_conn.query('SELECT * FROM artrite.tipo_risposta'  , function(err, rows, fields) {
-    if (err) throw err;
-    res.send(rows);    
-  });
-  mysql_conn.end();
-});
-
-app.get('/data/_farmaci_dimard', function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var pazienti;
-  // query
-    mysql_conn.query('SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'1\' ' , function(err, rows, fields) {
-    if (err) throw err;
-    res.send(rows);    
-  });
-  mysql_conn.end();
-});
-
-app.get('/data/_malattia_ptc', function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var pazienti;
-  // query
-    mysql_conn.query('SELECT * FROM artrite.tipo_malattia where cod_tipo_malattia=\'ptc\' ' , function(err, rows, fields) {
-    if (err) throw err;
-    res.send(rows);    
-  });
-  mysql_conn.end();
-});
 
 
-app.get('/data/_farmaci_biologici', function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var pazienti;
-  // query
-    mysql_conn.query('SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'2\' ' , function(err, rows, fields) {
-    if (err) throw err;
-    res.send(rows);    
-  });
-  mysql_conn.end();
-});
+
+
+
 
 
 
@@ -518,18 +517,6 @@ app.get('/data/pazienti/:idPaziente/terapiepre', function(req, res, next) {
   var pazienti;
   // query
     mysql_conn.query('SELECT * FROM artrite.vterapia_farmacologica_pre where idPaziente =?', [req.params.idPaziente]  , function(err, rows, fields) {
-    if (err) throw err;
-    res.send(rows);    
-  });
-  mysql_conn.end();
-});
-app.get ('/data/_fattori_rischio' , function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var pazienti;
-  // query
-    mysql_conn.query('select * from artrite.tipo_malattia where cod_tipo_malattia=\'fdr\'' , function(err, rows, fields) {
     if (err) throw err;
     res.send(rows);    
   });

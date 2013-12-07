@@ -17,6 +17,8 @@
             // this callback will be called asynchronously
             // when the response is available
             $scope[param_name] = data;
+            console.log("chiamando: GET " + url);
+            console.log(data);
           })
           .error(function(data, status, headers, config) {
             // called asynchronously if an error occurs

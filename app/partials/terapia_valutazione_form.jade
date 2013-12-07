@@ -70,13 +70,13 @@ div(ng-controller='TerapiaValutazioneCtrl')
             .col-md-4
               input(type='number', min ='0', max='50', step='0.1',ng-model ='tv_aggiungi.cdai')
           .form-group 
-            .col-md-3.col-md-offset-3
+            .col-md-offset-3
             
-              button.btn.btn-primary(
+              button.btn.btn-success.pull-right(
                   ng-click='save()'
                   ng-disabled='formState.saving || !canSave()')
-                i.glyphicon.glyphicon-plus
-                  | &nbsp; Aggiungi
+                i.glyphicon.glyphicon-plus-sign
+                  | &nbsp;Aggiungi
 
       .col-md-4
         h4 Elenco Terapie 

@@ -23,9 +23,10 @@ div(ng-controller='anamnesiCtrl')
               button.btn.btn-primary(
                 ng-click='salvaPatologieConcomitante(tc_aggiungi)'
                 ng-disabled='formState.saving') Salva 
-      .col-xs-12.col-md6
+      .col-xs-12.col-md-6
         .row
-          h4 Elenco delle patologie riscontrate &nbsp;
+          h4(ng-show="patologie_concomitanti.length == 0") Non sono state individuate patologie concomitanti.
+          h4(ng-show="patologie_concomitanti.length > 0") Elenco delle patologie riscontrate &nbsp;
             span.badge {{(patologie_concomitanti).length}}
 
           dl(ng-repeat='p in patologie_concomitanti')            
