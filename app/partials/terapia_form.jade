@@ -12,12 +12,9 @@ div(ng-controller='TerapiaEditCtrl')
                     ng-required='true'
                     ng-model='terapia.data_inizio'
                     open='calendarOpened')
-            
-            button.btn(ng-click='openCalendar()')
-              i.glyphicon.glyphicon-calendar
-        label 
-          | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi 
-        label {{terapia.data_inizio | monthsFromNow }}  
+        label(ng-show="terapia.data_inizio")
+          | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi &nbsp;
+          span.badge {{terapia.data_inizio | monthsFromNow }}  
       br
       br
     form.form-inline(novalidate , name='form_concomitante')  

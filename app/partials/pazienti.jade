@@ -23,6 +23,7 @@ div
           th Data diagnosi
           th Malattia
           th Inizio terapia
+          th Ult. infusione
           th Visualizza 
       tbody
         tr(ng-repeat='paziente in pazienti | filter:query')
@@ -31,11 +32,16 @@ div
           td.col-md-1(align='right')   
             span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA | date:"dd/MM/yyyy" }}')
               {{paziente.eta}} anni
-          td.col-md-2 &nbsp;
+          td.col-md-1 &nbsp;
             span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI | fromNow }}')
               {{ paziente.DATA_DIAGNOSI | date:"dd/MM/yyyy"}}
           td.col-md-2 &nbsp;     {{paziente.MALATTIA}}
-          td.col-md-1(align='right')   {{ paziente.DATA_TERAPIA | date:"dd/MM/yyyy"}}
+          td.col-md-1(align='right')
+            span(tooltip-placement='left', tooltip='{{ paziente.DATA_TERAPIA | fromNow }}')
+              {{ paziente.DATA_TERAPIA | date:"dd/MM/yyyy"}}
+          td.col-md-1(align='right')
+            span(tooltip-placement='left', tooltip='{{ paziente.data_infusione | fromNow }}')
+              {{ paziente.data_infusione | date:"dd/MM/yyyy"}}
           td.col-md-1(align='center') 
             a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}/diagnosi') dettaglio
 

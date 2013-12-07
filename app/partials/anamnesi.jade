@@ -1,45 +1,53 @@
 div(ng-controller='anamnesiCtrl')
   .content
-    br
-    form.form-horizontal(novalidate , name='form_anamnesi')  
-      h4 Patologie concomitanti
-      br
-      .row
-        .col-xs-7
-          .control-group              
-            label.horizontal-field Patologie concomitanti
-              select.form-control(
-                ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ptc'
-                ng-model='tc_aggiungi.idtipo_malattia')
-          .control-group
-            br
-            label.horizontal-field Descrizione 
-              br
-              input(type='text', size='80', ng-model ='tc_aggiungi.descrizione' )
-              br
-      .row
-        .col-xs-5.col-md-offset-6
-          button.btn.btn-primary(
-            ng-click='salvaPatologieConcomitante(tc_aggiungi)'
-            ng-disabled='formState.saving') Salva 
-      .row
-        br
-        br
-        .col-xs-5(ng-show='(patologie_concomitanti).length > 0')
-          h5 elementi esistenti ( nr. {{(patologie_concomitanti).length}} )
-          table.table-striped.table-bordered.table-hover
-            thead(style='background-color: rgba(82, 168, 236, 0.8);')
-              tr
-                th Tipo malattia
-                th Descrizione
-                th  
-            tbody
-              tr(ng-repeat='p in patologie_concomitanti')
-                td.col-md-1(align='left') {{p.tipo_malattia}}
-                td.col-md-1(align='left') {{p.descrizione}}
-                td.col-md-1(align='center') 
-                  button.btn.btn-primary.btn-xs(ng-click='elimina_patologia(p)') 
-                    i.glyphicon.glyphicon-remove-circle
-  br
-  br    
-      
+    .row
+      .col-md-6
+        form.form-horizontal(novalidate , name='form_anamnesi')  
+          h4 Patologie concomitanti
+          br
+          .row
+            .col-xs-7
+              .control-group              
+                label.horizontal-field Patologie concomitanti
+                  select.form-control(
+                    ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ptc'
+                    ng-model='tc_aggiungi.idtipo_malattia')
+              .control-group
+                br
+                label.horizontal-field Descrizione 
+                  br
+                  textarea(type='text', row='10', cols="50", ng-model ='tc_aggiungi.descrizione' )
+                  br
+          .row
+            .col-xs-5.pull-right
+              button.btn.btn-primary(
+                ng-click='salvaPatologieConcomitante(tc_aggiungi)'
+                ng-disabled='formState.saving') Salva 
+      .col-md6
+        .row
+          h4 Elenco delle patologie riscontrate &nbsp;
+            span.badge {{(patologie_concomitanti).length}}
+
+          dl(ng-repeat='p in patologie_concomitanti')            
+            dt {{p.tipo_malattia}}
+              button.btn.btn-danger.btn-xs(ng-click='elimina_patologia(p)') 
+                i.glyphicon.glyphicon-trash
+            dd {{p.descrizione}}
+            
+
+
+      //.col-xs-5(ng-show='(patologie_concomitanti).length > 0')
+        h5 elementi esistenti ( nr. {{(patologie_concomitanti).length}} )
+        table.table-striped.table-bordered.table-hover
+          thead(style='background-color: rgba(82, 168, 236, 0.8);')
+            tr
+              th Tipo malattia
+              th Descrizione
+              th  
+          tbody
+            tr(ng-repeat='p in patologie_concomitanti')
+              td.col-md-1(align='left') {{p.tipo_malattia}}
+              td.col-md-1(align='left') {{p.descrizione}}
+              td.col-md-1(align='center') 
+                button.btn.btn-primary.btn-xs(ng-click='elimina_patologia(p)') 
+                  i.glyphicon.glyphicon-remove-circle

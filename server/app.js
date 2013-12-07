@@ -209,7 +209,7 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
     return valid;
   };
 
-  if(req.body.length == 0) return;
+  if(req.body.length === 0) return;
 
   var db = mysql_connector.createConnection();
   db.connect();
@@ -243,7 +243,7 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
         qry = "DELETE from artrite.infusioni_tcz WHERE id_paziente = ? and data_infusione in (?)";
         db.query(qry, [req.params.idPaziente, infusioni_eliminate ], function(err) {
           if (err) notify_problem(res,qry,err,db);
-          else if(nuove_infusioni.length == 0)
+          else if(nuove_infusioni.length === 0)
             db.commit(function(err) {
               if(err) notify_problem(res,'commit',err,db);
               else res.send('ok');
@@ -576,7 +576,7 @@ app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, re
   mysql_conn.connect();
   // query insert 
   var query_ins ='INSERT INTO artrite.anamnesi (id_paziente,id_tipo_malattia, descrizione )';
-      query_ins += ' VALUES ( ?, ?, ?)'
+      query_ins += ' VALUES ( ?, ?, ?)';
   
    var fields =  [ req.body.idPaziente , req.body.idtipo_malattia, req.body.descrizione ];
 
@@ -588,7 +588,7 @@ app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, re
 });
 
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , function(req, res, next) {
-  if(req.body!= null ) {
+  if(req.body) {
     if( req.params.idPaziente != req.body.id_paziente)
          res.send(500);
   }
@@ -599,7 +599,7 @@ app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , functio
   mysql_conn.connect();
   // query insert 
   var query_delete ='DELETE FROM artrite.anamnesi ';
-      query_delete += ' WHERE id_paziente= ? and idpatologia_concomitante = ?'  
+      query_delete += ' WHERE id_paziente= ? and idpatologia_concomitante = ?';
   var fields =  [ req.body.id_paziente,  req.body.idpatologia_concomitante ];
 
  mysql_conn.query(query_delete, fields, function(err, result) {
@@ -660,7 +660,8 @@ app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res,
         }
 
         _.each( req.body, function(r) {
-          if(r)
+          if(r) {
+            console.log(r);
             mysql_conn.query(query_ins, getFieldsIns(r), function(err, result) {
               if (err) { 
                   mysql_conn.rollback(function() { 
@@ -668,6 +669,7 @@ app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res,
                   });
               }
             });
+          }
         });
         
         mysql_conn.commit(function(err) {

@@ -155,8 +155,9 @@
       }
       $scope.setInfToDelete = function(i) { $scope.formState.infusione_da_cancellare = i; }
       $scope.cancellaInfusione = function() {
-        $scope.infusioni.splice($scope.formState.infusione_da_cancellare,1);
-        save_infusioni($scope.infusioni);
+        var infusioni_da_salvare = angular.copy($scope.infusioni);
+        infusioni_da_salvare.splice($scope.formState.infusione_da_cancellare,1);
+        save_infusioni(infusioni_da_salvare);
       }
       $scope.add_infusione = function() {
         var infusioni_da_salvare = angular.copy($scope.infusioni);
