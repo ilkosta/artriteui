@@ -395,7 +395,7 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
 
         mysql_conn.query(qry, [ req.body.anticorpi
                               , req.body.cod_malattia
-                              , req.body.data_diagnosi.substring(0,10)
+                              , moment(req.body.data_diagnosi).format('YYYY-MM-DD')
                               , req.body.fattore_reumatoide
                               , req.body.iddiagnosi_malattia
                               , id], function(err, result) {
