@@ -79,8 +79,14 @@ div(ng-controller='TerapiaValutazioneCtrl')
                   | &nbsp; Aggiungi
 
       .col-md-4
-        p Elenco Terapie 
-          h5 elementi esistenti ( nr. {{(terapia_valutazione).length}} )
+        h4 Elenco Terapie 
+        p(ng-show="terapia_valutazione.length == 0") 
+          | Il paziente non presenta ancora valutazioni
+        div(ng-show="terapia_valutazione.length > 0")
+          p Il paziente presenta &nbsp;
+            span.badge {{(terapia_valutazione).length}}
+            | &nbsp; valutazioni:
+
           table.table-striped.table-bordered.table-hover
             thead(style='background-color: rgba(82, 168, 236, 0.8);')
               tr
@@ -108,5 +114,5 @@ div(ng-controller='TerapiaValutazioneCtrl')
                 td.col-md-1(align='right')   {{t.sdai}}
                 td.col-md-1(align='right')   {{t.cdai}}
                 td.col-md-1(align='center') 
-                  button.btn.btn-primary.btn-xs(ng-click='elimina_tv(t)') 
+                  button.btn.btn-danger.btn-xs(ng-click='elimina_tv(t)') 
                     i.glyphicon.glyphicon-trash
