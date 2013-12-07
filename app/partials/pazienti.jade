@@ -6,7 +6,7 @@ div
   div(ng-controller='PazientiElencoCtrl')    
     form.row
       .input-group.col-md-3
-        input.form-control(type='text', ng-model='query', placeholder='ricerca rapida')   
+        input.form-control(type='text', ng-model='query', placeholder='ricerca rapida', autofocus="true")   
         span.input-group-addon
           i.glyphicon.glyphicon-search
     
@@ -15,7 +15,7 @@ div
     
     table.table-striped.table-bordered.table-hover(
       ng-hide='(pazienti | filter:query).length == 0')
-      thead(style='background-color: rgba(82, 168, 236, 0.8);')
+      thead
         tr
           th Cod. 
           th Nome

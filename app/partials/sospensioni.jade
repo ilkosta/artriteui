@@ -1,0 +1,28 @@
+div( ng-controller='SospensioniCtrl' )
+  br
+  br
+  br
+  .content
+    h3 Sospensioni
+    .col-xs-12.col-md-6
+      p(ng-show="sospensioni.length == 0") La terapia non è mai stata sospesa
+      
+    .col-xs-12.col-md-6
+      button.btn.btn-default(ng-click="formState.insSospensione")
+        i.glyphicon.glyphicon-plus-sign
+        | Aggiungi
+
+      form(novalidate, role="form", name="form", ng-show="formState.insSospensione")
+        fieldset
+          label Tipo di sospensione
+          .btn-group(data-toggle="buttons")
+            label.btn.btn-primary(ng-repeat="tipo in cod_tipo_sospensione")
+              input(type="radio", name="options"
+                ng-click="setTipoSospensione(tipo.cod_tipo_sospensione)")
+                {{tipo.descrizione | img_options}}
+
+
+    form( novalidate , role='form', name='form' )
+      fieldset
+        .row
+          .col-xs-12.col-md-6(style="margin-left:20px;")

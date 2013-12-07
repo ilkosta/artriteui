@@ -26,6 +26,7 @@ var App = angular.module('app',
     'partials'
 // custom filters
   , 'momentFilters'
+  , 'optionsFilters'
   ]);
 
 
@@ -43,25 +44,49 @@ App.config([
     
     $routeProvider.when('/pazienti', {
       templateUrl: '/partials/pazienti.html'
-    }).when('/nuovopaziente', {
+    })
+
+    .when('/nuovopaziente', {
       templateUrl: '/partials/nuovopaziente.html'
-    }).when('/utenti', {
+    })
+    
+    .when('/utenti', {
       templateUrl: '/partials/utenti.html'
-    }).when('/pazienti/:idPaziente/diagnosi', {
+    })
+
+    .when('/pazienti/:idPaziente/diagnosi', {
       templateUrl: '/partials/pazientedettaglio.html'      
-    }).when('/pazienti/:idPaziente/terapia', {
+    })
+
+    .when('/pazienti/:idPaziente/terapia', {
       templateUrl: '/partials/pazientedettaglio.html'      
-    }).when('/pazienti/:idPaziente/terapia_val', {
+    })
+
+    .when('/pazienti/:idPaziente/terapia_val', {
       templateUrl: '/partials/pazientedettaglio.html'  
-    }).when('/pazienti/:idPaziente/anamnesi', {
+    })
+
+    .when('/pazienti/:idPaziente/anamnesi', {
       templateUrl: '/partials/pazientedettaglio.html'  
-    }).when('/pazienti/:idPaziente/fattori_rischio', {
+    })
+
+    .when('/pazienti/:idPaziente/fattori_rischio', {
       templateUrl: '/partials/pazientedettaglio.html'   
-    }).when('/no_connessione', {
+    })
+
+    .when('/pazienti/:idPaziente/sospensioni', {
+      templateUrl: '/partials/sospensioni.html'   
+    })
+
+    .when('/no_connessione', {
       templateUrl: '/partials/no_connessione.html'      
-    }).when('/no_db', {
+    })
+
+    .when('/no_db', {
       templateUrl: '/partials/no_connessione_DB.html'      
-    }).otherwise({
+    })
+
+    .otherwise({
       redirectTo: '/pazienti'
     });
     $locationProvider.html5Mode(false);

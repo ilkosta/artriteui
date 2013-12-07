@@ -3,21 +3,16 @@
   var mod = angular.module('app.controllers');
 
   mod.controller('PazienteDiagnosiEditCtrl', [
-    '$scope', '$location', '$routeParams',
+    '$scope', '$routeParams',
     '$http', 'calendar' , 'growl', 
     'loadDataListIntoScope', 'decodeCodesInObject',
     function(
-        $scope,$location, $routeParams,
+        $scope, $routeParams,
         $http, calendar, growl,
         loadDataListIntoScope, decodeCodesInObject) {
 
       $scope.formState = {};
       
-      
-      $scope.$watch('$scope.nuova_infusione', function(n,v) {
-        console.log('data cambiata: ' + n);
-      });
-
       var dataUrl = {
         diagnosi: '/data/pazienti/' + $routeParams.idPaziente + '/diagnosimalattia'
       , infusioni: '/data/pazienti/' + $routeParams.idPaziente + '/infusioni/tcz'
