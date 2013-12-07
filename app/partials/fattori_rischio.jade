@@ -18,9 +18,11 @@ div(ng-controller='fattoriRischioCtrl')
                     ng-options='fdr.idtipo_malattia as fdr.descrizione for fdr in fattori_rischio'
                     ng-model='fdr.idtipo_malattia')
 
-        button.btn.btn-primary(
-                ng-click='salvaFattore(fdr)'
-                ng-disabled='formState.saving') Salva 
+        button.btn.btn-success(
+          ng-click='salvaFattore(fdr)'
+          ng-disabled='formState.saving') 
+          i.glyphicon.glyphicon-plus-sign
+          | &nbsp;Aggiungi 
 
 //-      .row
 //-        fieldset

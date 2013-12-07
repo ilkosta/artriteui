@@ -125,21 +125,23 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                   p ({{ infusioni[0].data_infusione | daysFromNow }} giorni fa)                  
                   
                   // elenco delle infusioni
-                  .fade.in(ng-show='infusioni.length > 1 && formState.show_infusioni' )                  
-                    strong precedenti infusioni: 
+                  .fade.in(ng-show='infusioni.length > 1 && formState.show_infusioni' )  
+
                     button.close(
                       aria-hiden='true'
-                      data-dismiss='alert')
-                    //ul
-                    ul.list-inline                    
-                      li(ng-repeat='i in infusioni',style="padding-right:10px;")
-                        {{infusioni.length - $index}}) {{i.data_infusione | date:'dd/MM/yyyy'}}
-                        button.btn.btn-xs.btn-danger(
-                          ng-click="setInfToDelete($index)"
-                          data-toggle="modal"
-                          data-target="#cancella_infusione_dlg")
-                          //i.glyphicon.glyphicon-minus-sign
-                          i.glyphicon.glyphicon-trash
+                      data-dismiss='alert')                
+
+                    p
+                      strong tutte le infusioni:                    
+                      ul.list-inline                    
+                        li(ng-repeat='i in infusioni',style="padding-right:10px;")
+                          {{infusioni.length - $index}}) {{i.data_infusione | date:'dd/MM/yyyy'}}
+                          button.btn.btn-xs.btn-danger(
+                            ng-click="setInfToDelete($index)"
+                            data-toggle="modal"
+                            data-target="#cancella_infusione_dlg")
+                            //i.glyphicon.glyphicon-minus-sign
+                            i.glyphicon.glyphicon-trash
                   
             
 
