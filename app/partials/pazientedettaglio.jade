@@ -18,10 +18,12 @@
     div(data-fade="1", ngModel="activeTab", bs-tabs)
       div(data-title='Diagnosi'
           ng-include="'/partials/diagnosi_malattia_form_by_combo.html'")
-      
+      div(data-title='Anamnesi'
+          ng-include="'/partials/anamnesi.html'")     
+      div(data-title='Fattori di rischio'
+          ng-include="'/partials/fattori_rischio.html'")   
       div(data-title='Terapia'
           ng-include="'/partials/terapia_form.html'")
-
       div(data-title='Terapia valutazione'
           ng-include="'/partials/terapia_valutazione_form.html'")
 
@@ -30,6 +32,12 @@
     li(ng-class="getClass('/diagnosi')")
       a(data-toggle="tab"
         href="#/pazienti/{{paziente.idPAZIENTE}}/diagnosi") Diagnosi
+    li(ng-class="getClass('/anamnesi')")
+      a(data-toggle="tab"
+        href="#/pazienti/{{paziente.idPAZIENTE}}/anamnesi") Anamnesi
+    li(ng-class="getClass('/fattori_rischio')")
+      a(data-toggle="tab"
+        href="#/pazienti/{{paziente.idPAZIENTE}}/fattori_rischio") Fattori di rischio
     li(ng-class="getClass('/terapia')")
       a(data-toggle="tab"
         href="#/pazienti/{{paziente.idPAZIENTE}}/terapia") Terapia
@@ -40,6 +48,12 @@
     .tab-pane(
       ng-class="getClass('/diagnosi')"
       ng-include="'/partials/diagnosi_malattia_form_by_combo.html'")
+    .tab-pane(
+      ng-class="getClass('/anamnesi')"
+      ng-include="'/partials/anamnesi.html'")
+    .tab-pane(
+      ng-class="getClass('/fattori_rischio')"
+      ng-include="'/partials/fattori_rischio.html'")
     .tab-pane(
       ng-class="getClass('/terapia')"
       ng-include="'/partials/terapia_form.html'")

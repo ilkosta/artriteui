@@ -1,0 +1,39 @@
+div(ng-controller='fattoriRischioCtrl')
+  .content
+    br
+    form.form-inline(novalidate , name='form_fattori_rischio')  
+      br
+      br
+      .row
+        fieldset
+          .control-group 
+            .col-md-2            
+              label.inline-field FATTORI DI RISCHIO
+            .col-md-2 
+              select.form-control(
+                  ng-options='fdr.idtipo_malattia as fdr.descrizione for fdr in fattori_rischio'
+                  ng-model='fdr.idtipo_malattia')
+            .col-md-2  
+              button.btn.btn-primary(
+                ng-click='salvaFattore(fdr)'
+                ng-disabled='formState.saving') Salva 
+      .row
+        br
+        br
+        .col-xs-5(ng-show='(fattori_di_rischio).length > 0')
+          h5 elementi esistenti ( nr. {{(fattori_di_rischio).length}} )
+          table.table-striped.table-bordered.table-hover
+            thead(style='background-color: rgba(82, 168, 236, 0.8);')
+              tr
+                th Fattori di rischio 
+                th Presenza
+                th  
+            tbody
+              tr(ng-repeat='f in fattori_di_rischio')
+                td.col-md-1(align='left') {{f.tipo_malattia}}
+                td.col-md-1(align='left') SI
+                td.col-md-1(align='center') 
+                  button.btn.btn-primary.btn-xs(ng-click='elimina_fattore(f)') 
+                    i.glyphicon.glyphicon-remove-circle
+  br
+  br      

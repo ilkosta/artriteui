@@ -52,7 +52,11 @@ App.config([
     }).when('/pazienti/:idPaziente/terapia', {
       templateUrl: '/partials/pazientedettaglio.html'      
     }).when('/pazienti/:idPaziente/terapia_val', {
-      templateUrl: '/partials/pazientedettaglio.html'      
+      templateUrl: '/partials/pazientedettaglio.html'  
+    }).when('/pazienti/:idPaziente/anamnesi', {
+      templateUrl: '/partials/pazientedettaglio.html'  
+    }).when('/pazienti/:idPaziente/fattori_rischio', {
+      templateUrl: '/partials/pazientedettaglio.html'   
     }).when('/no_connessione', {
       templateUrl: '/partials/no_connessione.html'      
     }).when('/no_db', {

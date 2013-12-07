@@ -55,5 +55,5 @@ div
     .row
       .col-md-offset-2
         button.btn-primary(ng-click='reset()', ng-disabled='isUnchanged(user)', style='width:90px') Pulisci
-        button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='myForm.$invalid || isUnchanged(user)') Salva
+        button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='formState.saving  || myForm.$invalid || isUnchanged(user)') Salva
     
