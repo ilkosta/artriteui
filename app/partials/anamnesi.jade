@@ -1,7 +1,7 @@
 div(ng-controller='anamnesiCtrl')
   .content
     .row
-      .col-md-6
+      .col-xs-12.col-md-6
         form.form-horizontal(novalidate , name='form_anamnesi')  
           h4 Patologie concomitanti
           br
@@ -23,7 +23,7 @@ div(ng-controller='anamnesiCtrl')
               button.btn.btn-primary(
                 ng-click='salvaPatologieConcomitante(tc_aggiungi)'
                 ng-disabled='formState.saving') Salva 
-      .col-md6
+      .col-xs-12.col-md6
         .row
           h4 Elenco delle patologie riscontrate &nbsp;
             span.badge {{(patologie_concomitanti).length}}
