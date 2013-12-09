@@ -58,16 +58,6 @@
         
       };
 
-      $scope.decodeTipoRisposta = function(tr) {
-        var img_txt = '';
-        switch(tr.risposta) {
-          case "si"   : img_txt = 'ok-sign';        break;
-          case "no"   : img_txt = 'minus-sign';     break;
-          case "forse": img_txt = 'question-sign';  break;
-        }
-        return '<i class=\".glyphicon..glyphicon-' + img_txt + '\"></i>&nbsp;' + tr;
-      }
-
       $scope.getTipiRisposta = function() {
         var tipi_risp = _.map($scope.tipo_risposta, function(ts) {
           switch(ts.risposta) {}
@@ -113,12 +103,10 @@
         // check of diagnosi_malattia before save
 
         // allign the values
-        decodeCodesInObject($scope.diagnosi, $scope.malattia_ric)
-          .where('cod_malattia').is_to('idtipo_malattia')
-          .as('malattia').is_to('descrizione')
+        var malattie = _.groupBy($scope.malattia_ric,"idtipo_malattia");
 
-          .by('cod_malattia');
-
+        $scope.diagnosi.malattia = (_.groupBy($scope.malattia_ric,"idtipo_malattia")[$scope.diagnosi.cod_malattia][0]).descrizione;
+        
         $http.post(dataUrl.diagnosi, $scope.diagnosi)
           .success(function(data, status, headers, config) {
                 growl.addSuccessMessage("Diagnosi salvata con successo");
@@ -126,9 +114,8 @@
                 Init();
               })
               .error(function(data, status, headers, config) {
-                var msg  = "Salvataggio della diagnosi fallito!<br>";
-                    msg += "data:   " + data + "<br>";
-                    msg += "status: " + status;
+                var msg  = "Salvataggio della diagnosi fallito!";
+                    msg += "codice: " + status;
                 growl.addErrorMessage(msg);
                 $scope.formState.saving = false;
               });
@@ -141,8 +128,8 @@
             initInfusioni();
           })
           .error(function(data, status, headers, config) {
-            var msg  = "Aggiornamento delle infusioni fallito!<br>";
-                msg += "data:   " + data + "<br>";
+            var msg  = "Aggiornamento delle infusioni fallito!";
+                msg += "data:   " + data;
                 msg += "status: " + status;
             growl.addErrorMessage(msg);
             initInfusioni();

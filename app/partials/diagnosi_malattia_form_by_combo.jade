@@ -32,7 +32,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                   select.selectpicker.form-control(
                     class='selectpicker'
                     ng-required='true'
-                    ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
+                    ng-options='tipo_risp.idtipo_risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
                     ng-model='diagnosi.fattore_reumatoide')
                     //-option(value='') ----------            
 
@@ -41,7 +41,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                   select.selectpicker.form-control(
                     class='selectpicker'
                     ng-required='true'
-                    ng-options='tipo_risp.risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
+                    ng-options='tipo_risp.idtipo_risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
                     ng-model='diagnosi.anticorpi')
                     //-option(value='') ----------          
             .row

@@ -388,8 +388,12 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
 // malattia: "artrite psoriasica"
 // nome: "Costantino"
 
-  function notify_problem(what) {
+  function notify_problem(res,qry,what,conn) {
+    console.log("errore eseguendo: " + qry);
+    console.log(what);
     res.send(500,{err:what}); // TODO.... da sistemare
+    if(conn) 
+      conn.rollback();
   }
 
   function getNewConn() {
@@ -439,12 +443,12 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
   // INIZIO metodo normale
 
   // assumo la connessione come aperta...
-  mysql_conn.query('select risposta from artrite.tipo_risposta', function(err,r,fields) {
-    if(err) throw err;
+  mysql_conn.query('select idtipo_risposta from artrite.tipo_risposta', function(err,r,fields) {
+    if(err) notify_problem(res,'select idtipo_risposta from artrite.tipo_risposta',err);
 
     var risposte_usabili = _.pluck(r,fields[0].name);
     if( _.difference( risposte_usate , risposte_usabili ).length > 0 )
-      return notify_problem(err);
+      return notify_problem(res,'select risposta from artrite.tipo_risposta',err);
   });
   mysql_conn.end();
   // FINE metodo normale
@@ -459,7 +463,7 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
   
   mysql_conn = getNewConn();
   mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
-    if(err) throw err;
+    if(err) notify_problem(res,qry,err);
     var nr_diagnosi = r[0][fields[0].name];
     if( nr_diagnosi > 1 ) {
       return notify_problem(err);
@@ -470,16 +474,12 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
 
   mysql_conn = getNewConn();
   mysql_conn.beginTransaction( function(err) {
-    if (err) { throw err; }
+    if (err) notify_problem(res,'begin tran',err,mysql_conn);
     qry  =  "SELECT iddiagnosi_malattia";
     qry += " FROM   artrite.diagnosi_malattia";
     qry += " WHERE  id_paziente = ?";
     mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
-      if (err) { 
-        mysql_conn.rollback(function() {
-          throw err;
-        });
-      }
+      if (err) notify_problem(res,qry,err,mysql_conn);
       if(r.length === 1) {
         var id = r[0][fields[0].name];
         qry  = 'update diagnosi_malattia';
@@ -497,16 +497,12 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
                               , req.body.iddiagnosi_malattia
                               , id], function(err, result) {
           if(err) 
-            notify_problem(err);
+            notify_problem(res,qry,err,mysql_conn);
 
           mysql_conn.commit(function(err) {
-            if (err) { 
-              mysql_conn.rollback(function() {
-                throw err;
-              });
-            }
+            if (err) notify_problem(res,qry,err,mysql_conn);
             else 
-              res.send(200, result);
+              res.send(200, {insertId: result.insertId});
           });
         });
       }
@@ -522,16 +518,12 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
                               , req.body.fattore_reumatoide
                               , req.params.idPaziente ], function(err, result) {
           if(err) 
-            notify_problem(err);
+            notify_problem(res,qry,err,mysql_conn);
 
           mysql_conn.commit(function(err) {
-            if (err) { 
-              mysql_conn.rollback(function() {
-                throw err;
-              });
-            }
+            if (err) notify_problem(res,qry,err,mysql_conn);
             else 
-              res.send(200, result);
+              res.send(200, {insertId: result.insertId});
           });
         });
       }
