@@ -47,7 +47,7 @@
     li(ng-class="getClass('/sospensioni')")
       a(data-toggle="tab"
         href="#/pazienti/{{paziente.idPAZIENTE}}/sospensioni") Sospensioni
-  .tab-content
+  .tab-content.ng-cloak
     .tab-pane(
       ng-class="getClass('/diagnosi')"
       ng-include="'/partials/diagnosi_malattia_form_by_combo.html'")

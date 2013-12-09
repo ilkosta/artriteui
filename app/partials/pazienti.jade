@@ -13,7 +13,7 @@ div
     br
     img(src='/img/crying.svg', ng-hide='(pazienti.length == 0) || (pazienti | filter:query).length > 0')
     
-    table.table-striped.table-bordered.table-hover(
+    table.table-striped.table-bordered.table-hover.ng-cloak(
       ng-hide='(pazienti | filter:query).length == 0')
       thead
         tr

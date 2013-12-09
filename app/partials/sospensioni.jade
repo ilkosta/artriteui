@@ -8,21 +8,52 @@ div( ng-controller='SospensioniCtrl' )
       p(ng-show="sospensioni.length == 0") La terapia non è mai stata sospesa
       
     .col-xs-12.col-md-6
-      button.btn.btn-default(ng-click="formState.insSospensione")
-        i.glyphicon.glyphicon-plus-sign
+      button.btn.btn-default(
+        ng-click="formState.insSospensione = !formState.insSospensione"
+        ng-hide="!formState.insSospensione") 
         | Aggiungi
 
-      form(novalidate, role="form", name="form", ng-show="formState.insSospensione")
+      //form(novalidate, role="form", name="form", ng-show="formState.insSospensione")
+      form(novalidate, role="form", name="form")
         fieldset
-          label Tipo di sospensione
-          .btn-group(data-toggle="buttons")
-            label.btn.btn-primary(ng-repeat="tipo in cod_tipo_sospensione")
-              input(type="radio", name="options"
-                ng-click="setTipoSospensione(tipo.cod_tipo_sospensione)")
-                {{tipo.descrizione | img_options}}
-
-
-    form( novalidate , role='form', name='form' )
-      fieldset
-        .row
-          .col-xs-12.col-md-6(style="margin-left:20px;")
+          .form-group
+            .row
+              label Caratteristiche della sospensione
+            .row
+              .btn-group(data-toggle="buttons")
+                label.btn.btn-primary(ng-repeat="tipo in cod_tipo_sospensione")
+                  input(type="radio", name="options"
+                    ng-click="tipo_sospensione.setTipoSospensione(tipo.cod_tipo_sospensione)") 
+                  | {{tipo.descrizione}}
+            br
+            .row
+              label Data sospensione
+                br
+                input( 
+                  name='data_diagnosi'
+                  type='text'
+                  datepicker-popup='dd-MM-yyyy'
+                  datepicker-options='dateOptions'
+                  ng-required='true'
+                  ng-model='editForm.data_sospensione'
+                  open='calendarOpened'
+                  ui-validate='dataDiagnosiValida($value)' )
+            .row
+              label Motivo della sospensione
+                select.selectpicker.form-control(
+                  ng-required='true'
+                  ng-options='sosp.id as sosp.desc for sosp in tipo_sospensione.getMotiviSospensione()'
+                  ng-model='editForm.id_motivo_sospensione')
+                  //-option(value='') ----------  
+            
+              //label(ng-show="tipo_sospensione.getMotiviSospensione2().length > 0") Dettagli
+              labelDettagli
+                select.selectpicker.form-control(
+                  ng-required='true'
+                  ng-options='sosp.id as sosp.desc for sosp in tipo_sospensione.getMotiviSospensione2()'
+                  ng-model='editForm.id_sospensione_dettaglio')
+                  //-option(value='') ---------- 
+            .row
+              label Annotazioni
+                br
+                textarea(type='text', row='10', cols="50", ng-model ='editForm.annotazioni' )
