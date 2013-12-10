@@ -108,7 +108,7 @@ simple_params = [
   { nome_parametro: 'infusioni/tcz',
     qry: 'SELECT data_infusione from artrite.infusioni_tcz where id_paziente =? order by data_infusione desc'
   },
-  { nome_parametro: 'terapiepre',
+  { nome_parametro: 'terapie_pre',
     qry: 'SELECT * FROM artrite.vterapia_farmacologica_pre where idPaziente =?'
   },
   { nome_parametro: 'fattori_di_rischio',
@@ -123,6 +123,7 @@ simple_params = [
   { nome_parametro: 'terapie_concomitanti',
     qry: 'SELECT tf.idtipo_farmaco, tf.nome, a.*, ter.id_paziente FROM artrite.tipo_farmaco tf inner join artrite.terapia_concomitante a on a.id_tipo_farmaco=tf.idtipo_farmaco inner join artrite.terapia ter on ter. idterapia = a.id_terapia where tf.tipo_famiglia_farmaco = \'1\' and ter.id_paziente=?'
   },
+  
   { nome_parametro: 'terapia_farmaco',
     qry: 'select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?'
   },
@@ -186,24 +187,6 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   mysql_conn.end();
 });
 
-
-// app.get('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
-//   // apertura connessione db
-//   var mysql_conn = mysql_connector.createConnection();
-//   mysql_conn.connect();
-// 
-//   // query
-//     var qry   =  'SELECT data_infusione from artrite.infusioni_tcz';
-//         qry  += ' where id_paziente =?';
-//         qry  += ' order by data_infusione desc';
-//     mysql_conn.query(qry, [req.params.idPaziente]  , function(err, rows, fields) {
-//     if (err) throw err;
-//     
-//     res.send(rows);    
-//   });
-//   mysql_conn.end();
-// });
-
 app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
 
   function notify_problem(res,qry,what,conn) {
@@ -227,75 +210,6 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
 
     // return deferred.promise;
   }
-
-  // function mkPromiseCmd(conn, qry, params) {
-  //   var deferred = Q.defer();
-  //   mysql_conn.query(qry, params, function(err, r) {
-  //     if (err) { 
-  //       notify_problem(res,qry,err);
-  //       deferred.reject(err);
-  //     }
-  //     else deferred.resolve(err, r);
-  //   });
-
-  //   return deferred.promise;
-  // }
-
-
-  // function infusioniPaziente(conn, idPaziente) {
-    
-  //   var qry =   "SELECT data_infusione";
-  //       qry += " FROM   artrite.infusioni_tcz";
-  //       qry += " WHERE  id_paziente = ?";
-    
-  //   return mkPromiseSelect(conn, qry, idPaziente);
-  // }
-
-
-  // function deleteInfusioni(conn, idPaziente, date_infusioni) {
-  //   var qry = "DELETE from artrite.infusioni_tcz WHERE id_paziente = ? and data_infusione in (?)";
-  //   var par = date_infusioni;
-  //   par.splice(0,0,idPaziente);
-  //   //return mkPromiseCmd(conn, qry, par);
-  //   return Q.ninvoke(conn.query, qry, par);
-  // }
-
-
-  // function insInfusioni(conn, idPaziente, date_infusioni) {
-  //   var qry = "INSERT INTO artrite.infusioni_tcz(id_paziente,data_infusione) VALUES(?,?)";
-  //   return Q.all( _.map(date_infusioni, function(d) { 
-  //     //return mkPromiseCmd(cmd, qry, [idPaziente, d]);
-  //     return Q.ninvoke(conn.query, qry, [idPaziente, d]);
-  //   }));
-  // }
-
-  //-------------------------------------
-  // by using conn
-  //   select(qry, params)
-  //     then calculate new_parameters
-  //       then del( qry, params1 )
-  //       and  ins( qry, params2 )
-  //-------------------------------------
-
-
-  // infusioniPaziente(mysql_conn, req.params.idPaziente)
-  //   .then(function(err,r,f) { 
-  //     var vecchie_infusioni       = r
-  //       , infusioni_ricevute      = _.uniq(req.body)
-  //       , infusioni_da_cancellare = _.difference( vecchie_infusioni, infusioni_ricevute)
-  //       , nuove_infusioni         = _.difference( infusioni_ricevute, vecchie_infusioni);
-  //     return (deleteInfusioni(conn, req.params.idPaziente, infusioni_da_cancellare))
-  //       .then(function(err, result) {
-  //         return insInfusioni(conn, idPaziente, nuove_infusioni);
-  //       });
-  //   })    
-  //   .then(function(err, result) {
-  //     return Q.ninvoke(mysql_conn.commit);
-  //   })
-  //   .catch(function(err) {
-  //     notify_problem('','',err);
-  //     return Q.ninvoke(mysql_conn.rollback);
-  //   });
 
   var isValidDate = function(_d) {
     if(!_d) return false;
@@ -496,7 +410,7 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
                               , req.body.fattore_reumatoide
                               , req.body.iddiagnosi_malattia
                               , id], function(err, result) {
-          if(err) 
+           if(err) 
             notify_problem(res,qry,err,mysql_conn);
 
           mysql_conn.commit(function(err) {
@@ -582,19 +496,50 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
 // });
 
 
-// app.get ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, res, next) {
-//   // apertura connessione db
-//   var mysql_conn = mysql_connector.createConnection();
-//   mysql_conn.connect();
-//   // query
-//     mysql_conn.query('SELECT a.*, t.descrizione as tipo_malattia '+ 
-//                      'FROM artrite.anamnesi a inner join artrite.tipo_malattia t on a.id_tipo_malattia= t.idtipo_malattia '+ 
-//                      'where t.cod_tipo_malattia = \'ptc\' and  a.id_paziente=?',[req.params.idPaziente] , function(err, rows, fields) {
-//     if (err) throw err;
-//     res.send(rows);    
-//   });
-//   mysql_conn.end();
-// });
+//terapie_pre
+app.post ('/data/pazienti/:idPaziente/terapie_pre' , function(req, res, next) {
+ 
+  if(req.body.lenght > 0 )
+    if( req.params.idPaziente != req.body.id_paziente)
+         res.send(500);
+    else{ res.send(500);}
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  // query insert 
+  var query_ins =  'INSERT INTO artrite.terapia_farmacologica_pre (id_paziente,cod_tipo_farmaco)';
+      query_ins += 'VALUES ( ?, ?)';
+  
+   var fields =  [ req.body.id_paziente , req.body.cod_tipo_farmaco];
+
+ mysql_conn.query(query_ins, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});  
+  });
+  mysql_conn.end();
+});
+
+app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella' , function(req, res, next) {
+  if(req.body) {
+    if( req.params.idPaziente != req.body.idPaziente)
+         res.send(500);
+  }
+  else{ res.send(500);}
+
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  // query insert 
+  var query_delete ='DELETE FROM artrite.terapia_farmacologica_pre ';
+      query_delete += ' WHERE id_paziente= ? and idterapia_farmacologica_pre = ?';
+  var fields =  [ req.body.idPaziente,  req.body.idterapia_farmacologica_pre ];
+
+ mysql_conn.query(query_delete, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});  
+  });
+  mysql_conn.end();
+});
 
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, res, next) {
   if(req.body.lenght > 0 )
@@ -641,21 +586,6 @@ app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , functio
 
 
 
-// app.get ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, next) {
-//   // apertura connessione db
-//   var mysql_conn = mysql_connector.createConnection();
-//   mysql_conn.connect();
-//   var pazienti;
-//   // query
-//     mysql_conn.query('SELECT tf.idtipo_farmaco, tf.nome, a.*, ter.id_paziente FROM artrite.tipo_farmaco tf '+
-//                      ' inner join artrite.terapia_concomitante a on a.id_tipo_farmaco=tf.idtipo_farmaco ' +
-//                      ' inner join artrite.terapia ter on ter. idterapia = a.id_terapia '+
-//                      ' where tf.tipo_famiglia_farmaco = \'1\' and ter.id_paziente=?',[req.params.idPaziente] , function(err, rows, fields) {
-//     if (err) throw err;
-//     res.send(rows);    
-//   });
-//   mysql_conn.end();
-// });
 
 app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, next) {
     if(req.body.lenght > 0 )

@@ -26,7 +26,7 @@ var App = angular.module('app',
     'partials'
 // custom filters
   , 'momentFilters'
-  , 'optionsFilters'
+  
   ]);
 
 
@@ -76,6 +76,10 @@ App.config([
 
     .when('/pazienti/:idPaziente/sospensioni', {
       templateUrl: '/partials/sospensioni.html'   
+    })
+
+    .when('/pazienti/:idPaziente/terapie_pre', {
+      templateUrl: '/partials/pazientedettaglio.html'   
     })
 
     .when('/no_connessione', {
