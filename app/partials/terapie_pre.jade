@@ -1,0 +1,43 @@
+div(ng-controller='terapie_preCtrl')
+  .content
+    br
+    .row
+      .col-xs-12.col-md-6
+        h4 Terapie pregresse con DMARD
+        .row
+          .col-xs-12.col-md-12
+            label.inline-field Farmaco
+              select.form-control(
+                ng-options='farmaco.idtipo_farmaco as farmaco.nome for farmaco in farmaci_dimard'
+                ng-model='terapie_dimard.cod_tipo_farmaco')  
+            button.btn.btn-success(
+              ng-click='salvaDmard(terapie_dimard)'
+              ng-disabled='formState.saving') 
+              i.glyphicon.glyphicon-plus-sign
+              | &nbsp;Aggiungi 
+        br
+        br
+        h4 Terapie pregresse con Farmaci Biologici
+        .row
+          .col-xs-12.col-md-12
+            label.inline-field Farmaco
+              select.form-control(
+                ng-options='farmaco_bio.idtipo_farmaco as farmaco_bio.nome for farmaco_bio in farmaci_biologici'
+                ng-model='terapie_bio.cod_tipo_farmaco')  
+            button.btn.btn-success(
+              ng-click='salvaBio(terapie_bio)'
+              ng-disabled='formState.saving') 
+              i.glyphicon.glyphicon-plus-sign
+              | &nbsp;Aggiungi   
+      .col-xs-12.col-md-6
+        h3 Terapia farmacologia Precedente    
+        br &nbsp;
+        p(ng-show='farmaci_pre.length > 0')
+          | &nbsp;&nbsp; Il paziente è stato sottoposto a  &nbsp;
+          span.badge {{farmaci_pre.length}}
+          | &nbsp; terapie farmacologiche precedenti:
+        ul
+          li(ng-repeat='f in farmaci_pre') 
+            button.btn.btn-danger.btn-xs(ng-click='elimina_pre(f)') 
+              i.glyphicon.glyphicon-trash
+            | &nbsp; {{f.farmaco_nome }} &nbsp; della famiglia dei  {{f.famiglia_farmacocol }}

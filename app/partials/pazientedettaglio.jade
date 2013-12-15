@@ -21,7 +21,9 @@
       div(data-title='Anamnesi'
           ng-include="'/partials/anamnesi.html'")     
       div(data-title='Fattori di rischio'
-          ng-include="'/partials/fattori_rischio.html'")   
+          ng-include="'/partials/fattori_rischio.html'")  
+      div(data-title='Terapia farmacologia pre'
+          ng-include="'/partials/terapie_pre.html'")  
       div(data-title='Terapia'
           ng-include="'/partials/terapia_form.html'")
       div(data-title='Terapia valutazione'
@@ -38,6 +40,10 @@
     li(ng-class="getClass('/fattori_rischio')")
       a(data-toggle="tab"
         href="#/pazienti/{{paziente.idPAZIENTE}}/fattori_rischio") Fattori di rischio
+    li(ng-class="getClass('/terapie_pre')")
+      a(data-toggle="tab"
+        href="#/pazienti/{{paziente.idPAZIENTE}}/terapie_pre") Terapie farmacologie pre
+    
     li(ng-class="getClass('/terapia')")
       a(data-toggle="tab"
         href="#/pazienti/{{paziente.idPAZIENTE}}/terapia") Terapia
@@ -57,6 +63,9 @@
     .tab-pane(
       ng-class="getClass('/fattori_rischio')"
       ng-include="'/partials/fattori_rischio.html'")
+    .tab-pane(
+      ng-class="getClass('/terapie_pre')"
+      ng-include="'/partials/terapie_pre.html'")
     .tab-pane(
       ng-class="getClass('/terapia')"
       ng-include="'/partials/terapia_form.html'")

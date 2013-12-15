@@ -133,7 +133,7 @@ var qry_paziente = [
   { nome_parametro: 'infusioni/tcz',
     qry: 'SELECT data_infusione from artrite.infusioni_tcz where id_paziente =? order by data_infusione desc'
   },
-  { nome_parametro: 'terapiepre',
+  { nome_parametro: 'terapie_pre',
     qry: 'SELECT * FROM artrite.vterapia_farmacologica_pre where idPaziente =?'
   },
   { nome_parametro: 'fattori_di_rischio',
@@ -148,6 +148,7 @@ var qry_paziente = [
   { nome_parametro: 'terapie_concomitanti',
     qry: 'SELECT tf.idtipo_farmaco, tf.nome, a.*, ter.id_paziente FROM artrite.tipo_farmaco tf inner join artrite.terapia_concomitante a on a.id_tipo_farmaco=tf.idtipo_farmaco inner join artrite.terapia ter on ter. idterapia = a.id_terapia where tf.tipo_famiglia_farmaco = \'1\' and ter.id_paziente=?'
   },
+  
   { nome_parametro: 'terapia_farmaco',
     qry: 'select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?'
   },
@@ -223,6 +224,7 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
 });
 
 
+
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna', function(req, res, next) {
   var notify_problem = function (res,qry,what,conn) {
     console.log("errore eseguendo: " + qry);
@@ -292,6 +294,7 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/cancella
     notify_problem(res,'','dati tra req.body e req.params non corrispondenti');
     return;
   }
+
 
   var db = mysql_connector.createConnection();
   db.connect();
@@ -541,7 +544,7 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
                               , req.body.fattore_reumatoide
                               , req.body.iddiagnosi_malattia
                               , id], function(err, result) {
-          if(err) 
+           if(err) 
             notify_problem(res,qry,err,mysql_conn);
 
           mysql_conn.commit(function(err) {
@@ -576,6 +579,52 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
   });
 });
 
+
+
+//terapie_pre
+app.post ('/data/pazienti/:idPaziente/terapie_pre' , function(req, res, next) {
+ 
+  if(req.body.lenght > 0 )
+    if( req.params.idPaziente != req.body.id_paziente)
+         res.send(500);
+    else{ res.send(500);}
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  // query insert 
+  var query_ins =  'INSERT INTO artrite.terapia_farmacologica_pre (id_paziente,cod_tipo_farmaco)';
+      query_ins += 'VALUES ( ?, ?)';
+  
+   var fields =  [ req.body.id_paziente , req.body.cod_tipo_farmaco];
+
+ mysql_conn.query(query_ins, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});  
+  });
+  mysql_conn.end();
+});
+
+app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella' , function(req, res, next) {
+  if(req.body) {
+    if( req.params.idPaziente != req.body.idPaziente)
+         res.send(500);
+  }
+  else{ res.send(500);}
+
+  // apertura connessione db
+  var mysql_conn = mysql_connector.createConnection();
+  mysql_conn.connect();
+  // query insert 
+  var query_delete ='DELETE FROM artrite.terapia_farmacologica_pre ';
+      query_delete += ' WHERE id_paziente= ? and idterapia_farmacologica_pre = ?';
+  var fields =  [ req.body.idPaziente,  req.body.idterapia_farmacologica_pre ];
+
+ mysql_conn.query(query_delete, fields, function(err, result) {
+    if(err) throw err;
+    res.send(200, {insertId: result.insertId});  
+  });
+  mysql_conn.end();
+});
 
 
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, res, next) {

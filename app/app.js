@@ -77,6 +77,10 @@ App.config([
       templateUrl: '/partials/pazientedettaglio.html'   
     })
 
+    .when('/pazienti/:idPaziente/terapie_pre', {
+      templateUrl: '/partials/pazientedettaglio.html'   
+    })
+
     .when('/no_connessione', {
       templateUrl: '/partials/no_connessione.html'      
     })
