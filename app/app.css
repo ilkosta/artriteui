@@ -4,3 +4,5 @@
 
 .growl{top:60px;}
 /*thead { background-color: rgba(82, 168, 236, 0.8); }*/
+
+th { padding-left: 3px; }
