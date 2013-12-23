@@ -44,11 +44,11 @@ div( ng-controller='SospensioniCtrl' )
                 label Caratteristiche della sospensione
             .row
               .col-md-6
-                .btn-group(data-toggle="buttons")
-                  label.btn.btn-primary(ng-repeat="tipo in cod_tipo_sospensione")
-                    input(type="radio", name="options"
-                      ng-click="tipo_sospensione.setTipoSospensione(tipo.cod_tipo_sospensione)") 
-                    | {{tipo.descrizione}}
+                select.selectpicker.form-control(
+                    ng-required='true'
+                    ng-options='tipo.cod_tipo_sospensione as tipo.descrizione for tipo in cod_tipo_sospensione'
+                    ng-model='eForm.cod_tipo_sospensione')
+
             br
             .row
               .col-md-5
@@ -80,7 +80,7 @@ div( ng-controller='SospensioniCtrl' )
                 label Motivo
                   select.selectpicker.form-control(
                     ng-required='true'
-                    ng-options='sosp.id as sosp.desc for sosp in tipo_sospensione.getMotiviSospensione()'
+                    ng-options='sosp.id as sosp.desc for sosp in tipo_sospensione.motiviSospensione'
                     ng-model='eForm.id_motivo_sospensione'
                     ng-change='tipo_sospensione.reloadMotiviSospensioneDett()'
                     )
@@ -106,12 +106,14 @@ div( ng-controller='SospensioniCtrl' )
               .col-md-3
                 button.btn.btn-success(
                     ng-show="eForm.idterapia_sospensione", 
-                    ng-click="aggiungiSospensione()")
+                    ng-click="aggiungiSospensione()"
+                    ng-enable="eForm.id_motivo_sospensione && eForm.data_sospensione")
                   i.glyphicon.glyphicon-ok-sign(  ng-show="eForm.idterapia_sospensione")
                   | &nbsp;Modifica
                 button.btn.btn-success(
                     ng-hide="eForm.idterapia_sospensione", 
-                    ng-click="aggiungiSospensione()")
+                    ng-click="aggiungiSospensione()"
+                    ng-enable="eForm.id_motivo_sospensione && eForm.data_sospensione")
                   i.glyphicon.glyphicon-plus-sign
                   | &nbsp;Aggiungi
               

@@ -2,6 +2,7 @@
   "name": "application-name",
   "version": "0.0.1",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "start": "node app.js"
   },
@@ -11,6 +12,8 @@
     "mysql": "*",
     "lodash": "*",
     "moment": "*",
-    "node-dev": ">=~2.1.4"
+    "node-dev": "~2.1.4",
+    "express-winston": "~0.2.1",
+    "winston": "~0.7.2"
   }
 }

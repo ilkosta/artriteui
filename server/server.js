@@ -10,10 +10,12 @@ var http = require('http');
 var path = require('path');
 var _    = require('lodash');
 var moment = require('moment');
+var expressWinston = require("express-winston");
+var winston = require("winston");
 
 // personal libs
 var mysql_connector = require('./db/config.js');
-
+//var logger = require('./utils/logger.js');
 
 var app = express();
 
@@ -26,6 +28,19 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
+app.use(expressWinston.errorLogger({
+      transports: [
+        new winston.transports.Console({
+          json: true,
+          colorize: true
+        })
+      ], 
+      //level: "inf",
+      meta: true, // optional: control whether you want to log the meta data about the request (default to true)
+      msg: "HTTP {{req.method}} {{req.url}}" // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
+    }));
+
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
@@ -158,7 +173,7 @@ var qry_paziente = [
   { nome_parametro: 'sospensioni',
     qry: 'select  tersosp.idterapia_sospensione' + 
 '     ,   tersosp.id_terapia' + 
-'     ,   tersosp.tipo_sospensione ' + 
+'     ,   tersosp.tipo_sospensione as cod_tipo_sospensione' + 
 '     ,   cts.descrizione as tipo_sospensione' + 
 '     ,   tersosp.id_sospensione' + 
 '     ,   ts.descrizione as sospensione' + 
@@ -223,19 +238,22 @@ app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) 
   mysql_conn.end();
 });
 
+var notify_problem = function (res,qry,what,params,conn) {
+  var re = /\?/;
+  _.each(params, function(p) {
+    qry = qry.replace(re, p);
+  });
+  console.log("errore eseguendo: " + qry);
+  console.log(what);
+  res.send(500,{err:what}); 
+  if(conn) 
+    conn.rollback();
+};
 
 
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna', function(req, res, next) {
-  var notify_problem = function (res,qry,what,conn) {
-    console.log("errore eseguendo: " + qry);
-    console.log(what);
-    res.send(500,{err:what}); // TODO.... da sistemare
-    if(conn) 
-      conn.rollback();
-  };
-  
   if(req.body.length === 0) 
-    notify_problem(res,'req.body.length === 0','');
+    notify_problem(res,'req.body.length === 0');
 
   var db = mysql_connector.createConnection();
   db.connect();
@@ -248,13 +266,13 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna
           qry +=  "data_inizio=?, ";
           qry +=  "data_fine=?, ";
           qry +=  "note=?, ";
-          qry +=  "id_sospensione=?";
+          qry +=  "id_sospensione=? ";
         qry +=  "WHERE idterapia_sospensione = ? ";
         qry +=  "  and exists( ";
         qry +=  "   select * from terapia t ";
         qry +=  "   where t.id_paziente = ? ";
         qry +=  "     and t.idterapia = terapia_sospensione.id_terapia)";
-    db.query(qry, [
+    var parameters = [
         req.body.id_sospensione_dettaglio
       , req.body.tipo_sospensione
       , req.body.data_inizio
@@ -263,13 +281,14 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna
       , req.body.id_sospensione
       , req.params.idterapia_sospensione
       , req.params.idPaziente
-      ], function(err, r, f) {
+      ];
+    db.query(qry, parameters, function(err, r, f) {
       if (err) 
-        notify_problem(res,qry,err,db);
+        notify_problem(res,qry,err, parameters,db);
       
       db.commit(function(err) {
         if(err) 
-          notify_problem(res,'commit',err,db);
+          notify_problem(res,'commit',err,[],db);
         else res.send('ok');
       });
     });
@@ -277,14 +296,6 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna
 });
 
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/cancella', function(req, res, next) {
-  var notify_problem = function(res,qry,what,conn) {
-    console.log("errore eseguendo: " + qry);
-    console.log(what);
-    res.send(500,{err:what}); // TODO.... da sistemare
-    if(conn) 
-      conn.rollback();
-  };
-  
   if(req.body.length === 0) {
     notify_problem(res,'','req.body.length === 0');
     return;
@@ -301,21 +312,22 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/cancella
   db.beginTransaction( function(err) {
     if (err) notify_problem(res,'connection',err);
 
-    var qry =   "DELETE terapia_sospensione ";
+    var qry =   "DELETE FROM terapia_sospensione ";
         qry +=  "WHERE idterapia_sospensione = ? and and exists (";
         qry +=  "    select * from terapia t";
         qry +=  "    where t.id_paziente = ?";
         qry +=  "      and t.idterapia = terapia_sospensione.id_terapia)";
-    db.query(qry, [
+    var params = [
         req.params.idterapia_sospensione
       , req.params.idPaziente
-      ], function(err, r, f) {
+      ];
+    db.query(qry, params, function(err, r, f) {
       if (err) 
-        notify_problem(res,qry,err,db);
+        notify_problem(res,qry,err, params,db);
       
       db.commit(function(err) {
         if(err) 
-          notify_problem(res,'commit',err,db);
+          notify_problem(res,'commit',err,[],db);
         else res.send('ok');
       });
     });
@@ -323,14 +335,6 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/cancella
 });
   
 app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, next) {
-  var notify_problem = function(res,qry,what,conn) {
-    console.log("errore eseguendo: " + qry);
-    console.log(what);
-    res.send(500,{err:what}); // TODO.... da sistemare
-    if(conn) 
-      conn.rollback();
-  };
-  
   if(req.body.length === 0) 
     notify_problem(res,'','req.body.length === 0');
 
@@ -341,17 +345,18 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
       notify_problem(res,'connection',err);
     // devi prendere l'id terapia
     var qry = "SELECT idterapia FROM terapia where id_paziente = ? limit 1";
-    db.query(qry, [req.params.idPaziente], function(err, r, f) {
+    var params = [req.params.idPaziente];
+    db.query(qry, params, function(err, r, f) {
       if (err) 
-        notify_problem(res,qry,err,db);
+        notify_problem(res,qry,err, params,db);
 
       var id_terapia = r[0].idterapia;
       if(!id_terapia)
-        notify_problem(res,"id_terapia nullo!", new Error("id_terapia nullo!"),db);        
+        notify_problem(res,"id_terapia nullo!", new Error("id_terapia nullo!"),[],db);        
 
       qry =   "INSERT INTO terapia_sospensione(id_terapia, id_sospensione_dettaglio, tipo_sospensione, data_inizio, data_fine, note, id_sospensione) ";
       qry +=   "                        VALUES(?,           ?,                        ?,              ?,            ?,          ?,    ?)";
-      db.query(qry, [
+      params = [
           id_terapia
         , req.body.id_sospensione_dettaglio
         , req.body.tipo_sospensione
@@ -359,13 +364,14 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
         , req.body.data_fine
         , req.body.note
         , req.body.id_sospensione
-        ], function(err, r, f) {
+        ];
+      db.query(qry, params, function(err, r, f) {
         if (err) 
-          notify_problem(res,qry,err,db);
+          notify_problem(res,qry,err, params,db);
         
         db.commit(function(err) {
           if(err) 
-            notify_problem(res,'commit',err,db);
+            notify_problem(res,'commit',err, [],db);
           else res.send('ok');
         });
       });
@@ -375,14 +381,6 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
   
   
 app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
-
-  var notify_problem = function(res,qry,what,conn) {
-    console.log("errore eseguendo: " + qry);
-    console.log(what);
-    res.send(500,{err:what}); // TODO.... da sistemare
-    if(conn) 
-      conn.rollback();
-  };
 
   if(req.body.length === 0) 
     return;
@@ -396,9 +394,10 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
     //var qry =   "SELECT  data_infusione";
         qry += " FROM   artrite.infusioni_tcz";
         qry += " WHERE  id_paziente = ?";
-    db.query(qry, [req.params.idPaziente], function(err, r, f) {
+    var params = [req.params.idPaziente];
+    db.query(qry, params, function(err, r, f) {
       if (err) 
-        notify_problem(res,qry,err,db);
+        notify_problem(res,qry,err, params,db);
       
 
       var vecchie_infusioni       = _(r).pluck('data_infusione').value();
@@ -413,11 +412,12 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
       // --------- allineo il db in parallelo----------
       if(infusioni_eliminate.length > 0) {
         qry = "DELETE from artrite.infusioni_tcz WHERE id_paziente = ? and data_infusione in (?)";
-        db.query(qry, [req.params.idPaziente, infusioni_eliminate ], function(err) {
-          if (err) notify_problem(res,qry,err,db);
+        params = [req.params.idPaziente, infusioni_eliminate ];
+        db.query(qry, params, function(err) {
+          if (err) notify_problem(res,qry,err, params,db);
           else if(nuove_infusioni.length === 0)
             db.commit(function(err) {
-              if(err) notify_problem(res,'commit',err,db);
+              if(err) notify_problem(res,'commit',err,[],db);
               else res.send('ok');
             });
         });
@@ -430,14 +430,15 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
             return;
 
           var d_infusione = data_inf.splice(0,1)[0];
-          db.query(qry, [req.params.idPaziente, d_infusione], function(err) {
-            if(err) notify_problem(res,qry,err,db);
+          params = [req.params.idPaziente, d_infusione];
+          db.query(qry, params, function(err) {
+            if(err) notify_problem(res,qry,err, params,db);
             if(data_inf.length > 0)
               return insNuovaInf(data_inf);
 
             // else  
             db.commit(function(err) {
-              if(err) notify_problem(res,'commit',err,db);
+              if(err) notify_problem(res,'commit',err,[],db);
               else res.send('ok');
             });
           });
@@ -463,16 +464,7 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
 // malattia: "artrite psoriasica"
 // nome: "Costantino"
 
-  function notify_problem(res,qry,what,conn) {
-    console.log("errore eseguendo: " + qry);
-    console.log(what);
-    res.send(500,{err:what}); // TODO.... da sistemare
-    if(conn) 
-      conn.rollback();
-  }
-
   function getNewConn() {
-    
     var mysql_conn = mysql_connector.createConnection();
     mysql_conn.connect();
     return mysql_conn;
@@ -508,13 +500,13 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
       qry +=  ' , min(iddiagnosi_malattia) as first_id';
       qry +=  ' from artrite.diagnosi_malattia'; 
       qry +=  ' where id_paziente = ?';
-  
+  var params = [req.params.idPaziente];
   mysql_conn = getNewConn();
-  mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
-    if(err) notify_problem(res,qry,err);
+  mysql_conn.query(qry, params, function(err, r, fields) {
+    if(err) notify_problem(res,qry,params,err);
     var nr_diagnosi = r[0][fields[0].name];
     if( nr_diagnosi > 1 ) {
-      return notify_problem(err);
+      return notify_problem(res,null,err);
     }
   });
   mysql_conn.end();
@@ -522,12 +514,13 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
 
   mysql_conn = getNewConn();
   mysql_conn.beginTransaction( function(err) {
-    if (err) notify_problem(res,'begin tran',err,mysql_conn);
+    if (err) notify_problem(res,'begin tran',err,[],mysql_conn);
     qry  =  "SELECT iddiagnosi_malattia";
     qry += " FROM   artrite.diagnosi_malattia";
     qry += " WHERE  id_paziente = ?";
-    mysql_conn.query(qry, [req.params.idPaziente], function(err, r, fields) {
-      if (err) notify_problem(res,qry,err,mysql_conn);
+    params = [req.params.idPaziente];
+    mysql_conn.query(qry, params, function(err, r, fields) {
+      if (err) notify_problem(res,qry,err, params, mysql_conn);
       if(r.length === 1) {
         var id = r[0][fields[0].name];
         qry  = 'update diagnosi_malattia';
@@ -537,18 +530,18 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
         qry += '   , fattore_reumatoide = ?';
         qry += '   , iddiagnosi_malattia = ?';
         qry += ' where iddiagnosi_malattia = ?';
-
-        mysql_conn.query(qry, [ req.body.anticorpi
-                              , req.body.cod_malattia
-                              , moment(req.body.data_diagnosi).format('YYYY-MM-DD')
-                              , req.body.fattore_reumatoide
-                              , req.body.iddiagnosi_malattia
-                              , id], function(err, result) {
+        params = [  req.body.anticorpi
+                  , req.body.cod_malattia
+                  , moment(req.body.data_diagnosi).format('YYYY-MM-DD')
+                  , req.body.fattore_reumatoide
+                  , req.body.iddiagnosi_malattia
+                  , id];
+        mysql_conn.query(qry, params, function(err, result) {
            if(err) 
-            notify_problem(res,qry,err,mysql_conn);
+            notify_problem(res,qry,err, params, mysql_conn);
 
           mysql_conn.commit(function(err) {
-            if (err) notify_problem(res,qry,err,mysql_conn);
+            if (err) notify_problem(res,qry,err, [], mysql_conn);
             else 
               res.send(200, {insertId: result.insertId});
           });
@@ -559,17 +552,17 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next)
         qry  = 'INSERT INTO diagnosi_malattia';
         qry += ' (anticorpi, cod_malattia, data_diagnosi, fattore_reumatoide, id_paziente)';
         qry += ' VALUES(?, ?, ?, ?, ?)';
-
-        mysql_conn.query(qry, [ req.body.anticorpi
-                              , req.body.cod_malattia
-                              , req.body.data_diagnosi.substring(0,10)
-                              , req.body.fattore_reumatoide
-                              , req.params.idPaziente ], function(err, result) {
+        params = [  req.body.anticorpi
+                  , req.body.cod_malattia
+                  , req.body.data_diagnosi.substring(0,10)
+                  , req.body.fattore_reumatoide
+                  , req.params.idPaziente ];
+        mysql_conn.query(qry, params, function(err, result) {
           if(err) 
-            notify_problem(res,qry,err,mysql_conn);
+            notify_problem(res,qry,err, params,mysql_conn);
 
           mysql_conn.commit(function(err) {
-            if (err) notify_problem(res,qry,err,mysql_conn);
+            if (err) notify_problem(res,qry,err, [],mysql_conn);
             else 
               res.send(200, {insertId: result.insertId});
           });
