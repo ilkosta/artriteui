@@ -5,6 +5,28 @@ momentFilters.filter('fromNow', function() {
     return (dateString != null) ? moment(dateString).fromNow() : '';
   };
 });
+
+momentFilters.filter('fromNowPrecisely', function() {
+  return function(dateString) {
+    if(!dateString)
+      return '';
+    var now = moment()
+      , dateParam = moment(dateString)
+      , years = now.diff(dateParam, 'year')
+      , afterYears = dateParam.add('years',years)
+      , months = now.diff(afterYears, 'month')
+      , days  = now.diff(afterYears.add('months',months), 'day');
+    
+    var s = (years > 0) ? '' + years + ' anni' : '';
+        s += (months > 0) ? ((s.length > 0) ? ', ': '') + months + ' mesi' : '';
+        s += (days > 0) ? ((s.length > 0) ? ' e ': '') + days + ' giorni' : '';
+        s += (s.length > 0) ? ' fa' : '';
+
+    return s;
+  };
+});
+
+
 // moment filter factory
 function getMomentDiffBy(param) {
   return function() {
