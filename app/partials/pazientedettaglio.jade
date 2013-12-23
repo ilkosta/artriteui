@@ -17,7 +17,7 @@
   // --- tentativo di usare angular-strap .... ma alla fine non mi serve no?
     div(data-fade="1", ngModel="activeTab", bs-tabs)
       div(data-title='Diagnosi'
-          ng-include="'/partials/diagnosi_malattia_form_by_combo.html'")
+          ng-include="'/partials/diagnosi.html'")
       div(data-title='Anamnesi'
           ng-include="'/partials/anamnesi.html'")     
       div(data-title='Fattori di rischio'
@@ -56,7 +56,7 @@
   .tab-content.ng-cloak
     .tab-pane(
       ng-class="getClass('/diagnosi')"
-      ng-include="'/partials/diagnosi_malattia_form_by_combo.html'")
+      ng-include="'/partials/diagnosi.html'")
     .tab-pane(
       ng-class="getClass('/anamnesi')"
       ng-include="'/partials/anamnesi.html'")

@@ -18,10 +18,18 @@ div( ng-controller='SospensioniCtrl' )
             
         tbody
           tr(ng-repeat="sosp in sospensioni", ng-class="sosp.class")
-            td.col-md-4 {{sosp.sospensione}}
-            td.col-md-2 {{sosp.dettaglio}}
-            td.col-md-1 {{sosp.data_inizio | date:"dd/MM/yyyy"}}
-            td.col-md-1 {{sosp.data_fine | date:"dd/MM/yyyy"}}
+            td.col-md-4
+              span(data-placement="bottom", tooltip="{{sosp.note}}") 
+                {{sosp.sospensione}}
+            td.col-md-2
+              // span(data-placement="bottom", tooltip="{{sosp.note}}") 
+              {{sosp.dettaglio}}
+            td.col-md-1 
+              span(data-placement="bottom", tooltip="{{sosp.data_inizio | fromNow }}")
+                {{sosp.data_inizio | date:"dd/MM/yyyy"}}
+            td.col-md-1
+              span(data-placement="bottom", tooltip="{{sosp.data_fine | fromNow }}")
+                {{sosp.data_fine | date:"dd/MM/yyyy"}}
             td
               button.btn.btn-xs.btn-default(ng-click="editSospensione(sosp.idterapia_sospensione)")
                 i.glyphicon.glyphicon-pencil

@@ -18,6 +18,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                     ng-model='diagnosi.data_diagnosi'
                     open='calendarOpened'
                     ui-validate='dataDiagnosiValida($value)' )
+                  span ({{ diagnosi.data_diagnosi | monthsFromNow }} mesi fa)
             br
             .row
               

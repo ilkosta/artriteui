@@ -1,4 +1,7 @@
-var TerapiaValutazioneCtrl = [
+(function (){
+var mod = angular.module('app.controllers');
+
+  mod.controller('TerapiaValutazioneCtrl', [
   '$scope','$routeParams', 
   '$timeout', '$http','loadDataListIntoScope',
   '$window','$log', 'growl', 
@@ -18,6 +21,7 @@ var TerapiaValutazioneCtrl = [
           : (0.56*Math.sqrt(t28)) + (0.28*Math.sqrt(sw28)) + (0.70*Math.log(ESR)) + (0.014*GH);
       }
 
+      
 
       // init: non c'è isogno che sia esposta allo $scope
       function init() {
@@ -54,11 +58,10 @@ var TerapiaValutazioneCtrl = [
       };
      
       $scope.canSave = function(on_save) {
-        
         var notify_err = function(what) {
           if(on_save) 
             $log.error(what);
-        }
+        };
 
         //-------------------------------
         // controlli
@@ -76,13 +79,15 @@ var TerapiaValutazioneCtrl = [
         }
 
         // dati obbligatori
-        var obbligatori = [ $scope.tv_aggiungi.tempo,
-                            $scope.tv_aggiungi.art_tumefatte,
-                            $scope.tv_aggiungi.art_dolenti,
-                            $scope.tv_aggiungi.ves,
-                            $scope.tv_aggiungi.vas_medico,
-                            $scope.tv_aggiungi.vas_paziente,
-                            $scope.tv_aggiungi.pcr ];
+        // var obbligatori = [ $scope.tv_aggiungi.tempo,
+        //                     $scope.tv_aggiungi.art_tumefatte,
+        //                     $scope.tv_aggiungi.art_dolenti,
+        //                     $scope.tv_aggiungi.ves,
+        //                     $scope.tv_aggiungi.vas_medico,
+        //                     $scope.tv_aggiungi.vas_paziente,
+        //                     $scope.tv_aggiungi.pcr ];
+
+        var obbligatori = [];
         if( $window._.some(obbligatori, function(v) { return v == null; })) {
           notify_err('ci sono valori obbligatori assenti');
           return false;
@@ -131,4 +136,5 @@ var TerapiaValutazioneCtrl = [
 
       init();
 
-     }];
+     }]);
+})();
