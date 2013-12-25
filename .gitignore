@@ -10,6 +10,8 @@ node_modules
 .idea/*
 
 _public
+server/public
+
 node_modules/*
 server/node_modules/*
 npm-debug.log
@@ -28,3 +30,6 @@ chestavofacendo.txt
 
 *.tar*
 *.leo
+*.bz2
+*.xz
+
