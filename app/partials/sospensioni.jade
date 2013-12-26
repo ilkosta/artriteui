@@ -39,12 +39,12 @@ div( ng-controller='SospensioniCtrl' )
 
     .col-xs-12.col-md-5
       button.btn.btn-default(
-        ng-click="formState.insSospensione = !formState.insSospensione"
-        ng-show="!formState.insSospensione") 
+        ng-click="eForm.visible = true"
+        ng-hide="eForm.visible") 
         i.glyphicon.glyphicon-plus-sign
         | &nbsp;Aggiungi Sospensione
 
-      form(novalidate, role="form", name="form", ng-show="formState.insSospensione")      
+      form(novalidate, role="form", name="form", ng-show="eForm.visible")      
         fieldset
           .form-group
             .row
@@ -110,7 +110,7 @@ div( ng-controller='SospensioniCtrl' )
             .row
               .col-md-2.col-md-offset-6
                 button.btn.btn-default(
-                    ng-click="formState.insSospensione = !formState.insSospensione") Annulla
+                    ng-click="eForm.init()") Annulla
               .col-md-3
                 button.btn.btn-success(
                     ng-show="eForm.idterapia_sospensione", 

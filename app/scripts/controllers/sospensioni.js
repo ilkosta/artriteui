@@ -23,6 +23,8 @@
         this.data_sospensione = null;
         this.data_fine_sospensione = null;
         this.annotazioni = null;
+
+        this.visible = false;
       };
 
       editForm.prototype.edit = function(sosp) {
@@ -34,6 +36,7 @@
         this.data_fine_sospensione = sosp.data_fine;
         this.annotazioni = sosp.note;
       };
+
 
       editForm.prototype.setMotivoSospensione = function(v) { this.id_motivo_sospensione = v; };
       editForm.prototype.setMotivoSospensione2 = function(v) { this.id_sospensione_dettaglio = v; };
@@ -105,7 +108,7 @@
         if(sosp) {
           sosp.class = "warning";
           $scope.eForm.edit(sosp);
-          $scope.formState.insSospensione = true;
+          $scope.eForm.visible = true;
           $scope.tipo_sospensione.reloadMotiviSospensioneDett();
         }
       };
@@ -149,7 +152,6 @@
 
       var init = function() {
         $scope.eForm.init();
-        $scope.formState = { insSospensione: false };
 
         loadParameters();
         loadData();
