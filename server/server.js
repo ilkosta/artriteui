@@ -275,8 +275,8 @@ app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna
     var parameters = [
         req.body.id_sospensione_dettaglio
       , req.body.tipo_sospensione
-      , req.body.data_inizio
-      , req.body.data_fine
+      , moment(req.body.data_inizio).format('YYYY-MM-DD')
+      , moment(req.body.data_fine).format('YYYY-MM-DD')
       , req.body.note
       , req.body.id_sospensione
       , req.params.idterapia_sospensione
@@ -360,8 +360,8 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
           id_terapia
         , req.body.id_sospensione_dettaglio
         , req.body.tipo_sospensione
-        , req.body.data_inizio 
-        , req.body.data_fine
+        , moment(req.body.data_inizio).format('YYYY-MM-DD') 
+        , moment(req.body.data_fine).format('YYYY-MM-DD')
         , req.body.note
         , req.body.id_sospensione
         ];

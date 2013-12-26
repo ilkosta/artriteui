@@ -11,6 +11,7 @@ node_modules
 
 _public
 server/public
+server/db/config.js
 
 node_modules/*
 server/node_modules/*
