@@ -38,7 +38,7 @@ var fattoriRischioCtrl = [
       
     $scope.salvaFattore = function(fdr){
       $scope.formState.saving = true;
-      $scope.fdr.idPaziente = $routeParams.idPaziente;
+      $scope.fdr.id_paziente = $routeParams.idPaziente;
       var save =1;
       if(!$scope.fdr.idtipo_malattia){
           growl.addErrorMessage('Tipo malattia Obbligatoria');

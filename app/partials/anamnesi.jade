@@ -22,7 +22,11 @@ div(ng-controller='anamnesiCtrl')
             .col-xs-5.pull-right
               button.btn.btn-primary(
                 ng-click='salvaPatologieConcomitante(tc_aggiungi)'
-                ng-disabled='formState.saving') Salva 
+                ng-disabled='formState.saving || tc_aggiungi.idtipo_malattia == null') Salva 
+
+
+
+
       .col-xs-12.col-md-6
         .row
           h4(ng-show="patologie_concomitanti.length == 0") Non sono state individuate patologie concomitanti.
