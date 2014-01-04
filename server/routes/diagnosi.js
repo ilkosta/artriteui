@@ -3,7 +3,8 @@
 
 	var mysql_connector = require('../db/config.js')
 		, notify_problem = require('../utils/problem_notifier.js').notify_problem
-		, _ = require('lodash');
+		, _ = require('lodash')
+		, moment = require('moment');
 
 
 	exports.get = function(req, res, next) {
