@@ -125,7 +125,7 @@
           ' join terapia t on tersosp.id_terapia = t.idterapia' +
           ' left join cod_tipo_sospensione cts on tersosp.tipo_sospensione = cts.cod_tipo_sospensione' +
           ' join tipo_sospensione ts on tersosp.id_sospensione = ts.idtipo_motivo_sospensione' +
-          ' join tipo_sospensione_dettaglio tsd ' +
+          ' left join tipo_sospensione_dettaglio tsd ' +
           '     on tersosp.id_sospensione_dettaglio = tsd.id_sospensione_dettaglio' +
           '     and tersosp.id_sospensione = tsd.id_tipo_sospensione' +
           ' where t.id_paziente = ?'

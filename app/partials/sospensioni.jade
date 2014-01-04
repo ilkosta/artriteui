@@ -115,13 +115,14 @@ div( ng-controller='SospensioniCtrl' )
                 button.btn.btn-success(
                     ng-show="eForm.idterapia_sospensione", 
                     ng-click="aggiungiSospensione()"
-                    ng-enable="eForm.id_motivo_sospensione && eForm.data_sospensione")
+                    ng-disabled="!eForm.id_motivo_sospensione || !eForm.data_sospensione"
+                    )
                   i.glyphicon.glyphicon-ok-sign(  ng-show="eForm.idterapia_sospensione")
                   | &nbsp;Modifica
                 button.btn.btn-success(
                     ng-hide="eForm.idterapia_sospensione", 
                     ng-click="aggiungiSospensione()"
-                    ng-enable="eForm.id_motivo_sospensione && eForm.data_sospensione")
+                    ng-disabled="!eForm.id_motivo_sospensione || !eForm.data_sospensione")
                   i.glyphicon.glyphicon-plus-sign
                   | &nbsp;Aggiungi
               

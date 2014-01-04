@@ -1,1 +1,5 @@
 non ho capito su terapia_pre a cosa servono "save==1" e "del == 1"
+
+
+TODO:
+1- terapia_sospensione.id_sospensione_dettaglio c'è da impostarlo a nullabile sul db
