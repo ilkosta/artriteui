@@ -31,7 +31,10 @@ div(ng-controller='TerapiaEditCtrl')
           br
           input(type='number',min='0.0000',max='1000', step='0.05', ng-model ='tc_aggiungi.dose' )
       
-        button.btn.btn-success.inline-field(ng-click='aggiungi_tc()')
+        button.btn.btn-success.inline-field(
+            ng-click='aggiungi_tc()'
+            ng-disabled='!tc_aggiungi.id_tipo_farmaco || !tc_aggiungi.dose'
+          )
           i.glyphicon.glyphicon-plus-sign
           | &nbsp; Aggiungi
       
