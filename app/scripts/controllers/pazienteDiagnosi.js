@@ -52,11 +52,15 @@
           .success(function(data, status, headers, config) {
             $scope.diagnosi = data || {};
             $scope.master   = angular.copy($scope.diagnosi);
+
+            if(_.isEmpty($scope.diagnosi))
+              $scope.diagnosi.data_diagnosi = new Date();
           })
           .error(function(data, status, headers, config) {
             growl.addErrorMessage("Errore nel caricamento della diagnosi del paziente.\nControlla la connessione al server!");
             $scope.diagnosi = $scope.master = {};
           });
+
 
         initInfusioni();
         
