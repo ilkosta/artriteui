@@ -19,25 +19,42 @@
 			return;
 		}
 
-		
-		// apertura connessione db
-		var mysql_conn = mysql_connector.createConnection();
-		mysql_conn.connect();
-		// query insert 
-		var query_ins = 'INSERT INTO artrite.terapia_farmacologica_pre (id_paziente,cod_tipo_farmaco)';
-		query_ins += 'VALUES ( ?, ?)';
+		var db = mysql_connector.createConnection();
+		db.connect();
+		db.beginTransaction(function(err) {
+			if (err) notify_problem(res, 'connection', err);
 
-		var fields = [req.body.id_paziente, req.body.cod_tipo_farmaco];
+			var qry = "SELECT * FROM artrite.terapia_farmacologica_pre WHERE  id_paziente = ? and cod_tipo_farmaco = ?";
+			var params = [req.params.idPaziente, req.body.cod_tipo_farmaco];
+			db.query(qry, params, function(err, r, f) {
+				if (err) {
+					notify_problem(res, qry, err, params, db);
+					return;
+				}
 
-		mysql_conn.query(query_ins, fields, function(err, result) {
-			if (err)
-				notify_problem(res, query_ins, err, fields);
-			else
-				res.send(200, {
-					insertId: result.insertId
+				if (r.length !== 0) {
+					db.rollback(function() {});
+					res.send('ok');
+					return;
+				}
+
+				qry = "INSERT INTO artrite.terapia_farmacologica_pre(id_paziente,cod_tipo_farmaco) VALUES(?,?)";
+				db.query(qry, params, function(err,result) {
+					if (err) {
+						notify_problem(res, qry, err, params, db);
+						return;
+					}
+
+
+					db.commit(function(err) {
+						if (err) notify_problem(res, 'commit', err, [], db);
+						else res.send(200, {
+              insertId: result.insertId
+            });
+					});
 				});
+			});
 		});
-		mysql_conn.end();
 	};
 
 	exports.del = function(req, res, next) {
