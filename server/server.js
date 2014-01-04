@@ -23,6 +23,7 @@ var routes = require('./routes')
   , diagnosi = require('./routes/diagnosi.js')
   , infusioni = require('./routes/infusioni.js')
   , patologie_concomitanti = require('./routes/patologie_concomitanti.js')
+  , terapie_pre = require('./routes/terapie_pre.js')
   ;
 
 var app = express();
@@ -43,6 +44,10 @@ app.post('/data/pazienti/:idPaziente/infusioni/tcz/cancella', infusioni.del);
 // fattori di rischio / patologie concomitanti
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , patologie_concomitanti.ins);
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , patologie_concomitanti.del);
+
+//terapie_pre
+app.post ('/data/pazienti/:idPaziente/terapie_pre', terapie_pre.ins);
+app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella', terapie_pre.del);
 
 
 
@@ -185,55 +190,6 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
 
 
 
-
-//terapie_pre
-app.post ('/data/pazienti/:idPaziente/terapie_pre' , function(req, res, next) {
- 
-  if(req.body.lenght > 0 )
-    if( req.params.idPaziente != req.body.id_paziente)
-         res.send(500);
-    else{ res.send(500);}
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  // query insert 
-  var query_ins =  'INSERT INTO artrite.terapia_farmacologica_pre (id_paziente,cod_tipo_farmaco)';
-      query_ins += 'VALUES ( ?, ?)';
-  
-   var fields =  [ req.body.id_paziente , req.body.cod_tipo_farmaco];
-
- mysql_conn.query(query_ins, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query_ins,err,fields);
-    else
-      res.send(200, {insertId: result.insertId});  
-  });
-  mysql_conn.end();
-});
-
-app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella' , function(req, res, next) {
-  if(req.body) {
-    if( req.params.idPaziente != req.body.idPaziente)
-         res.send(500);
-  }
-  else{ res.send(500);}
-
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  // query insert 
-  var query_delete ='DELETE FROM artrite.terapia_farmacologica_pre ';
-      query_delete += ' WHERE id_paziente= ? and idterapia_farmacologica_pre = ?';
-  var fields =  [ req.body.idPaziente,  req.body.idterapia_farmacologica_pre ];
-
- mysql_conn.query(query_delete, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query_delete,fields,params);
-    
-    res.send(200, {insertId: result.insertId});  
-  });
-  mysql_conn.end();
-});
 
 
 
