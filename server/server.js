@@ -26,6 +26,10 @@ dev_env.configure_env(app);
 
 require('./routes/get.js').add_simple_get(app);
 
+// paziente
+var paziente = require('./routes/paziente.js');
+app.post('/data/pazienti/pazientenuovo', paziente.ins);
+
 // diagnosi
 var diagnosi = require('./routes/diagnosi.js');
 app.get('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.get );
@@ -53,6 +57,10 @@ app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , terapie_concomitan
 app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.ins);
 app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.upd);
 
+// terapia valutazione
+var terapia_valutazione = require('./routes/terapia_valutazione.js');
+app.post('/data/pazienti/:idPaziente/terapia_valutazione/:tempo/cancella' , terapia_valutazione.del);
+app.post('/data/pazienti/:idPaziente/terapia_valutazione' , terapia_valutazione.ins);
 
 
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna', function(req, res, next) {
@@ -201,81 +209,8 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
 
 
 
-app.post('/data/pazienti/:idPaziente/terapia_valutazione/:tempo/cancella' , function(req, res, next) {
-
-  if( req.params.idPaziente != req.body.id_paziente)
-    res.send(500);
-
-  if( req.params.tempo != req.body.tempo)
-    res.send(500);
-
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  var qry = 'delete from artrite.terapia_valutazione where id_paziente = ? and tempo = ?';
-  var params = [req.params.idPaziente, req.params.tempo];
-  mysql_conn.query(qry,params , function(err, rows, fields) {
-    if (err) 
-      notify_problem(res,qry,err,params);
-    res.send(200);    
-  });
-  mysql_conn.end();
-});
 
 
-
-app.post('/data/pazienti/:idPaziente/terapia_valutazione' , function(req, res, next) {
-
-    if( req.params.idPaziente === req.body.idPaziente )
-    return notify_problem(res, 'nel json ricevuto l\'idPaziente non coincide con quello del PUT');
-
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  // query
-  var  query   =   'INSERT INTO artrite.terapia_valutazione( ';
-      query   +=  ' id_paziente, art_dolenti, art_tumefatte, pcr, ves, vas_paziente, vas_medico, das28, sdai, cdai, tempo) ';
-      query   +=  ' VALUES( ?,    ?,          ?,              ?,  ?,    ?,            ?,          ?,    ?,    ?,    ?    )' ;
-
-
-  var fields =  [ req.body.id_paziente  ,req.body.art_dolenti, req.body.art_tumefatte
-                , req.body.pcr, req.body.ves, req.body.vas_paziente, req.body.vas_medico
-                , req.body.das28, req.body.sdai, req.body.cdai, req.body.tempo ];
-
-
-  mysql_conn.query(query, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query,err,fields);
-
-    res.send(200, {insertId: result.insertId});
-  });
-  mysql_conn.end();
-});
-
-app.post('/data/pazienti/pazientenuovo', function(req,res,next){
-  // acluni controlli
-  if(!date_utils.isDateInRange(req.body.datadinascita, moment().subtract('years',100)))
-    notify_problem(res,"chek input: data inizio = ?","data di inizio non valida",[req.body.datadinascita]);
-
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  //debugger;
-  var query =   'INSERT INTO artrite.paziente (NOME, COGNOME,DATA_NASCITA,CODICE_FISCALE,sesso)';
-      query +=  ' VALUES( ?, ?, ?, ? ,? )';
-      var fields =  [ req.body.nome, req.body.cognome
-                    , moment(req.body.datadinascita).format('YYYY-MM-DD')
-                    , req.body.codicefiscale,req.body.gender
-                    ];
-
-    mysql_conn.query(query, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query,err,fields);
-
-    res.send(200, {insertId: result.insertId});
-  });
-  mysql_conn.end();
-});
 
 
 

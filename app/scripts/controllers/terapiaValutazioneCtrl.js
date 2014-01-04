@@ -57,6 +57,8 @@ var mod = angular.module('app.controllers');
           });
       };
      
+      
+
       $scope.canSave = function(on_save) {
         var notify_err = function(what) {
           if(on_save) 
