@@ -35,6 +35,8 @@
           .error(function(data, status, headers, config) {
             growl.addErrorMessage("Errore nel caricamento delle infusioni del paziente.\nControlla la connessione al server!");
           });
+
+        $scope.nuova_infusione = new Date();
       }
 
 
@@ -142,7 +144,7 @@
 
       $scope.cancellaInfusione = function() {
         var da_cancellare = $scope.infusioni[$scope.formState.infusione_da_cancellare];
-        
+
         $http.post(dataUrl.del_infusione, da_cancellare)
           .success(function(data, status,heades,config) {
             //growl.addSuccessMessage("infusioni aggiornate");
