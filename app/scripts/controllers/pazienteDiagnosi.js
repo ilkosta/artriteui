@@ -141,7 +141,9 @@
       $scope.setInfToDelete = function(i) { $scope.formState.infusione_da_cancellare = i; }
 
       $scope.cancellaInfusione = function() {
-        $http.post(dataUrl.del_infusione, infusioni[formState.infusione_da_cancellare])
+        var da_cancellare = $scope.infusioni[$scope.formState.infusione_da_cancellare];
+        
+        $http.post(dataUrl.del_infusione, da_cancellare)
           .success(function(data, status,heades,config) {
             //growl.addSuccessMessage("infusioni aggiornate");
             initInfusioni();

@@ -123,7 +123,13 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                 .col-md-8
                   p 
                     span.lead {{ infusioni[0].data_infusione | date:'EEEE dd/MM/yyyy'}}
-                  p ({{ infusioni[0].data_infusione | daysFromNow }} giorni fa)                  
+                  p ({{ infusioni[0].data_infusione | fromNowPrecisely }})
+                    button.btn.btn-xs.btn-danger(
+                      ng-click="setInfToDelete(0)"
+                      data-toggle="modal"
+                      data-target="#cancella_infusione_dlg")
+                      //i.glyphicon.glyphicon-minus-sign
+                      i.glyphicon.glyphicon-trash
                   
                   // elenco delle infusioni
                   .fade.in(ng-show='infusioni.length > 1 && formState.show_infusioni' )  
