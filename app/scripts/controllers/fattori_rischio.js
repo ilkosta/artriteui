@@ -45,7 +45,7 @@ var fattoriRischioCtrl = [
           $scope.formState.saving = false;
           save=0;
       }
-      if(save == 1){      
+      if(save == 1) {      
           $http.post('/data/pazienti/' + $routeParams.idPaziente + '/patologie_concomitanti', $scope.fdr )
             .success(function(data, status, headers, config) {
                     $log.info('salvataggio Fattori di Rischio avvenuto con successo');

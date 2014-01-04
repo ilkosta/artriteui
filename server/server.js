@@ -22,6 +22,7 @@ var dev_env = require('./environments/dev.js');
 var routes = require('./routes')
   , diagnosi = require('./routes/diagnosi.js')
   , infusioni = require('./routes/infusioni.js')
+  , patologie_concomitanti = require('./routes/patologie_concomitanti.js')
   ;
 
 var app = express();
@@ -38,6 +39,11 @@ app.post('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.set);
 // infusioni
 app.post('/data/pazienti/:idPaziente/infusioni/tcz/aggiungi', infusioni.ins);
 app.post('/data/pazienti/:idPaziente/infusioni/tcz/cancella', infusioni.del);
+
+// fattori di rischio / patologie concomitanti
+app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , patologie_concomitanti.ins);
+app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , patologie_concomitanti.del);
+
 
 
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna', function(req, res, next) {
@@ -229,52 +235,6 @@ app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella' , function(req, res,
   mysql_conn.end();
 });
 
-
-app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , function(req, res, next) {
-  if(req.body.lenght > 0 )
-    if( req.params.idPaziente != req.body.id_paziente)
-         res.send(500);
-    else{ res.send(500);}
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  // query insert 
-  var query_ins ='INSERT INTO artrite.anamnesi (id_paziente,id_tipo_malattia, descrizione )';
-      query_ins += ' VALUES ( ?, ?, ?)';
-  
-   var fields =  [ req.body.idPaziente , req.body.idtipo_malattia, req.body.descrizione ];
-
- mysql_conn.query(query_ins, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query_ins,err,fields);
-
-    res.send(200, {insertId: result.insertId});  
-  });
-  mysql_conn.end();
-});
-
-app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , function(req, res, next) {
-  if(req.body) {
-    if( req.params.idPaziente != req.body.id_paziente)
-         res.send(500);
-  }
-  else{ res.send(500);}
-
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  // query insert 
-  var query_delete ='DELETE FROM artrite.anamnesi ';
-      query_delete += ' WHERE id_paziente= ? and idpatologia_concomitante = ?';
-  var fields =  [ req.body.id_paziente,  req.body.idpatologia_concomitante ];
-
- mysql_conn.query(query_delete, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query_delete,err,fields);
-    res.send(200, {insertId: result.insertId});  
-  });
-  mysql_conn.end();
-});
 
 
 app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, next) {
