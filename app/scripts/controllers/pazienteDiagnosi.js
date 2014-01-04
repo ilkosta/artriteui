@@ -117,6 +117,7 @@
         
         $http.post(dataUrl.diagnosi, $scope.diagnosi)
           .success(function(data, status, headers, config) {
+              $log.info('salvataggio Diagnosi avvenuto con successo');
                 growl.addSuccessMessage("Diagnosi salvata con successo");
                 $scope.formState.saving = false;
                 Init();
@@ -132,6 +133,8 @@
       function save_infusione(infusioni_da_salvare) {
         $http.post(dataUrl.ins_infusione, infusioni_da_salvare)
           .success(function(data, status,heades,config) {
+            $log.info('salvataggio Infusione avvenuto con successo: ' + infusioni_da_salvare);
+
             //growl.addSuccessMessage("infusioni aggiornate");
             initInfusioni();
           })
@@ -151,6 +154,8 @@
 
         $http.post(dataUrl.del_infusione, da_cancellare)
           .success(function(data, status,heades,config) {
+            $log.info('cancellazione Infusione avvenuto con successo: ' + da_cancellare);
+
             //growl.addSuccessMessage("infusioni aggiornate");
             initInfusioni();
           })
