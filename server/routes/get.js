@@ -107,7 +107,7 @@
         qry: 'select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?'
       }, {
         nome_parametro: 'terapia_valutazione',
-        qry: 'SELECT tv.* FROM artrite.terapia_valutazione tv where tv.id_paziente=?'
+        qry: 'SELECT tv.* FROM artrite.terapia_valutazione tv where tv.id_paziente=? order by tv.tempo'
       }, {
         nome_parametro: 'sospensioni',
         qry: 'select  tersosp.idterapia_sospensione' +

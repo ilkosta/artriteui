@@ -20,7 +20,7 @@ div(ng-controller='fattoriRischioCtrl')
 
         button.btn.btn-success(
           ng-click='salvaFattore(fdr)'
-          ng-disabled='formState.saving') 
+          ng-disabled='formState.saving || !fdr.idtipo_malattia') 
           i.glyphicon.glyphicon-plus-sign
           | &nbsp;Aggiungi 
 
