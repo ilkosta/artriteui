@@ -37,7 +37,7 @@ var anamnesiCtrl = [
     
     $scope.salvaPatologieConcomitante = function(tc_aggiungi){
         $scope.formState.saving = true;
-        $scope.tc_aggiungi.idPaziente = $routeParams.idPaziente;
+        $scope.tc_aggiungi.id_paziente = $routeParams.idPaziente;
         var save =1;
         if(!$scope.tc_aggiungi.descrizione) {
           growl.addErrorMessage('Descrizione Obbligatoria');

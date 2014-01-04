@@ -9,20 +9,29 @@
 
 
 	exports.ins = function(req, res, next) {
-		if (req.body.lenght > 0)
-			if (req.params.idPaziente != req.body.id_paziente)
-				res.send(500);
-			else {
-				res.send(500);
-			}
-			// apertura connessione db
+		if (req.body.lenght === 0) {
+			res.send(500);
+			return;
+		}
+
+		if (req.params.idPaziente != req.body.id_paziente) {
+			res.send(500);
+			return;
+		}
+
+		if(!req.body.idtipo_malattia) {
+			notify_problem(res, 'controllo parametri', 'req.body.idtipo_malattia non presente!');
+			return;
+		}
+
+		// apertura connessione db
 		var mysql_conn = mysql_connector.createConnection();
 		mysql_conn.connect();
 		// query insert 
 		var query_ins = 'INSERT INTO artrite.anamnesi (id_paziente,id_tipo_malattia, descrizione )';
 		query_ins += ' VALUES ( ?, ?, ?)';
 
-		var fields = [req.body.idPaziente, req.body.idtipo_malattia, req.body.descrizione];
+		var fields = [req.body.id_paziente, req.body.idtipo_malattia, req.body.descrizione];
 
 		mysql_conn.query(query_ins, fields, function(err, result) {
 			if (err)
@@ -36,11 +45,14 @@
 	};
 
 	exports.del = function(req, res, next) {
-		if (req.body) {
-			if (req.params.idPaziente != req.body.id_paziente)
-				res.send(500);
-		} else {
+		if (req.body.lenght === 0) {
 			res.send(500);
+			return;
+		}
+
+		if (req.params.idPaziente != req.body.id_paziente) {
+			res.send(500);
+			return;
 		}
 
 		// apertura connessione db
