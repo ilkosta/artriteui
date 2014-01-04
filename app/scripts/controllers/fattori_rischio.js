@@ -8,7 +8,7 @@ var fattoriRischioCtrl = [
 
 
 
-	// parametri: _fattori_rischio 
+  // parametri: _fattori_rischio 
   loadDataListIntoScope(
         $scope,
         [ 'fattori_rischio' ],
@@ -36,8 +36,8 @@ var fattoriRischioCtrl = [
   }
 
       
-	  $scope.salvaFattore = function(fdr){
-	    $scope.formState.saving = true;
+    $scope.salvaFattore = function(fdr){
+      $scope.formState.saving = true;
       $scope.fdr.idPaziente = $routeParams.idPaziente;
       var save =1;
       if(!$scope.fdr.idtipo_malattia){
@@ -49,7 +49,7 @@ var fattoriRischioCtrl = [
           $http.post('/data/pazienti/' + $routeParams.idPaziente + '/patologie_concomitanti', $scope.fdr )
             .success(function(data, status, headers, config) {
                     $log.info('salvataggio Fattori di Rischio avvenuto con successo');
-                    growl.addSuccessMessage('Salvataggio Fattori di Rischio avvenuto con successo');
+                    //growl.addSuccessMessage('Salvataggio Fattori di Rischio avvenuto con successo');
                     $scope.formState.saving = false;  
                     init();                  
               })
@@ -67,13 +67,15 @@ var fattoriRischioCtrl = [
           $scope.formState.saving = false;
           del=0;
         }
-        if(f.id_paziente==null)
+        
+        if(!f.id_paziente)
           f.id_paziente =$routeParams.idPaziente;
+
         if(del == 1){      
           $http.post('/data/pazienti/' + $routeParams.idPaziente + '/patologie_concomitanti/cancella', f )
             .success(function(data, status, headers, config) {
                 $log.info('eliminazione fattore di richio avvenuto con successo');
-                growl.addSuccessMessage('Eliminazione fattore di rischio avvenuto con successo');
+                //growl.addSuccessMessage('Eliminazione fattore di rischio avvenuto con successo');
                 init();
               })
             .error(function(data, status, headers, config) {              
