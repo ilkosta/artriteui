@@ -373,7 +373,7 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
 });
   
   
-app.post('/data/pazienti/:idPaziente/infusioni/tcz', function(req, res, next) {
+app.post('/data/pazienti/:idPaziente/infusioni/tcz/aggiungi', function(req, res, next) {
 
   if(req.body.length === 0) 
     return;

@@ -60,22 +60,22 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
               
 
               // ctrl data di infusione
-              // div(ng-show='formState.ins_infusione')
-                label.inline-field Data infusione
-                  .form-horizontal
-                    input( 
-                      name='data_infusione'
-                      type='text'
-                      datepicker-popup='dd-MM-yyyy'
-                      datepicker-options='dateOptions'
-                      datepicker-month-format='MM'
-                      ng-required='false'
-                      ng-model='nuova_infusione'
-                      open='calendarOpened'
-                      ui-validate='dataInfusioneValida($value)')
-                button.btn.btn-success(
-                  ng-disabled='inQuestoMese(nuova_infusione)'                
-                  ng-click='add_infusione()') ok
+              //- div(ng-show='formState.ins_infusione')
+              //-   label.inline-field Data infusione
+              //-     .form-horizontal
+              //-       input( 
+              //-         name='data_infusione'
+              //-         type='text'
+              //-         datepicker-popup='dd-MM-yyyy'
+              //-         datepicker-options='dateOptions'
+              //-         datepicker-month-format='MM'
+              //-         ng-required='false'
+              //-         ng-model='nuova_infusione'
+              //-         open='calendarOpened'
+              //-         ui-validate='dataInfusioneValida($value)')
+              //-   button.btn.btn-success(
+              //-     ng-disabled='inQuestoMese(nuova_infusione)'                
+              //-     ng-click='add_infusione()') ok
 
               div(ng-show='formState.ins_infusione')
                 label.inline-field Data infusione
