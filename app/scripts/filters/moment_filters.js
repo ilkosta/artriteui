@@ -17,15 +17,10 @@ momentFilters.filter('fromNowPrecisely', function() {
       , months = now.diff(afterYears, 'month')
       , days  = now.diff(afterYears.add('months',months), 'day');
     
-    if( years === months === days == 0)
-      return 'oggi';
-    if( years === months === 0 && days == 1)
-      return 'ieri';
-
     var s = (years > 0) ? '' + years + ' anni' : '';
         s += (months > 0) ? ((s.length > 0) ? ', ': '') + months + ' mesi' : '';
         s += (days > 0) ? ((s.length > 0) ? ' e ': '') + days + ' giorni' : '';
-        s += (s.length === 0) ? '' : ' fa';
+        s += (s.length === 0) ? 'oggi' : ' fa';
 
     return s;
   };

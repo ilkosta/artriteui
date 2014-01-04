@@ -1,5 +1,6 @@
 ;(function () {
   'use strict';
+var moment = require('moment');
 
 exports.isDateInRange = function(_d, _d1, _d2) {
   if(!_d)
