@@ -14,7 +14,18 @@ var _ = require('lodash');
 			return;
 		}
 
-		if (req.params.idPaziente != req.body.id_paziente) {
+		var idPazienteOk = function() {
+			var id_pazienti = _(req.body).pluck('id_paziente').unique().value();
+			if(id_pazienti.length !== 1)
+				return false;
+			if(req.params.idPaziente != id_pazienti[0])
+				return false;
+
+			return true;
+		}
+		
+
+		if (!idPazienteOk()) {
 			res.send(500);
 			return;
 		}

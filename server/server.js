@@ -10,48 +10,48 @@ var _    = require('lodash');
 var moment = require('moment');
 
 
-
-var date_utils = require('./utils/date.js');
 var notify_problem = require('./utils/problem_notifier.js').notify_problem;
 
 // personal libs
 var mysql_connector = require('./db/config.js');
 var dev_env = require('./environments/dev.js');
+var date_utils = require('./utils/date.js');
 
+// ----------------------------------------------------------------------------
 // rotte
-var routes = require('./routes')
-  , diagnosi = require('./routes/diagnosi.js')
-  , infusioni = require('./routes/infusioni.js')
-  , patologie_concomitanti = require('./routes/patologie_concomitanti.js')
-  , terapie_pre = require('./routes/terapie_pre.js')
-  , terapie_concomitanti = require('./routes/terapie_concomitanti.js')
-  ;
-
+// ----------------------------------------------------------------------------
 var app = express();
 
 dev_env.configure_env(app);
 
 require('./routes/get.js').add_simple_get(app);
 
-
 // diagnosi
+var diagnosi = require('./routes/diagnosi.js');
 app.get('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.get );
 app.post('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.set);
 
 // infusioni
+var infusioni = require('./routes/infusioni.js');
 app.post('/data/pazienti/:idPaziente/infusioni/tcz/aggiungi', infusioni.ins);
 app.post('/data/pazienti/:idPaziente/infusioni/tcz/cancella', infusioni.del);
 
 // fattori di rischio / patologie concomitanti
+var patologie_concomitanti = require('./routes/patologie_concomitanti.js');
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti' , patologie_concomitanti.ins);
 app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , patologie_concomitanti.del);
 
 //terapie_pre
+var terapie_pre = require('./routes/terapie_pre.js');
 app.post ('/data/pazienti/:idPaziente/terapie_pre', terapie_pre.ins);
 app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella', terapie_pre.del);
 
 // terapia
+var terapie_concomitanti = require('./routes/terapie_concomitanti.js')
+  , terapia_farmaco = require('./routes/terapia_farmaco.js');
 app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , terapie_concomitanti.ins);
+app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.ins);
+app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.upd);
 
 
 
@@ -198,47 +198,6 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
 
 
 
-
-app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
-  if( req.params.idPaziente != req.body.id_paziente)
-      res.send(500);
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  
-  var query =   'INSERT INTO artrite.terapia (id_paziente, data_inizio)';
-      query +=  ' VALUES ( ?, ?)';
-  
-  var fields =  [ req.body.id_paziente , moment(req.body.data_inizio).format('YYYY-MM-DD')];
-
- mysql_conn.query(query, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query,err,fields);
-
-    res.send(200, {insertId: result.insertId});  
-  });
-  mysql_conn.end();
-});
-
-app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
-  if( req.params.idPaziente != req.body.id_paziente)
-      res.send(500);
-  // apertura connessione db
-  //debugger;
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-  
-  var query  =   'UPDATE artrite.terapia  SET data_inizio = ? where  id_paziente = ? ' ;
-  var fields =  [  moment(req.body.data_inizio).format('YYYY-MM-DD'),req.body.id_paziente ];
-
- mysql_conn.query(query, fields, function(err, result) {
-    if(err) 
-      notify_problem(res,query,err,fields);
-
-    res.send(200, {insertId: result.insertId});  
-  });
-  mysql_conn.end();
-});
 
 
 

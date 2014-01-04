@@ -42,7 +42,9 @@ div(ng-controller='TerapiaEditCtrl')
 
       .row
         .col-xs-5(ng-hide='(terapie_concomitanti).length == 0')
-          h5 elementi esistenti ( nr. {{(terapie_concomitanti).length}} )
+          h5 elementi esistenti 
+            span.badge {{(terapie_concomitanti).length}}
+            
           table.table-striped.table-bordered.table-hover
             thead
               tr

@@ -11,7 +11,8 @@ var TerapiaEditCtrl = [
       return angular.equals($scope.terapie_concomitanti, $scope.master_tc);
     };
 
-    $http.get('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco')
+    var initPazienti = function() {
+      $http.get('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco')
       .success(function(data, status, headers, config) {
 
         $scope.terapia = { data_inizio: new Date() }; // inizializzo la data a oggi
@@ -23,33 +24,43 @@ var TerapiaEditCtrl = [
       .error(function(data, status, headers, config) {
         $log.error('lettura di Terapia Paziente non riuscita!');
         growl.addErrorMessage("lettura di Terapia Paziente non riuscita! IdPaziente :" + $routeParams.idPaziente + ' \nControlla che il server sia attivo!');
-      });
+      });  
+    }
 
-    $scope.openCalendar = openCalendar($scope);
+    var init = function() {
+      initPazienti();
+      $scope.openCalendar = openCalendar($scope);
 
-    // parametri: _farmaci_dimard 
-    loadDataListIntoScope(
-      $scope, ['farmaci_dimard'],
-      function(p) {
-        return '/data/_' + p;
-      }
-    );
-
-    // load terapie_concomitanti (da pazienti/:id/terapie_concomitanti)
-    $http.get('data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti')
-      .success(function(data, status, headers, config) {
-        $scope.terapie_concomitanti = [];
-        if (data.length > 0) {
-          $scope.master_tc = data;
-          $scope.terapie_concomitanti = data;
-          // vado avanti a inizializzare terapie_concomitanti
-          $scope.terapie_concomitanti.unchanged = tc_unchanged;
+      // parametri: _farmaci_dimard 
+      loadDataListIntoScope(
+        $scope, ['farmaci_dimard'],
+        function(p) {
+          return '/data/_' + p;
         }
-      })
-      .error(function(data, status, headers, config) {
-        $log.error('lettura di Terapia terapie_concomitanti non riuscita!');
-        growl.addErrorMessage('Lettura di Terapia terapie_concomitanti non riuscita! \nControlla che il server sia attivo!');
-      });
+      );
+
+      // load terapie_concomitanti (da pazienti/:id/terapie_concomitanti)
+      $http.get('data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti')
+        .success(function(data, status, headers, config) {
+          $scope.terapie_concomitanti = [];
+          if (data.length > 0) {
+            $scope.master_tc = data;
+            $scope.terapie_concomitanti = data;
+            // vado avanti a inizializzare terapie_concomitanti
+            $scope.terapie_concomitanti.unchanged = tc_unchanged;
+          }
+        })
+        .error(function(data, status, headers, config) {
+          $log.error('lettura di Terapia terapie_concomitanti non riuscita!');
+          growl.addErrorMessage('Lettura di Terapia terapie_concomitanti non riuscita! \nControlla che il server sia attivo!');
+        });
+
+      $scope.formState.saving = false;
+    }
+
+    
+
+    
 
 
     // interazioni della form ...
@@ -72,27 +83,24 @@ var TerapiaEditCtrl = [
           .success(function(data, status, headers, config) {
             $log.info('Aggiornamento avvenuto con successo');
             growl.addSuccessMessage("Aggiornamento avvenuto con successo");
-            $scope.formState.saving = false;
             salvaTerapiaConcomitante($scope.terapia.idterapia);
           })
           .error(function(data, status, headers, config) {
             $log.error('Aggiornamento non riuscito per la terapia del paziente :' + $scope.terapia.id_paziente);
             growl.addErrorMessage('Aggiornamento non riuscito per la terapia del paziente :' + $scope.terapia.id_paziente);
-            $scope.formState.saving = false;
-
+            init();
           });
       } else {
         $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco', $scope.terapia)
           .success(function(data, status, headers, config) {
             $log.info('salvataggio avvenuto con successo');
             growl.addSuccessMessage("Aggiornamento TERAPIA FARMACOLOGICA avvenuta con successo");
-            $scope.formState.saving = false;
             salvaTerapiaConcomitante(data.insertId);
           })
           .error(function(data, status, headers, config) {
             $log.error('salvataggio non riuscito: ');
             growl.addErrorMessage('Aggiornamento non riuscito per la terapia farmaco del paziente :' + $scope.terapia.id_paziente);
-            $scope.formState.saving = false;
+            init();
           });
       }
       // allinea gli ultimi valori prima del salvataggio
@@ -108,11 +116,14 @@ var TerapiaEditCtrl = [
         $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti', terapie_concomitanti)
           .success(function(data, status, headers, config) {
             $log.info('salvataggio avvenuto con successo');
-            $scope.formState.saving = false;
+            init();
           })
           .error(function(data, status, headers, config) {
             $log.error('salvataggio non riuscito: ');
-            $scope.formState.saving = false;
+            $log.error(data);
+            $log.error(status);
+            growl.addErrorMessage('salvataggio della terapia concomitante non riuscito');
+            init();
           });
     }
 
@@ -152,6 +163,6 @@ var TerapiaEditCtrl = [
       });
     };
 
-
+    init();
   }
 ];
