@@ -4,238 +4,40 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
 var http = require('http');
-var path = require('path');
+
 var _    = require('lodash');
 var moment = require('moment');
-var expressWinston = require("express-winston");
-var winston = require("winston");
+
+
+
 var date_utils = require('./utils/date.js');
+var notify_problem = require('./utils/problem_notifier.js').notify_problem;
 
 // personal libs
 var mysql_connector = require('./db/config.js');
-//var logger = require('./utils/logger.js');
+var dev_env = require('./environments/dev.js');
+
+// rotte
+var routes = require('./routes')
+  , diagnosi = require('./routes/diagnosi.js')
+  , infusioni = require('./routes/infusioni.js')
+  ;
 
 var app = express();
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(expressWinston.errorLogger({
-      transports: [
-        new winston.transports.Console({
-          json: true,
-          colorize: true
-        })
-      ], 
-      //level: "inf",
-      meta: true, // optional: control whether you want to log the meta data about the request (default to true)
-      msg: "HTTP {{req.method}} {{req.url}}" // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-    }));
+dev_env.configure_env(app);
+
+require('./routes/get.js').add_simple_get(app);
 
 
-app.use(express.static(path.join(__dirname, 'public')));
+// diagnosi
+app.get('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.get );
+app.post('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.set);
 
-// development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
-  app.enable('log actions');
-  app.enable('env info');
-  app.use(require('express').errorHandler({ dumpExceptions: true, showStack: true }));
-}
-
-// gestione degli errori
-function logErrors(err, req, res, next) {
-  console.error(err.stack);
-  res.send(500, 'Something broke!');
-  next(err);
-}
-function clientErrorHandler(err, req, res, next) {
-  if (req.xhr) {
-    res.send(500, { error: 'Something blew up!' });
-  } else {
-    next(err);
-  }
-}
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
-}
-app.use(logErrors);
-app.use(clientErrorHandler);
-app.use(errorHandler);
-
-
-
-app.get('/', routes.index);
-app.get('/users', user.list);
-
-
-var notify_problem = function (res,qry,what,params,conn) {
-  var re = /\?/;
-  params = params || [];
-  _.each(params, function(p) {
-    qry = qry.replace(re, p);
-  });
-  console.log("errore eseguendo: " + qry);
-  console.log(what);
-  res.send(500,{err:what}); 
-  if(conn) 
-    conn.rollback();
-};
-
-
-var simple_params = [
-  { nome_parametro: 'pazienti',
-    qry: 'SELECT * from artrite.vpazienti'
-  },
-  { nome_parametro: '_tipo_risposta',
-    qry: 'SELECT * FROM artrite.tipo_risposta'
-  },
-  { nome_parametro: '_farmaci_dimard',
-    qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'1\' '
-  },
-  { nome_parametro: '_farmaci_biologici',
-    qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'2\''
-  },
-  { nome_parametro: '_malattia_ric',
-    qry: 'SELECT * FROM artrite.tipo_malattia where cod_tipo_malattia=\'ric\''
-  },
-  { nome_parametro: '_malattia_ptc',
-    qry: 'SELECT * FROM artrite.tipo_malattia where cod_tipo_malattia=\'ptc\''
-  },
-  { nome_parametro: '_fattori_rischio',
-    qry: 'select * from artrite.tipo_malattia where cod_tipo_malattia=\'fdr\''
-  },
-  { nome_parametro: '_cod_tipo_sospensione',
-    qry: 'select * from cod_tipo_sospensione'
-  },
-  { nome_parametro: '_tipo_sospensione',
-    qry: 'select * from vsospensione'
-  }
-];
-
-var add_get = function(param) {
-  // inject the route
-  app.get('/data/' + param.nome_parametro, function(req, res, next) {
-    // apertura connessione db
-    var mysql_conn = mysql_connector.createConnection();
-    mysql_conn.connect();
-    var pazienti;
-    // query
-      mysql_conn.query(param.qry, function(err, rows, fields) {
-      if (err) 
-        notify_problem(res,param.qry,err);
-
-      res.send(rows);    
-    });
-    mysql_conn.end();
-  });
-};
-
- _.each(simple_params, add_get);
-//console.log(simple_params);
-
-var add_paziente_simple_get = function(param) {
-  // inject the route
-  app.get('/data/pazienti/:idPaziente/' + param.nome_parametro, function(req, res, next) {
-    // apertura connessione db
-    var mysql_conn = mysql_connector.createConnection();
-    mysql_conn.connect();
-    var pazienti;
-    var re = /\?/g;
-    // query
-    mysql_conn.query(param.qry, [req.params.idPaziente] , function(err, rows, fields) {
-      if (err) 
-        notify_problem(res,param.qry,err,[req.params.idPaziente]);
-      res.send(rows);    
-    });
-    mysql_conn.end();
-  });
-};
-
-var qry_paziente = [
-  { nome_parametro: '',
-    qry: 'SELECT * from artrite.vpazienti where idPaziente =?'
-  },
-  { nome_parametro: 'infusioni/tcz',
-    qry: 'SELECT data_infusione from artrite.infusioni_tcz where id_paziente =? order by data_infusione desc'
-  },
-  { nome_parametro: 'terapie_pre',
-    qry: 'SELECT * FROM artrite.vterapia_farmacologica_pre where idPaziente =?'
-  },
-  { nome_parametro: 'fattori_di_rischio',
-    qry: 'SELECT a.*, t.descrizione as tipo_malattia FROM artrite.anamnesi a inner join artrite.tipo_malattia t on a.id_tipo_malattia= t.idtipo_malattia where t.cod_tipo_malattia = \'fdr\' and  a.id_paziente=?'
-  },
-  { nome_parametro: 'patologie_concomitanti',
-    qry: 'SELECT a.*, t.descrizione as tipo_malattia FROM artrite.anamnesi a inner join artrite.tipo_malattia t on a.id_tipo_malattia= t.idtipo_malattia where t.cod_tipo_malattia = \'ptc\' and  a.id_paziente=?'
-  },
-  { nome_parametro: 'patologie_concomitanti',
-    qry: 'SELECT a.*, t.descrizione as tipo_malattia FROM artrite.anamnesi a inner join artrite.tipo_malattia t on a.id_tipo_malattia= t.idtipo_malattia where t.cod_tipo_malattia = \'ptc\' and  a.id_paziente=?'
-  },
-  { nome_parametro: 'terapie_concomitanti',
-    qry: 'SELECT tf.idtipo_farmaco, tf.nome, a.*, ter.id_paziente FROM artrite.tipo_farmaco tf inner join artrite.terapia_concomitante a on a.id_tipo_farmaco=tf.idtipo_farmaco inner join artrite.terapia ter on ter. idterapia = a.id_terapia where tf.tipo_famiglia_farmaco = \'1\' and ter.id_paziente=?'
-  },
-  
-  { nome_parametro: 'terapia_farmaco',
-    qry: 'select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?'
-  },
-  { nome_parametro: 'terapia_valutazione',
-    qry: 'SELECT tv.* FROM artrite.terapia_valutazione tv where tv.id_paziente=?'
-  },
-  { nome_parametro: 'sospensioni',
-    qry: 'select  tersosp.idterapia_sospensione' + 
-'     ,   tersosp.id_terapia' + 
-'     ,   tersosp.tipo_sospensione as cod_tipo_sospensione' + 
-'     ,   cts.descrizione as tipo_sospensione' + 
-'     ,   tersosp.id_sospensione' + 
-'     ,   ts.descrizione as sospensione' + 
-'     ,   tersosp.id_sospensione_dettaglio' + 
-'     ,   tsd.sospensione_dettaglio as dettaglio' + 
-'     ,   tersosp.data_inizio' +
-'     ,   tersosp.data_fine' +
-'     ,   tersosp.note' +
-' from terapia_sospensione as tersosp' + 
-' join terapia t on tersosp.id_terapia = t.idterapia' +
-' left join cod_tipo_sospensione cts on tersosp.tipo_sospensione = cts.cod_tipo_sospensione' + 
-' join tipo_sospensione ts on tersosp.id_sospensione = ts.idtipo_motivo_sospensione' + 
-' join tipo_sospensione_dettaglio tsd ' + 
-'     on tersosp.id_sospensione_dettaglio = tsd.id_sospensione_dettaglio' + 
-'     and tersosp.id_sospensione = tsd.id_tipo_sospensione' +
-' where t.id_paziente = ?'
-  }
-];
-
-_.each(qry_paziente, add_paziente_simple_get);
-
-app.get('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
-  // apertura connessione db
-  var mysql_conn = mysql_connector.createConnection();
-  mysql_conn.connect();
-
-  // query
-  var qry = 'SELECT * from artrite.vdiagnosimalattia where idPaziente =?';
-  var params = [req.params.idPaziente];
-    mysql_conn.query(qry, params  , function(err, rows, fields) {
-    if (err) 
-      notify_problem(res,qry,err,params);
-
-    if( rows.lenght > 1 ) 
-      notify_problem(res,qry,"trovati più record vdiagnosimalattia",params);      
-      
-    res.send(rows[0]);    
-  });
-  mysql_conn.end();
-});
-
+// infusioni
+app.post('/data/pazienti/:idPaziente/infusioni/tcz/aggiungi', infusioni.ins);
+app.post('/data/pazienti/:idPaziente/infusioni/tcz/cancella', infusioni.del);
 
 
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna', function(req, res, next) {
@@ -372,198 +174,9 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
   });
 });
   
-  
-app.post('/data/pazienti/:idPaziente/infusioni/tcz/aggiungi', function(req, res, next) {
-
-  if(req.body.length === 0) 
-    return;
-
-  var db = mysql_connector.createConnection();
-  db.connect();
-  db.beginTransaction( function(err) {
-    if (err) notify_problem(res,'connection',err);
-
-    var qry =   "SELECT REPLACE( DATE_FORMAT(data_infusione,GET_FORMAT(DATE,'ISO')), \".\",\"-\") AS data_infusione";
-    //var qry =   "SELECT  data_infusione";
-        qry += " FROM   artrite.infusioni_tcz";
-        qry += " WHERE  id_paziente = ?";
-    var params = [req.params.idPaziente];
-    db.query(qry, params, function(err, r, f) {
-      if (err) 
-        notify_problem(res,qry,err, params,db);
-      
-
-      var vecchie_infusioni       = _(r).pluck('data_infusione').value();
-      var infusioni_ricevute      = _(req.body).pluck('data_infusione').value();
-          infusioni_ricevute      = _(infusioni_ricevute).filter(date_utils.isDateInRange).value();
-          infusioni_ricevute      = _(infusioni_ricevute).uniq().map(function(d) { 
-            return moment(d).format('YYYY-MM-DD'); }).value();
-      var infusioni_eliminate     = _.difference( vecchie_infusioni, infusioni_ricevute);
-      var nuove_infusioni         = _.difference( infusioni_ricevute, vecchie_infusioni);
-      
-
-      // --------- allineo il db in parallelo----------
-      if(infusioni_eliminate.length > 0) {
-        qry = "DELETE from artrite.infusioni_tcz WHERE id_paziente = ? and data_infusione in (?)";
-        params = [req.params.idPaziente, infusioni_eliminate ];
-        db.query(qry, params, function(err) {
-          if (err) notify_problem(res,qry,err, params,db);
-          else if(nuove_infusioni.length === 0)
-            db.commit(function(err) {
-              if(err) notify_problem(res,'commit',err,[],db);
-              else res.send('ok');
-            });
-        });
-      }
-
-      if(nuove_infusioni.length > 0) {
-        qry = "INSERT INTO artrite.infusioni_tcz(id_paziente,data_infusione) VALUES(?,?)";
-        var insNuovaInf = function(data_inf) {
-          if(data_inf.length === 0) 
-            return;
-
-          var d_infusione = data_inf.splice(0,1)[0];
-          params = [req.params.idPaziente, d_infusione];
-          db.query(qry, params, function(err) {
-            if(err) notify_problem(res,qry,err, params,db);
-            if(data_inf.length > 0)
-              return insNuovaInf(data_inf);
-
-            // else  
-            db.commit(function(err) {
-              if(err) notify_problem(res,'commit',err,[],db);
-              else res.send('ok');
-            });
-          });
-        };   
-        insNuovaInf(nuove_infusioni);
-      }
-    });
-  });
-});
-
-app.post('/data/pazienti/:idPaziente/diagnosimalattia', function(req, res, next) {
-  // controllo dei dati ricevuti
-  //debugger;
-// anticorpi: "no"
-// cod_malattia: 10
-// cod_tipo_malattia: "ric"
-// cognome: "Giuliodori"
-// data_diagnosi: "2010-08-25T00:00:00.000Z"
-// data_nascita: "1976-04-06T00:00:00.000Z"
-// fattore_reumatoide: "si"
-// idPaziente: 2
-// iddiagnosi_malattia: 4
-// malattia: "artrite psoriasica"
-// nome: "Costantino"
-
-  function getNewConn() {
-    var mysql_conn = mysql_connector.createConnection();
-    mysql_conn.connect();
-    return mysql_conn;
-  }
-
-  if( req.params.idPaziente === req.body.idPaziente )
-    return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
-
-  
-   var risposte_usate = _(['fattore_reumatoide','anticorpi'])
-     .map(function(a) { return req.body[a];  })
-     .uniq().value();
-  
-  // apertura connessione db
-  var mysql_conn = getNewConn();
-
-  // INIZIO metodo normale
-
-  // assumo la connessione come aperta...
-  mysql_conn.query('select idtipo_risposta from artrite.tipo_risposta', function(err,r,fields) {
-    if(err) notify_problem(res,'select idtipo_risposta from artrite.tipo_risposta',err);
-
-    var risposte_usabili = _.pluck(r,fields[0].name);
-    if( _.difference( risposte_usate , risposte_usabili ).length > 0 )
-      return notify_problem(res,'select risposta from artrite.tipo_risposta',err);
-  });
-  mysql_conn.end();
-  // FINE metodo normale
 
 
-  // regola di validità: una diagnosi per paziente?
-  var qry  =  'select count(*) as num';
-      qry +=  ' , min(iddiagnosi_malattia) as first_id';
-      qry +=  ' from artrite.diagnosi_malattia'; 
-      qry +=  ' where id_paziente = ?';
-  var params = [req.params.idPaziente];
-  mysql_conn = getNewConn();
-  mysql_conn.query(qry, params, function(err, r, fields) {
-    if(err) notify_problem(res,qry,params,err);
-    var nr_diagnosi = r[0][fields[0].name];
-    if( nr_diagnosi > 1 ) {
-      return notify_problem(res,null,err);
-    }
-  });
-  mysql_conn.end();
 
-
-  mysql_conn = getNewConn();
-  mysql_conn.beginTransaction( function(err) {
-    if (err) notify_problem(res,'begin tran',err,[],mysql_conn);
-    qry  =  "SELECT iddiagnosi_malattia";
-    qry += " FROM   artrite.diagnosi_malattia";
-    qry += " WHERE  id_paziente = ?";
-    params = [req.params.idPaziente];
-    mysql_conn.query(qry, params, function(err, r, fields) {
-      if (err) notify_problem(res,qry,err, params, mysql_conn);
-      if(r.length === 1) {
-        var id = r[0][fields[0].name];
-        qry  = 'update diagnosi_malattia';
-        qry += ' set anticorpi = ?';
-        qry += '   , cod_malattia = ?';
-        qry += '   , data_diagnosi = ?';
-        qry += '   , fattore_reumatoide = ?';
-        qry += '   , iddiagnosi_malattia = ?';
-        qry += ' where iddiagnosi_malattia = ?';
-        params = [  req.body.anticorpi
-                  , req.body.cod_malattia
-                  , moment(req.body.data_diagnosi).format('YYYY-MM-DD')
-                  , req.body.fattore_reumatoide
-                  , req.body.iddiagnosi_malattia
-                  , id];
-        mysql_conn.query(qry, params, function(err, result) {
-           if(err) 
-            notify_problem(res,qry,err, params, mysql_conn);
-
-          mysql_conn.commit(function(err) {
-            if (err) notify_problem(res,qry,err, [], mysql_conn);
-            else 
-              res.send(200, {insertId: result.insertId});
-          });
-        });
-      }
-      else {
-        
-        qry  = 'INSERT INTO diagnosi_malattia';
-        qry += ' (anticorpi, cod_malattia, data_diagnosi, fattore_reumatoide, id_paziente)';
-        qry += ' VALUES(?, ?, ?, ?, ?)';
-        params = [  req.body.anticorpi
-                  , req.body.cod_malattia
-                  , moment(req.body.data_diagnosi).format('YYYY-MM-DD')
-                  , req.body.fattore_reumatoide
-                  , req.params.idPaziente ];
-        mysql_conn.query(qry, params, function(err, result) {
-          if(err) 
-            notify_problem(res,qry,err, params,mysql_conn);
-
-          mysql_conn.commit(function(err) {
-            if (err) notify_problem(res,qry,err, [],mysql_conn);
-            else 
-              res.send(200, {insertId: result.insertId});
-          });
-        });
-      }
-    });
-  });
-});
 
 
 

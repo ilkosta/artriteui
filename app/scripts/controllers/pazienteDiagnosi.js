@@ -16,6 +16,8 @@
       var dataUrl = {
         diagnosi: '/data/pazienti/' + $routeParams.idPaziente + '/diagnosimalattia'
       , infusioni: '/data/pazienti/' + $routeParams.idPaziente + '/infusioni/tcz'
+      , ins_infusione: '/data/pazienti/' + $routeParams.idPaziente + '/infusioni/tcz/aggiungi'
+      , del_infusione: '/data/pazienti/' + $routeParams.idPaziente + '/infusioni/tcz/cancella'
       };
 
       // relazione tra modello e vista...
@@ -121,10 +123,10 @@
               });
       };
 
-      function save_infusioni(infusioni_da_salvare) {
-        $http.post(dataUrl.infusioni, infusioni_da_salvare)
+      function save_infusione(infusioni_da_salvare) {
+        $http.post(dataUrl.ins_infusione, infusioni_da_salvare)
           .success(function(data, status,heades,config) {
-            growl.addSuccessMessage("infusioni aggiornate");
+            //growl.addSuccessMessage("infusioni aggiornate");
             initInfusioni();
           })
           .error(function(data, status, headers, config) {
@@ -135,16 +137,26 @@
             initInfusioni();
           });
       }
+
       $scope.setInfToDelete = function(i) { $scope.formState.infusione_da_cancellare = i; }
+
       $scope.cancellaInfusione = function() {
-        var infusioni_da_salvare = angular.copy($scope.infusioni);
-        infusioni_da_salvare.splice($scope.formState.infusione_da_cancellare,1);
-        save_infusioni(infusioni_da_salvare);
+        $http.post(dataUrl.del_infusione, infusioni[formState.infusione_da_cancellare])
+          .success(function(data, status,heades,config) {
+            //growl.addSuccessMessage("infusioni aggiornate");
+            initInfusioni();
+          })
+          .error(function(data, status, headers, config) {
+            var msg  = "Aggiornamento delle infusioni fallito!";
+                msg += ", data:   " + data;
+                msg += ", status: " + status;
+            growl.addErrorMessage(msg);
+            initInfusioni();
+          });
       }
+
       $scope.add_infusione = function() {
-        var infusioni_da_salvare = angular.copy($scope.infusioni);
-        infusioni_da_salvare.push({data_infusione:$scope.nuova_infusione});
-        save_infusioni(infusioni_da_salvare);
+        save_infusione({data_infusione:$scope.nuova_infusione});
       };
 
       $scope.isUnchanged  = function(diagnosi) {
