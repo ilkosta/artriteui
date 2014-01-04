@@ -2,7 +2,7 @@ var momentFilters = angular.module('momentFilters',[]);
 
 momentFilters.filter('fromNow', function() {
   return function(dateString) {
-    return (dateString != null) ? moment(dateString).fromNow() : '';
+    return (dateString) ? moment(dateString).fromNow() : '';
   };
 });
 
@@ -20,7 +20,7 @@ momentFilters.filter('fromNowPrecisely', function() {
     var s = (years > 0) ? '' + years + ' anni' : '';
         s += (months > 0) ? ((s.length > 0) ? ', ': '') + months + ' mesi' : '';
         s += (days > 0) ? ((s.length > 0) ? ' e ': '') + days + ' giorni' : '';
-        s += (s.length > 0) ? ' fa' : '';
+        s += (s.length === 0) ? 'oggi' : ' fa';
 
     return s;
   };
@@ -32,7 +32,7 @@ function getMomentDiffBy(param) {
   return function() {
     return function(dateString) {
       
-      if(dateString == null) 
+      if(dateString === null) 
         return '';
 
       var a = moment();
@@ -40,7 +40,7 @@ function getMomentDiffBy(param) {
       return a.diff(b, param);
     };
   };
-};
+}
 
 
 
