@@ -48,7 +48,7 @@ var mod = angular.module('app.controllers');
         $http.post(url_tv + '/' + t.tempo + '/cancella', 
                    {id_paziente: $routeParams.idPaziente, tempo: t.tempo}) 
           .success(function(data, status, headers, config) {
-            growl.addSuccessMessage("Cancellata terapia tempo " + t.tempo);
+            //growl.addSuccessMessage("Cancellata terapia tempo " + t.tempo);
             init();
           })
           .error(function(data, status, headers, config) {
@@ -67,7 +67,7 @@ var mod = angular.module('app.controllers');
         // controlli
         //-------------------------------
         // tempo
-        if(0 != ($scope.tv_aggiungi.tempo % 6)) {
+        if(0 !== ($scope.tv_aggiungi.tempo % 6)) {
           notify_err('tempo % 6 errato');
           return false;
         }
@@ -118,14 +118,14 @@ var mod = angular.module('app.controllers');
             success(function(data, status, headers, config) {
               msg = 'salvataggio avvenuto con successo del tempo ' + $scope.tv_aggiungi.tempo;
               $log.info(msg);
-              growl.addSuccessMessage(msg);
+              //growl.addSuccessMessage(msg);
 
               $scope.formState.saving = false;              
               init();
             }).
             error(function(data, status, headers, config) {   
               msg = "salvataggio non riuscito del tempo " + $scope.tv_aggiungi.tempo ;
-              growl.addSuccessMessage(msg);
+              growl.addErrorMessage(msg);
               $log.error(msg);
               $log.error($scope.tv_aggiungi);
 
