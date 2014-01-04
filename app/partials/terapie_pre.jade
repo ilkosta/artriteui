@@ -12,7 +12,7 @@ div(ng-controller='terapie_preCtrl')
                 ng-model='terapie_dimard.cod_tipo_farmaco')  
             button.btn.btn-success(
               ng-click='salvaDmard(terapie_dimard)'
-              ng-disabled='formState.saving') 
+              ng-disabled='formState.saving || !terapie_dimard.cod_tipo_farmaco') 
               i.glyphicon.glyphicon-plus-sign
               | &nbsp;Aggiungi 
         br
@@ -26,7 +26,7 @@ div(ng-controller='terapie_preCtrl')
                 ng-model='terapie_bio.cod_tipo_farmaco')  
             button.btn.btn-success(
               ng-click='salvaBio(terapie_bio)'
-              ng-disabled='formState.saving') 
+              ng-disabled='formState.saving || !terapie_bio.cod_tipo_farmaco') 
               i.glyphicon.glyphicon-plus-sign
               | &nbsp;Aggiungi   
       .col-xs-12.col-md-6
