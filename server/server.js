@@ -24,6 +24,7 @@ var routes = require('./routes')
   , infusioni = require('./routes/infusioni.js')
   , patologie_concomitanti = require('./routes/patologie_concomitanti.js')
   , terapie_pre = require('./routes/terapie_pre.js')
+  , terapie_concomitanti = require('./routes/terapie_concomitanti.js')
   ;
 
 var app = express();
@@ -48,6 +49,9 @@ app.post ('/data/pazienti/:idPaziente/patologie_concomitanti/cancella' , patolog
 //terapie_pre
 app.post ('/data/pazienti/:idPaziente/terapie_pre', terapie_pre.ins);
 app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella', terapie_pre.del);
+
+// terapia
+app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , terapie_concomitanti.ins);
 
 
 
@@ -193,55 +197,6 @@ app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', function(req, res, 
 
 
 
-app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , function(req, res, next) {
-    if(req.body.lenght > 0 )
-      if( req.params.idPaziente != req.body.id_paziente)
-         res.send(500);
-    else{ res.send(500);}
-    // apertura connessione db
-    var mysql_conn = mysql_connector.createConnection();
-    mysql_conn.connect();
-   
-    var query =   'DELETE FROM artrite.terapia_concomitante';
-        query +=  ' WHERE id_terapia = ? and id_paziente = ?';
-    var fields =  [ req.body[0].id_terapia,  req.body[0].id_paziente ];
-
-    //insert 
-    var query_ins ='INSERT INTO artrite.terapia_concomitante (id_terapia,id_tipo_farmaco,dose,id_paziente )';
-        query_ins += ' VALUES ( ?, ?, ?, ? )';
-
-
-    function getFieldsIns(r) {
-      return [ r.id_terapia, r.id_tipo_farmaco, r.dose,  r.id_paziente ];
-    }
-
-    //debugger;
-    mysql_conn.beginTransaction(function(err) {
-      if (err) 
-        notify_problem(res,"begin beginTransaction",err,[],conn);
-
-      mysql_conn.query(query, fields, function(err, result) {
-        if (err) 
-          notify_problem(res,query,err,fields,conn);
-
-        _.each( req.body, function(r) {
-          if(r) {
-            console.log(r);
-            mysql_conn.query(query_ins, getFieldsIns(r), function(err, result) {
-              if (err) 
-                notify_problem(res,query_ins,err,getFieldsIns(r),conn);
-            });
-          }
-        });
-        
-        mysql_conn.commit(function(err) {
-          if (err) 
-            notify_problem(res,"durante il commit",err,[],conn);
-        });
-        
-      });
-    });
-});
 
 
 app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , function(req, res, next) {
