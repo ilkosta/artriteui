@@ -4,11 +4,11 @@
 
   mod.controller('PazienteDiagnosiEditCtrl', [
     '$scope', '$routeParams',
-    '$http', 'calendar' , 'growl', 
+    '$http', '$log','calendar' , 'growl', 
     'loadDataListIntoScope',
     function(
         $scope, $routeParams,
-        $http, calendar, growl,
+        $http, $log, calendar, growl,
         loadDataListIntoScope) {
 
       $scope.formState = {};
