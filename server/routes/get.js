@@ -129,6 +129,10 @@
           '     on tersosp.id_sospensione_dettaglio = tsd.id_sospensione_dettaglio' +
           '     and tersosp.id_sospensione = tsd.id_tipo_sospensione' +
           ' where t.id_paziente = ?'
+      }, {
+        nome_parametro: 'paziente_modifica',
+        qry: 'select  * from paziente ' +
+             ' where idPaziente = ?'
       }
     ];
 

@@ -44,5 +44,6 @@ div
               {{ paziente.data_infusione | date:"dd/MM/yyyy"}}
           td.col-md-1(align='center') 
             a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}/diagnosi') dettaglio
-
+          td.col-md-1(align='center') 
+            a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}/paziente_modifica') modifica
 br            

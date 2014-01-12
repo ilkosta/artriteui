@@ -27,6 +27,10 @@ require('./routes/get.js').add_simple_get(app);
 var paziente = require('./routes/paziente.js');
 app.post('/data/pazienti/pazientenuovo', paziente.ins);
 
+// paziente modifica
+var paziente_mod = require('./routes/paziente_modifica.js');
+app.post('/data/pazienti/:idPaziente/paziente_modifica', paziente_mod.upd);
+
 // diagnosi
 var diagnosi = require('./routes/diagnosi.js');
 app.get('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.get );

@@ -1,0 +1,62 @@
+div
+  .page-header
+    .row
+      h1(style='color: rgb(0, 68, 204);') Modifica Paziente
+      lead Inserimento nuovo paziente
+
+  form.col-md-6.form-horizontal.css-form(name='myForm',ng-controller='PazienteModificaCtrl')
+    .row
+      .control-group
+        .col-md-3
+          label.control-label Nome
+        .col-md-8
+          input(type='text'
+                placeholder='Inserisci il nome'
+                ng-model='user[0].NOME'
+                ng-required='true')
+    .row
+      .control-group
+        .col-md-3
+          label.control-label Cognome
+        .col-md-8
+          input(type='text', placeholder='Cognome', ng-model='user[0].COGNOME', ng-required='true')
+    .row  
+      .control-group
+        .col-md-3
+          label.control-label Codice Fiscale
+        .col-md-8
+          input(type='text', placeholder='codicefiscale', ng-model='user[0].CODICE_FISCALE')
+    .row
+      .control-group
+        .col-md-3
+          label.control-label Data di Nascita
+        .col-md-8
+          .form-horizontal
+            input(type='text'
+                  datepicker-popup='dd-MM-yyyy'
+                  datepicker-options='dateOptions'
+                  ng-required='true'
+                  placeholder='Data di nascita'
+                  open='calendarOpened'
+                  ng-model='user[0].DATA_NASCITA')
+            //- button.btn(ng-click='openCalendar()')
+            //-   i.glyphicon.glyphicon-calendar
+    .row
+      .control-group
+        .col-md-3
+          label.control-label Sesso
+        .col-md-8
+          .controls
+            label.radio.inline
+              input#rdGenderM(type='radio',name='rdGender', ng-model='user[0].sesso', value='M', checked='checked')
+              | M
+            label.radio.inline
+              input#rdGenderF(type='radio',name='rdGender', ng-model='user[0].sesso', value='F')
+              | F 
+    .row
+      &nbsp;
+    .row
+      .col-md-offset-2
+        button.btn-primary(ng-click='elimina(user)',  style='width:90px') Elimina
+        button.btn-primary(ng-click='update(user)',style='width:90px', ng-disabled='formState.saving  || myForm.$invalid || isUnchanged(user)') Salva
+    

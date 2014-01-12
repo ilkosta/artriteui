@@ -49,6 +49,10 @@ App.config([
       templateUrl: '/partials/nuovopaziente.html'
     })
     
+    .when('/pazienti/:idPaziente/paziente_modifica', {
+      templateUrl: '/partials/paziente_modifica.html'      
+    })
+
     .when('/utenti', {
       templateUrl: '/partials/utenti.html'
     })
