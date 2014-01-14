@@ -29,7 +29,8 @@ app.post('/data/pazienti/pazientenuovo', paziente.ins);
 
 // paziente modifica
 var paziente_mod = require('./routes/paziente_modifica.js');
-app.post('/data/pazienti/:idPaziente/paziente_modifica', paziente_mod.upd);
+app.put('/data/pazienti/:idPaziente/paziente_modifica', paziente_mod.upd);
+app.post('/data/pazienti/:idPaziente/paziente_modifica', paziente_mod.del);
 
 // diagnosi
 var diagnosi = require('./routes/diagnosi.js');

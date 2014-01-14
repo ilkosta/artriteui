@@ -32,4 +32,22 @@
   mysql_conn.end();
 };
 	
+  exports.del = function(req,res,next){
+    // apertura connessione db
+    var mysql_conn = mysql_connector.createConnection();
+    mysql_conn.connect();
+    var query =   ' UPDATE artrite.paziente';
+        query +=  ' SET attivo =0 , data_fine = ? ';
+        query +=  ' WHERE  idPAZIENTE = ? ';
+    var fields =  [ moment().format('YYYY-MM-DD'), req.body.idPAZIENTE ];
+
+    mysql_conn.query(query, fields, function(err, result) {
+      if(err) 
+          notify_problem(res,query,err,fields);
+      else res.send(200, {insertId: result.insertId});
+    });
+    mysql_conn.end();
+};
+
+
 }());
