@@ -27,8 +27,8 @@
         if(!id_terapia)
           notify_problem(res,"id_terapia nullo!", new Error("id_terapia nullo!"),[],db);        
 
-        qry =   "INSERT INTO terapia_sospensione(id_terapia, id_sospensione_dettaglio, tipo_sospensione, data_inizio, data_fine, note, id_sospensione) ";
-        qry +=   "                        VALUES(?,           ?,                        ?,              ?,            ?,          ?,    ?)";
+        qry =   "INSERT INTO terapia_sospensione(id_terapia, id_sospensione_dettaglio, tipo_sospensione, data_inizio, data_fine, note, id_sospensione , num_infusioni_fatte , follow_up) ";
+        qry +=   "                        VALUES(?,           ?,                        ?,              ?,            ?,          ?,    ?,               ?,                    ?)";
         params = [
             id_terapia
           , req.body.id_sospensione_dettaglio
@@ -37,6 +37,8 @@
           , moment(req.body.data_fine).format('YYYY-MM-DD')
           , req.body.note
           , req.body.id_sospensione
+          , req.body.num_infusioni_fatte
+          , req.body.follow_up
           ];
         db.query(qry, params, function(err, r, f) {
           if (err) 
@@ -73,7 +75,9 @@
             qry +=  "data_inizio=?, ";
             qry +=  "data_fine=?, ";
             qry +=  "note=?, ";
-            qry +=  "id_sospensione=? ";
+            qry +=  "id_sospensione=?, ";
+            qry +=  "num_infusioni_fatte =?, ";
+            qry +=  "follow_up =? ";
           qry +=  "WHERE idterapia_sospensione = ? ";
           qry +=  "  and exists( ";
           qry +=  "   select * from terapia t ";
@@ -86,6 +90,8 @@
         , moment(req.body.data_fine).format('YYYY-MM-DD')
         , req.body.note
         , req.body.id_sospensione
+        , req.body.num_infusioni_fatte
+        , req.body.follow_up 
         , req.params.idterapia_sospensione
         , req.params.idPaziente
         ];

@@ -3,7 +3,7 @@ div( ng-controller='SospensioniCtrl' )
     h3 Sospensioni
     .col-xs-12.col-md-7
       p(ng-hide="sospensioni.length > 0") La terapia non è mai stata sospesa
-      p(ng-show="sospensioni.length > 0") La terapia è mai stata sospesa per &nbsp;
+      p(ng-show="sospensioni.length > 0") La terapia è stata sospesa per &nbsp;
         span.badge {{sospensioni.length}}
         | &nbsp; volte
 
@@ -57,6 +57,32 @@ div( ng-controller='SospensioniCtrl' )
                     ng-options='tipo.cod_tipo_sospensione as tipo.descrizione for tipo in cod_tipo_sospensione'
                     ng-model='eForm.cod_tipo_sospensione')
 
+            br
+            .row
+              .col-md-6
+                label Infusioni somministrate
+                  input(
+                    name='numero_infusioni'
+                    type='number'
+                    min='0'
+                    max='1000'
+                    step='1' 
+                    ng-required='true'
+                    ng-model='eForm.num_infusioni_fatte'                   
+                    )
+                 
+              .col-md-6
+                label Follow up
+                  br
+                  input(
+                    name='mesi_followup'
+                    type='number'
+                    min='0'
+                    max='1000'
+                    step='1' 
+                    ng-required='true'
+                    ng-model='eForm.follow_up'                   
+                    )    
             br
             .row
               .col-md-5

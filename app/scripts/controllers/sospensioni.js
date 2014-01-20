@@ -23,11 +23,14 @@
         this.data_sospensione = null;
         this.data_fine_sospensione = null;
         this.annotazioni = null;
+        this.num_infusioni_fatte = null;
+        this.follow_up = null;
 
         this.visible = false;
       };
 
       editForm.prototype.edit = function(sosp) {
+        debugger;
         this.idterapia_sospensione = sosp.idterapia_sospensione;
         this.cod_tipo_sospensione = sosp.cod_tipo_sospensione;
         this.id_motivo_sospensione = sosp.id_sospensione;
@@ -35,6 +38,8 @@
         this.data_sospensione = sosp.data_inizio;
         this.data_fine_sospensione = sosp.data_fine;
         this.annotazioni = sosp.note;
+        this.num_infusioni_fatte = sosp.num_infusioni_fatte;
+        this.follow_up = sosp.follow_up;
       };
 
 
@@ -82,7 +87,9 @@
           sosp.id_sospensione_dettaglio = this.edit.id_sospensione_dettaglio;
           sosp.data_inizio              = this.edit.data_sospensione;
           sosp.data_fine                = this.edit.data_fine_sospensione;
-          sosp.note                     = this.edit.annotazioni;          
+          sosp.note                     = this.edit.annotazioni;    
+          sosp.num_infusioni_fatte      = this.edit.num_infusioni_fatte;
+          sosp.follow_up                = this.edit.follow_up ;      
 
           var dett_sospensioni = grouped[this.edit.id_motivo_sospensione];
           sosp.sospensione = dett_sospensioni[0].sospensione;

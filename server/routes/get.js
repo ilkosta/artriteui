@@ -121,6 +121,8 @@
           '     ,   tersosp.data_inizio' +
           '     ,   tersosp.data_fine' +
           '     ,   tersosp.note' +
+          '     ,   tersosp.num_infusioni_fatte' +
+          '     ,   tersosp.follow_up' +
           ' from terapia_sospensione as tersosp' +
           ' join terapia t on tersosp.id_terapia = t.idterapia' +
           ' left join cod_tipo_sospensione cts on tersosp.tipo_sospensione = cts.cod_tipo_sospensione' +
