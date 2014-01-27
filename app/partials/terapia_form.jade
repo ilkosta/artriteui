@@ -17,47 +17,49 @@ div(ng-controller='TerapiaEditCtrl')
           span.badge {{terapia.data_inizio | monthsFromNow }}  
       br
       br
-    form.form-inline(novalidate , name='form_concomitante')  
-      h4 Terapia concomitante al Tocilizumab - DMARD
-      br
-      .form-group               
-        
-        label.inline-field Farmaco
-          select.form-control(
-            ng-options='farmaco.idtipo_farmaco as farmaco.nome for farmaco in farmaci_dimard'
-            ng-model='tc_aggiungi.id_tipo_farmaco')
-        
-        label.inline-field Dose (mg)
-          br
-          input(type='number',min='0.0000',max='1000', step='0.05', ng-model ='tc_aggiungi.dose' )
-      
-        button.btn.btn-success.inline-field(
-            ng-click='aggiungi_tc()'
-            ng-disabled='!tc_aggiungi.id_tipo_farmaco || !tc_aggiungi.dose'
-          )
-          i.glyphicon.glyphicon-plus-sign
-          | &nbsp; Aggiungi
-      
 
+    //- -------------------------------------------------------------
+    h4 Terapia concomitante al Tocilizumab - DMARD
+    //- -------------------------------------------------------------
+    .row
+      .col-md-6(ng-hide='(terapie_concomitanti).length == 0')
+        h5 elementi esistenti 
+          span.badge {{(terapie_concomitanti).length}}
+          
+        table.table-striped.table-bordered.table-hover
+          thead
+            tr
+              th Tempo
+              th Data Inizio
+              
 
-      .row
-        .col-xs-5(ng-hide='(terapie_concomitanti).length == 0')
-          h5 elementi esistenti 
-            span.badge {{(terapie_concomitanti).length}}
-            
-          table.table-striped.table-bordered.table-hover
-            thead
-              tr
-                th Farmaco
-                th Dose
-                th  
-            tbody
-              tr(ng-repeat='t in terapie_concomitanti')
-                td.col-md-1(align='center')  {{t.nome}}
-                td.col-md-1(align='right')   {{t.dose}}
-                td.col-md-1(align='center') 
-                  button.btn.btn-danger.btn-xs(ng-click='elimina_tc(t)') 
-                    i.glyphicon.glyphicon-trash
+              th Farmaco
+              th Dose
+
+              th Data Fine
+              th Motivo Sosp.
+              th Note              
+          tbody
+            tr(ng-repeat='t in terapie_concomitanti')
+              td.col-md-1 {{t.tempo}}
+              td.col-md-1 {{t.di}}
+              td.col-md-1 {{t.nome}}
+              td.col-md-1(align='right')   {{t.dose}}
+              td.col-md-1 {{t.df}}
+              td.col-md-1 {{t.motivo}}
+              td.col-md-1 {{t.note}}
+              td
+                button.btn.btn-default.btn-xs(ng-click='modifica_tc(t)') 
+                  i.glyphicon.glyphicon-pencil
+                button.btn.btn-danger.btn-xs(ng-click='elimina_tc(t)') 
+                  i.glyphicon.glyphicon-trash
+
+      .col-md-5
+        div(ng-include="'/partials/terapia_concomitante_form.html'")
+
+        
+      
+                
      br 
      br 
      br 

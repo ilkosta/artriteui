@@ -33,7 +33,7 @@ var TerapiaEditCtrl = [
 
       // parametri: _farmaci_dimard 
       loadDataListIntoScope(
-        $scope, ['farmaci_dimard'],
+        $scope, ['farmaci_dimard','tipo_sospensione_dimard'],
         function(p) {
           return '/data/_' + p;
         }
@@ -56,6 +56,7 @@ var TerapiaEditCtrl = [
         });
 
       $scope.formState.saving = false;
+      $scope.tc_aggiungi = {};
     }
 
     
@@ -133,11 +134,12 @@ var TerapiaEditCtrl = [
       $scope.terapie_concomitanti.unchanged = tc_unchanged;
     };
 
-    $scope.tc_aggiungi = {};
+    
     $scope.aggiungi_tc = function() {
       if (!$scope.tc_aggiungi.dose) return;
       if (!$scope.tc_aggiungi.id_tipo_farmaco) return;
-
+      
+      // non aggiunge duplicati...
       if (_.find($scope.terapie_concomitanti, function(t) {
         return t.id_tipo_farmaco == $scope.tc_aggiungi.id_tipo_farmaco;
       }))
@@ -154,7 +156,6 @@ var TerapiaEditCtrl = [
       };
 
       $scope.terapie_concomitanti.push(tc_nuova);
-
     };
 
     $scope.elimina_tc = function(t) {

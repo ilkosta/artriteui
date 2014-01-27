@@ -38,6 +38,9 @@
     }, {
       nome_parametro: '_tipo_sospensione',
       qry: 'select * from vsospensione'
+    }, {
+      nome_parametro: '_tipo_sospensione_dimard',
+      qry: 'select * from tipo_sospensione where tipo_famiglia_farmaco = 1'
     }];
 
     var add_get = function(param) {
