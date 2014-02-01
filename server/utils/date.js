@@ -4,7 +4,8 @@ var moment = require('moment');
 
 var getDate = function(_d) {
   if(!_d)
-    return false;
+    return null;
+
   var d = moment(_d);
   var valid = d.isValid();
 
@@ -14,7 +15,12 @@ var getDate = function(_d) {
   return moment(_d).format('YYYY-MM-DD')
 };
 
-
+/*
+  check if the date _d is inside the range _d1.._d2
+  where if not specified:
+  _d1: 10 year ago
+  _d2: tomorrow
+*/
 exports.isDateInRange = function(_d, _d1, _d2) {
   if(!_d)
     return false;

@@ -1,17 +1,11 @@
+include _date
 div(ng-controller='TerapiaEditCtrl')
   .content
     br
     form( novalidate , name ='formTerapia')
       fieldset
+        +date('Data Inizio Terapia con TCZ', 'terapia.data_inizio')
         
-        label Data Inizio Terapia con TCZ
-          .form-horizontal
-            //- datepicker-popup='dd-MM-yyyy'
-            input(  type='text'
-                    datepicker-popup='dd-MM-yyyy'
-                    datepicker-options='dateOptions'
-                    ng-required='true'
-                    ng-model='terapia.data_inizio')
         button.btn.btn-xs.btn-success(
           ng-hide='terapia.data_inizio == terapia.data_inizio_ori'
           ng-click='salva_inizio_terapia()')

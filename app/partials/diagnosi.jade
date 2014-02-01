@@ -1,3 +1,4 @@
+include _date
 div( ng-controller='PazienteDiagnosiEditCtrl' )
   .content
     br
@@ -6,16 +7,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         .row
           .col-xs-12.col-md-6(style="margin-left:20px;")
             .row 
-              
-                label.inline-field Data diagnosi
-                .form-horizontal
-                  input( 
-                    type='text'
-                    datepicker-popup='dd-MM-yyyy'
-                    datepicker-options='dateOptions'
-                    ng-required='true'
-                    ng-model='diagnosi.data_diagnosi'
-                    ui-validate='dataDiagnosiValida($value)' )
+                +date("Data diagnosi", 'diagnosi.data_diagnosi', 'dataDiagnosiValida($value)')
                   span &nbsp; ({{ diagnosi.data_diagnosi | fromNowPrecisely }})
             br
             .row
@@ -63,33 +55,10 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                 | &nbsp;
                 | Aggiungi Infusione
 
-              // ctrl data di infusione
-              //- div(ng-show='formState.ins_infusione')
-              //-   label.inline-field Data infusione
-              //-     .form-horizontal
-              //-       input( 
-              //-         name='data_infusione'
-              //-         type='text'
-              //-         ng-required='false'
-              //-         ng-model='nuova_infusione'
-              //-         open='calendarOpened'
-              //-         ui-validate='dataInfusioneValida($value)')
-              //-   button.btn.btn-success(
-              //-     ng-disabled='inQuestoMese(nuova_infusione)'                
-              //-     ng-click='add_infusione()') ok
 
               div(ng-show='formState.ins_infusione')
-                label.inline-field Data infusione
-                  .form-horizontal
-                    input( 
-                      name='data_infusione'
-                      type='text'
-                      ng-required='false'
-                      datepicker-popup='dd-MM-yyyy'
-                      datepicker-options='dateOptions'
-                      ng-model='nuova_infusione'
-                      ui-validate='dataInfusioneValida($value)')
-                button.btn.btn-success(
+                +date("Data infusione", 'nuova_infusione')
+                button.btn.btn-ms.btn-success(
                   ng-click='add_infusione()') ok
             br
             .row.alert.alert-info(ng-show='infusioni.length > 0')              
