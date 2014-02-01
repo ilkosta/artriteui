@@ -33,14 +33,23 @@ angular.module('utils_forms',[]);
 var utils = angular.module('utils', []);
 
 App.config([
-  '$routeProvider', '$locationProvider', 'RestangularProvider', 'growlProvider', 
-  function($routeProvider, $locationProvider, RestangularProvider, growlProvider, config) {
+  '$routeProvider', '$locationProvider', 'RestangularProvider', 'growlProvider', 'datepickerPopupConfig',
+  function($routeProvider, $locationProvider, RestangularProvider, growlProvider, datepickerPopupConfig, config) {
 
     growlProvider.globalTimeToLive(10000);
 
     RestangularProvider.setBaseUrl('/data');
     RestangularProvider.setErrorInterceptor(utils.checkServer);
     
+    datepickerPopupConfig.dateFormat = 'dd-MM-yyyy';
+    datepickerPopupConfig.currentText = 'Oggi';
+    datepickerPopupConfig.toggleWeeksText = 'Sett.';
+    datepickerPopupConfig.clearText = 'Pulisci';
+    datepickerPopupConfig.closeText = 'Chiudi';
+    datepickerPopupConfig.closeOnDateSelection = true;
+    datepickerPopupConfig.appendToBody = false;
+    datepickerPopupConfig.showButtonBar = true;
+
     $routeProvider.when('/pazienti', {
       templateUrl: '/partials/pazienti.html'
     })

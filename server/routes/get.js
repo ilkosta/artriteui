@@ -38,6 +38,9 @@
     }, {
       nome_parametro: '_tipo_sospensione',
       qry: 'select * from vsospensione'
+    }, {
+      nome_parametro: '_tipo_sospensione_dimard',
+      qry: 'select * from tipo_sospensione where tipo_famiglia_farmaco = 1'
     }];
 
     var add_get = function(param) {
@@ -99,12 +102,20 @@
         qry: 'SELECT a.*, t.descrizione as tipo_malattia FROM artrite.anamnesi a inner join artrite.tipo_malattia t on a.id_tipo_malattia= t.idtipo_malattia where t.cod_tipo_malattia = \'ptc\' and  a.id_paziente=?'
       }, {
         nome_parametro: 'terapie_concomitanti',
-        qry: 'SELECT tf.idtipo_farmaco, tf.nome, a.*, ter.id_paziente FROM artrite.tipo_farmaco tf inner join artrite.terapia_concomitante a on a.id_tipo_farmaco=tf.idtipo_farmaco inner join artrite.terapia ter on ter. idterapia = a.id_terapia where tf.tipo_famiglia_farmaco = \'1\' and ter.id_paziente=?'
+        qry:  'SELECT ' +
+              '  tf.idtipo_farmaco, tf.nome, ' +
+              '  tc.*, ter.id_paziente, ts.descrizione as motivo_sospensione ' +
+              'FROM artrite.tipo_farmaco tf ' +
+              'join artrite.terapia_concomitante tc on tc.id_tipo_farmaco=tf.idtipo_farmaco ' +
+              'join artrite.terapia ter on ter.idterapia = tc.id_terapia ' +
+              'left join tipo_sospensione ts on ts.idtipo_motivo_sospensione = tc.idtipo_motivo_sospensione ' +
+              'where tf.tipo_famiglia_farmaco = \'1\' ' + // dmard
+              '  and ter.id_paziente=?'
       },
 
       {
         nome_parametro: 'terapia_farmaco',
-        qry: 'select idterapia, id_paziente, data_inizio from artrite.terapia where id_paziente =?'
+        qry: 'select * from artrite.terapia where id_paziente =?'
       }, {
         nome_parametro: 'terapia_valutazione',
         qry: 'SELECT tv.* FROM artrite.terapia_valutazione tv where tv.id_paziente=? order by tv.tempo'

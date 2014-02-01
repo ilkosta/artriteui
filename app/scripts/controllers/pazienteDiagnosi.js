@@ -12,6 +12,7 @@
         loadDataListIntoScope) {
 
       $scope.formState = {};
+      calendar().init($scope);
       
       var dataUrl = {
         diagnosi: '/data/pazienti/' + $routeParams.idPaziente + '/diagnosimalattia'
@@ -175,11 +176,6 @@
       $scope.isUnchanged  = function(diagnosi) {
         return angular.equals($scope.master, diagnosi);
       };
-
-      // calendar management
-      var cal = calendar($scope);
-      $scope.openCalendar = cal.open;
-      $scope.today        = cal.today;
 
       Init();
     }

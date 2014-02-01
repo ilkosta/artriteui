@@ -10,6 +10,8 @@
         $http, calendar, growl,
         loadDataListIntoScope) {
 
+      calendar().init($scope);
+      
       // ---- editForm ------
       function editForm() {
         this.init();

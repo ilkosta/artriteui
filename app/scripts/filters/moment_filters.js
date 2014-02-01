@@ -17,11 +17,18 @@ momentFilters.filter('fromNowPrecisely', function() {
       , months = now.diff(afterYears, 'month')
       , days  = now.diff(afterYears.add('months',months), 'day');
     
-    var s = (years > 0) ? '' + years + ' anni' : '';
-        s += (months > 0) ? ((s.length > 0) ? ', ': '') + months + ' mesi' : '';
-        s += (days > 0) ? ((s.length > 0) ? ' e ': '') + days + ' giorni' : '';
-        s += (s.length === 0) ? 'oggi' : ' fa';
 
+    var s = "";
+    if(dateParam.isAfter(now))
+    {
+      s = "fra " + dateParam.fromNow(true);
+    }
+    else {
+      s = (years > 0) ? '' + years + ' anni' : '';
+      s += (months > 0) ? ((s.length > 0) ? ', ': '') + months + ' mesi' : '';
+      s += (days > 0) ? ((s.length > 0) ? ' e ': '') + days + ' giorni' : '';
+      s += (s.length === 0) ? 'oggi' : ' fa';
+    }
     return s;
   };
 });

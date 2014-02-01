@@ -1,25 +1,26 @@
 angular.module('utils_bootstrap',[]) // create the module
-       .factory( 'calendar',
-  ['$timeout', // dependencies
-  function($timeout) {
-    return function($scope) { // factory with the know of $scope
+       .factory( 'calendar', ['datepickerPopupConfig',
+  function() {
+    return function() {
       return {
-
-        init: function(options) {
+        init: function($scope, options) { 
           $scope.dateOptions = options || {
     //         'year-format': "'yyyy'",
              'starting-day': 1,
-             'month-format': 'MM'
-          };
-        },
-        
-        open: function() {
-          return $timeout( function() {
-            $scope.calendarOpened = true;
-          });
-        },
+             'month-format': 'MM',
+             'popup': '"dd-MM-yyyy"',
+             'show-button-bar': true,
+             'current-text': 'Oggi'
+          }; 
 
-        today: moment()
-      }
-  }
-}]);
+          $scope.openCalendar = function() {
+            return $timeout( function() {
+              $scope.calendarOpened = true;
+            });
+          };
+
+          $scope.today = new Date();
+        }
+      };
+    };
+  }]);
