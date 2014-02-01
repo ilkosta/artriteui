@@ -52,6 +52,8 @@ var TerapiaEditCtrl = [
       });
     };
 
+    $scope.initForm = initTerapieConcomitantiForm;
+
     var init = function() {
       initPazienti();
 
@@ -152,6 +154,9 @@ var TerapiaEditCtrl = [
       var form_data = $scope.tc_aggiungi;
       form_data.id_terapia = $scope.terapia.idterapia;
       form_data.id_paziente = $scope.terapia.id_paziente;
+      // aggiusto le date
+      form_data.d_inizio = moment(form_data.d_inizio).format('YYYY-MM-DD');
+      form_data.d_fine = moment(form_data.d_fine).format('YYYY-MM-DD');
 
       // save
       $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti/dmard', form_data)
@@ -182,6 +187,11 @@ var TerapiaEditCtrl = [
         init();
       });
     };
+
+    $scope.modifica_tc = function(t) {
+      $scope.tc_aggiungi = angular.copy(t);
+    }
+
 
     init();
   }
