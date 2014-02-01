@@ -1,10 +1,10 @@
 var TerapiaEditCtrl = [
   '$scope', '$routeParams',
   '$timeout', 'calendar', '$http', 'loadDataListIntoScope',
-  '$window', '$log', 'growl',
+  '$log', 'growl',
   function($scope, $routeParams,
     $timeout, calendar, $http, loadDataListIntoScope,
-    $window, $log, growl) {
+    $log, growl) {
 
     calendar().init($scope);
 
@@ -168,8 +168,18 @@ var TerapiaEditCtrl = [
     };
 
     $scope.elimina_tc = function(t) {
-      $window._.remove($scope.terapie_concomitanti, function(tc) {
-        return tc.id_tipo_farmaco === t.id_tipo_farmaco;
+      $http.post('/data/pazienti/' + $routeParams.idPaziente + '/cancella/terapie_concomitanti/dmard/' + t.idterapia_concomitante, t)
+      .success(function(data, status, headers, config) {
+        $log.info('cancellazione avvenuta con successo, di');
+        $log.info(t);
+        initTerapieConcomitanti();
+        initTerapieConcomitantiForm();
+      })
+      .error(function(data, status, headers, config) {
+        $log.error('cancellazione non riuscita: ');
+        $log.error({data: data, status: status, headers: headers, config: config});
+        growl.addErrorMessage('Cancellazione non riuscita per la terapia DMARD');
+        init();
       });
     };
 
