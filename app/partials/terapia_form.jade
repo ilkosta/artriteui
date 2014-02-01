@@ -44,7 +44,7 @@ div(ng-controller='TerapiaEditCtrl')
               td.col-md-1 {{t.tempo}}
               td.col-md-1 {{t.d_inizio | date:"dd/MM/yyyy"}}
               td.col-md-1 {{t.nome}}
-              td.col-md-1(align='right')   {{t.dose}}
+              td.col-md-1(align='right')   {{t.dose | number:2}}
               td.col-md-1 {{t.d_fine | date:"dd/MM/yyyy"}}
               td.col-md-1 {{t.motivo_sospensione}}
               td.col-md-1 {{t.note}}
