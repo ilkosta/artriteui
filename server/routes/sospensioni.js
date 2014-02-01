@@ -28,6 +28,10 @@
         if(!id_terapia)
           notify_problem(res,"id_terapia nullo!", new Error("id_terapia nullo!"),[],db);        
         
+        var df =req.body.data_fine;
+        if(req.body.data_fine == null) df = null;
+        else moment(req.body.data_fine).format('YYYY-MM-DD');
+
         qry =   "INSERT INTO terapia_sospensione(id_terapia, id_sospensione_dettaglio, tipo_sospensione, data_inizio, data_fine, note, id_sospensione , num_infusioni_fatte , follow_up) ";
         qry +=   "                        VALUES(?,           ?,                        ?,              ?,            ?,          ?,    ?,               ?,                    ?)";
         params = [
@@ -35,7 +39,7 @@
           , req.body.id_sospensione_dettaglio
           , req.body.tipo_sospensione
           , moment(req.body.data_inizio).format('YYYY-MM-DD') 
-          , moment(req.body.data_fine).format('YYYY-MM-DD')
+          , df
           , req.body.note
           , req.body.id_sospensione
           , req.body.num_infusioni_fatte
@@ -56,15 +60,34 @@
   };
 
   exports.upd = function(req, res, next) {
-    if(req.body.length === 0) 
+    var save =1;
+    if(req.body.length === 0) {
       notify_problem(res,'req.body.length === 0');
+      save =0;
+    }
 
-    if(!date_utils.isDateInRange(req.body.data_inizio))
+    if(!date_utils.isDateInRange(req.body.data_inizio)){
       notify_problem(res,'data_inizio non valida!');
+    save =0;
+    }
 
-    if(!date_utils.isDateInRange(req.body.data_fine))
-      notify_problem(res,'data_fine non valida!');
+    var df =req.body.data_fine;
+    var di =moment(req.body.data_inizio).format('YYYY-MM-DD');
+    if(req.body.data_fine == null) df = null;
+    else {
+        if(!date_utils.isDateInRange(req.body.data_fine)){
+            notify_problem(res,'data_fine non valida!');
+            save =0;
+          }
+        df = moment(req.body.data_fine).format('YYYY-MM-DD'); 
 
+     if( moment(df).isBefore(di)){ 
+        notify_problem(res,'data_fine non valida!');
+        save =0;
+      }  
+    }
+
+if(save ===1 ){
     var db = mysql_connector.createConnection();
     db.connect();
     db.beginTransaction( function(err) {
@@ -87,8 +110,8 @@
       var parameters = [
           req.body.id_sospensione_dettaglio
         , req.body.tipo_sospensione
-        , moment(req.body.data_inizio).format('YYYY-MM-DD')
-        , moment(req.body.data_fine).format('YYYY-MM-DD')
+        , di
+        , df
         , req.body.note
         , req.body.id_sospensione
         , req.body.num_infusioni_fatte
@@ -107,6 +130,7 @@
         });
       });
     });
+  }
   };
 
   exports.del = function(req, res, next) {
