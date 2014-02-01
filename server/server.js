@@ -65,7 +65,9 @@ app.post('/data/pazienti/:idPaziente/terapia_valutazione/:tempo/cancella' , tera
 app.post('/data/pazienti/:idPaziente/terapia_valutazione' , terapia_valutazione.ins);
 
 // sospensioni
-var sospensioni = require('./routes/sospensioni.js');
+var sospensioni = require('./routes/sospensioni.js')
+app.get('/data/pazienti/:idPaziente/sospensioni/tempo', require('./routes/sospensioni_tempo.js').get);
+app.get('/data/pazienti/:idPaziente/sospensioni/tempomesi', require('./routes/sospensioni_tempo.js').getFolloup);
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/aggiorna', sospensioni.upd);
 app.post('/data/pazienti/:idPaziente/sospensioni/:idterapia_sospensione/cancella', sospensioni.del);  
 app.post('/data/pazienti/:idPaziente/sospensioni/inserisci', sospensioni.ins);
