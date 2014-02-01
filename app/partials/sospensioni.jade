@@ -68,8 +68,12 @@ div( ng-controller='SospensioniCtrl' )
                     max='1000'
                     step='1' 
                     ng-required='true'
-                    ng-model='eForm.num_infusioni_fatte'                   
+                    ng-model='eForm.num_infusioni_fatte' 
+                    style = 'width :80px'                 
                     )
+
+                  button(ng-click='calculateNumInfuzioni()')                   
+                    i.glyphicon.glyphicon-repeat
                  
               .col-md-6
                 label Follow up
@@ -81,8 +85,11 @@ div( ng-controller='SospensioniCtrl' )
                     max='1000'
                     step='1' 
                     ng-required='true'
-                    ng-model='eForm.follow_up'                   
-                    )    
+                    ng-model='eForm.follow_up' 
+                    style = 'width :80px'                   
+                    )   
+                  button(ng-click='calculateFollowUp()')                   
+                    i.glyphicon.glyphicon-repeat 
             br
             .row
               .col-md-5
