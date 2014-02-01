@@ -54,8 +54,11 @@ app.post ('/data/pazienti/:idPaziente/terapie_pre/cancella', terapie_pre.del);
 
 // terapia
 var terapie_concomitanti = require('./routes/terapie_concomitanti.js')
-  , terapia_farmaco = require('./routes/terapia_farmaco.js');
+  , terapia_farmaco = require('./routes/terapia_farmaco.js')
+  , terapie_concomitanti_dmard = require('./routes/terapie_concomitanti_dmard.js');
+  
 app.post ('/data/pazienti/:idPaziente/terapie_concomitanti' , terapie_concomitanti.ins);
+app.post ('/data/pazienti/:idPaziente/terapie_concomitanti/dmard' , terapie_concomitanti_dmard.ins);
 app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.ins);
 app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.upd);
 

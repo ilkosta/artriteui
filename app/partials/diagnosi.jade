@@ -10,13 +10,11 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                 label.inline-field Data diagnosi
                 .form-horizontal
                   input( 
-                    name='data_diagnosi'
                     type='text'
                     datepicker-popup='dd-MM-yyyy'
                     datepicker-options='dateOptions'
                     ng-required='true'
                     ng-model='diagnosi.data_diagnosi'
-                    open='calendarOpened'
                     ui-validate='dataDiagnosiValida($value)' )
                   span &nbsp; ({{ diagnosi.data_diagnosi | fromNowPrecisely }})
             br
@@ -72,9 +70,6 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
               //-       input( 
               //-         name='data_infusione'
               //-         type='text'
-              //-         datepicker-popup='dd-MM-yyyy'
-              //-         datepicker-options='dateOptions'
-              //-         datepicker-month-format='MM'
               //-         ng-required='false'
               //-         ng-model='nuova_infusione'
               //-         open='calendarOpened'
@@ -89,12 +84,10 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                     input( 
                       name='data_infusione'
                       type='text'
+                      ng-required='false'
                       datepicker-popup='dd-MM-yyyy'
                       datepicker-options='dateOptions'
-                      datepicker-month-format='MM'
-                      ng-required='false'
                       ng-model='nuova_infusione'
-                      open='calendarOpened'
                       ui-validate='dataInfusioneValida($value)')
                 button.btn.btn-success(
                   ng-click='add_infusione()') ok

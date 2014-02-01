@@ -89,11 +89,10 @@ div( ng-controller='SospensioniCtrl' )
                 label Data inizio sospensione
                   br
                   input( 
-                    name='data_diagnosi'
                     type='text'
+                    ng-required='true'
                     datepicker-popup='dd-MM-yyyy'
                     datepicker-options='dateOptions'
-                    ng-required='true'
                     ng-model='eForm.data_sospensione'
                     open='calendarOpened')
 
@@ -101,11 +100,10 @@ div( ng-controller='SospensioniCtrl' )
                 label Data fine sospensione
                   br
                   input( 
-                    name='data_diagnosi'
                     type='text'
+                    ng-required='true'
                     datepicker-popup='dd-MM-yyyy'
                     datepicker-options='dateOptions'
-                    ng-required='true'
                     ng-model='eForm.data_fine_sospensione'
                     open='calendarOpened')
 

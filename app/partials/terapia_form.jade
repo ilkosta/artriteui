@@ -6,12 +6,12 @@ div(ng-controller='TerapiaEditCtrl')
         
         label Data Inizio Terapia con TCZ
           .form-horizontal
+            //- datepicker-popup='dd-MM-yyyy'
             input(  type='text'
                     datepicker-popup='dd-MM-yyyy'
                     datepicker-options='dateOptions'
                     ng-required='true'
-                    ng-model='terapia.data_inizio'
-                    open='calendarOpened')
+                    ng-model='terapia.data_inizio')
         label(ng-show="terapia.data_inizio")
           | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi &nbsp;
           span.badge {{terapia.data_inizio | monthsFromNow }}  
@@ -29,7 +29,7 @@ div(ng-controller='TerapiaEditCtrl')
         table.table-striped.table-bordered.table-hover
           thead
             tr
-              th Tempo
+              th t.
               th Data Inizio
               
 
@@ -42,11 +42,11 @@ div(ng-controller='TerapiaEditCtrl')
           tbody
             tr(ng-repeat='t in terapie_concomitanti')
               td.col-md-1 {{t.tempo}}
-              td.col-md-1 {{t.di}}
+              td.col-md-1 {{t.d_inizio | date:"dd/MM/yyyy"}}
               td.col-md-1 {{t.nome}}
               td.col-md-1(align='right')   {{t.dose}}
-              td.col-md-1 {{t.df}}
-              td.col-md-1 {{t.motivo}}
+              td.col-md-1 {{t.d_fine | date:"dd/MM/yyyy"}}
+              td.col-md-1 {{t.motivo_sospensione}}
               td.col-md-1 {{t.note}}
               td
                 button.btn.btn-default.btn-xs(ng-click='modifica_tc(t)') 

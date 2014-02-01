@@ -1,10 +1,13 @@
 var TerapiaEditCtrl = [
   '$scope', '$routeParams',
-  '$timeout', 'openCalendar', '$http', 'loadDataListIntoScope',
+  '$timeout', 'calendar', '$http', 'loadDataListIntoScope',
   '$window', '$log', 'growl',
   function($scope, $routeParams,
-    $timeout, openCalendar, $http, loadDataListIntoScope,
+    $timeout, calendar, $http, loadDataListIntoScope,
     $window, $log, growl) {
+
+    calendar().init($scope);
+
 
     // constraints
     var tc_unchanged = function() {
@@ -13,58 +16,66 @@ var TerapiaEditCtrl = [
 
     var initPazienti = function() {
       $http.get('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco')
-      .success(function(data, status, headers, config) {
+        .success(function(data, status, headers, config) {
 
-        $scope.terapia = { data_inizio: new Date() }; // inizializzo la data a oggi
-        if (data.length > 0) {
-          $scope.master = data[0];
-          $scope.terapia = data[0];
-        }
-      })
-      .error(function(data, status, headers, config) {
-        $log.error('lettura di Terapia Paziente non riuscita!');
-        growl.addErrorMessage("lettura di Terapia Paziente non riuscita! IdPaziente :" + $routeParams.idPaziente + ' \nControlla che il server sia attivo!');
-      });  
+          $scope.terapia = {
+            data_inizio: new Date()
+          }; // inizializzo la data a oggi
+          if (data.length > 0) {
+            $scope.master = data[0];
+            $scope.terapia = data[0];
+          }
+        })
+        .error(function(data, status, headers, config) {
+          $log.error('lettura di Terapia Paziente non riuscita!');
+          growl.addErrorMessage("lettura di Terapia Paziente non riuscita! IdPaziente :" + $routeParams.idPaziente + ' \nControlla che il server sia attivo!');
+        });
     }
 
-    var init = function() {
-      initPazienti();
-      $scope.openCalendar = openCalendar($scope);
 
-      // parametri: _farmaci_dimard 
-      loadDataListIntoScope(
-        $scope, ['farmaci_dimard','tipo_sospensione_dimard'],
-        function(p) {
-          return '/data/_' + p;
-        }
-      );
-
+    var initTerapieConcomitanti = function() {
       // load terapie_concomitanti (da pazienti/:id/terapie_concomitanti)
       $http.get('data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti')
         .success(function(data, status, headers, config) {
-          $scope.terapie_concomitanti = [];
-          if (data.length > 0) {
-            $scope.master_tc = data;
-            $scope.terapie_concomitanti = data;
-            // vado avanti a inizializzare terapie_concomitanti
-            $scope.terapie_concomitanti.unchanged = tc_unchanged;
-          }
+          $scope.terapie_concomitanti = data;
         })
         .error(function(data, status, headers, config) {
           $log.error('lettura di Terapia terapie_concomitanti non riuscita!');
           growl.addErrorMessage('Lettura di Terapia terapie_concomitanti non riuscita! \nControlla che il server sia attivo!');
         });
+    };
+
+    var initTerapieConcomitantiForm = function() {
+      var form_data = $scope.tc_aggiungi;
+      _.forOwn(form_data, function(v,k,o) {
+        o[k] = null;
+      });
+    };
+
+    var init = function() {
+      initPazienti();
+
+
+      // parametri: _farmaci_dimard 
+      loadDataListIntoScope(
+        $scope, ['farmaci_dimard', 'tipo_sospensione_dimard'],
+        function(p) {
+          return '/data/_' + p;
+        }
+      );
+
+      initTerapieConcomitanti();
+      initTerapieConcomitantiForm();
 
       $scope.formState.saving = false;
       $scope.tc_aggiungi = {};
     }
 
-    
-
-    
 
 
+    // ----------------------------------------------------------------------
     // interazioni della form ...
+    // ----------------------------------------------------------------------
     $scope.formState = {};
     $scope.Save = function() {
       $scope.formState.saving = true;
@@ -134,28 +145,26 @@ var TerapiaEditCtrl = [
       $scope.terapie_concomitanti.unchanged = tc_unchanged;
     };
 
-    
+
     $scope.aggiungi_tc = function() {
-      if (!$scope.tc_aggiungi.dose) return;
-      if (!$scope.tc_aggiungi.id_tipo_farmaco) return;
-      
-      // non aggiunge duplicati...
-      if (_.find($scope.terapie_concomitanti, function(t) {
-        return t.id_tipo_farmaco == $scope.tc_aggiungi.id_tipo_farmaco;
-      }))
-        return;
+      // requisiti da controllare....
+      // allineaento dei campi mancanti
+      var form_data = $scope.tc_aggiungi;
+      form_data.id_terapia = $scope.terapia.idterapia;
+      form_data.id_paziente = $scope.terapia.id_paziente;
 
-      var tc_nuova = {
-        nome: _.find($scope.farmaci_dimard, function(f) {
-          return f.idtipo_farmaco == $scope.tc_aggiungi.id_tipo_farmaco;
-        }).nome,
-        id_terapia: $scope.terapia.idterapia,
-        id_tipo_farmaco: $scope.tc_aggiungi.id_tipo_farmaco,
-        dose: $scope.tc_aggiungi.dose,
-        id_paziente: $scope.terapia.id_paziente
-      };
-
-      $scope.terapie_concomitanti.push(tc_nuova);
+      // save
+      $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti/dmard', form_data)
+        .success(function(data, status, headers, config) {
+          $log.info('salvataggio avvenuto con successo');
+          initTerapieConcomitanti();
+          initTerapieConcomitantiForm();
+        })
+        .error(function(data, status, headers, config) {
+          $log.error('salvataggio non riuscito: ');
+          growl.addErrorMessage('Aggiornamento non riuscito per la terapia DMARD');
+          init();
+        });
     };
 
     $scope.elimina_tc = function(t) {
