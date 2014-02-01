@@ -10,7 +10,7 @@
   exports.ins = function(req, res, next) {
     if(req.body.length === 0) 
       notify_problem(res,'','req.body.length === 0');
-debugger;
+
     var db = mysql_connector.createConnection();
     db.connect();
     db.beginTransaction( function(err) {
@@ -27,7 +27,7 @@ debugger;
         var id_terapia = r[0].idterapia;
         if(!id_terapia)
           notify_problem(res,"id_terapia nullo!", new Error("id_terapia nullo!"),[],db);        
-        debugger;
+        
         qry =   "INSERT INTO terapia_sospensione(id_terapia, id_sospensione_dettaglio, tipo_sospensione, data_inizio, data_fine, note, id_sospensione , num_infusioni_fatte , follow_up) ";
         qry +=   "                        VALUES(?,           ?,                        ?,              ?,            ?,          ?,    ?,               ?,                    ?)";
         params = [
