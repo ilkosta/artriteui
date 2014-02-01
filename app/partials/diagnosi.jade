@@ -58,8 +58,10 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
 
               div(ng-show='formState.ins_infusione')
                 +date("Data infusione", 'nuova_infusione')
-                button.btn.btn-ms.btn-success(
-                  ng-click='add_infusione()') ok
+                  button.btn.btn-xs.btn-success(
+                    ng-click='add_infusione()') ok
+                  button.btn.btn-xs.btn-default(
+                    ng-click='formState.ins_infusione = false') x
             br
             .row.alert.alert-info(ng-show='infusioni.length > 0')              
               .row

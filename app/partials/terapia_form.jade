@@ -11,6 +11,10 @@ div(ng-controller='TerapiaEditCtrl')
           ng-click='salva_inizio_terapia()')
           | &nbsp; Salva
 
+        button.btn.btn-xs.btn-default(
+          ng-hide='terapia.data_inizio == terapia.data_inizio_ori'
+          ng-click='ripristina_data_inizio()') x
+
         label(ng-show="terapia.data_inizio")
           | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi &nbsp;
           span.badge {{terapia.data_inizio | monthsFromNow }}  

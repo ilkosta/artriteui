@@ -37,6 +37,10 @@ var TerapiaEditCtrl = [
         });
     }
 
+    $scope.ripristina_data_inizio = function() {
+      $scope.terapia.data_inizio = angular.copy($scope.terapia.data_inizio_ori);      
+    }
+
 
     var initTerapieConcomitanti = function() {
       // load terapie_concomitanti (da pazienti/:id/terapie_concomitanti)
