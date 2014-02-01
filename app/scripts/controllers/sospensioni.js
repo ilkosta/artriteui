@@ -17,7 +17,7 @@
         this.init();
       }
 
-    $scope.calculateNumInfuzioni = function () {        
+    $scope.calculateNumInfusioni = function () {        
         
         if($scope.eForm.data_sospensione==null)
               $scope.eForm.data_sospensione = new Date();

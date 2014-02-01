@@ -15,7 +15,7 @@
         data = data.replace( /"/g,"");
         var qry_select =   "select Count(*) as numero_infusioni from infusioni_tcz ";
         qry_select +=   "where id_paziente = ? and data_infusione < ? ";
-        var param_select = [ req.params.idPaziente , moment(data).format('YYYY-MM-DD') ];
+        var param_select = [ req.params.idPaziente , date_utils.getDate(data) ];
         
         mysql_conn.query(qry_select, param_select, function(err, rows, f) {
                    
@@ -34,7 +34,7 @@ exports.getFolloup = function(req, res, next) {
         data = data.replace( /"/g,"");
         var qry_select = "select  period_diff(date_format( ?, '%Y%m'), date_format(data_inizio, '%Y%m')) as mesi from terapia";
             qry_select +=" where id_paziente = ? ";
-        var param_select = [  moment(data).format('YYYY-MM-DD') , req.params.idPaziente];
+        var param_select = [  date_utils.getDate(data) , req.params.idPaziente];
         
         mysql_conn.query(qry_select, param_select, function(err, rows, f) {
                    
