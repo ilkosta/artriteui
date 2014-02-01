@@ -19,7 +19,7 @@
       qry: 'SELECT * FROM artrite.tipo_risposta'
     }, {
       nome_parametro: '_farmaci_dimard',
-      qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'1\' '
+      qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'1\' or tipo_famiglia_farmaco=\'3\''
     }, {
       nome_parametro: '_farmaci_biologici',
       qry: 'SELECT * FROM artrite.tipo_farmaco where tipo_famiglia_farmaco=\'2\''
