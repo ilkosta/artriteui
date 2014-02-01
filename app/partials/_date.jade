@@ -1,0 +1,12 @@
+mixin date(label, model, validate)
+  label.inline-field= label
+  .form-horizontal
+    input( 
+      type="text"
+      datepicker-popup='dd-MM-yyyy'
+      datepicker-options='dateOptions'    
+      ng-model=model 
+      ui-validate=validate
+      )
+    if block
+        block
