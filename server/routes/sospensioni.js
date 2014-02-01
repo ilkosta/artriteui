@@ -10,13 +10,14 @@
   exports.ins = function(req, res, next) {
     if(req.body.length === 0) 
       notify_problem(res,'','req.body.length === 0');
-
+debugger;
     var db = mysql_connector.createConnection();
     db.connect();
     db.beginTransaction( function(err) {
       if (err) 
         notify_problem(res,'connection',err);
       // devi prendere l'id terapia
+
       var qry = "SELECT idterapia FROM terapia where id_paziente = ? limit 1";
       var params = [req.params.idPaziente];
       db.query(qry, params, function(err, r, f) {
@@ -26,7 +27,7 @@
         var id_terapia = r[0].idterapia;
         if(!id_terapia)
           notify_problem(res,"id_terapia nullo!", new Error("id_terapia nullo!"),[],db);        
-
+        debugger;
         qry =   "INSERT INTO terapia_sospensione(id_terapia, id_sospensione_dettaglio, tipo_sospensione, data_inizio, data_fine, note, id_sospensione , num_infusioni_fatte , follow_up) ";
         qry +=   "                        VALUES(?,           ?,                        ?,              ?,            ?,          ?,    ?,               ?,                    ?)";
         params = [

@@ -17,6 +17,51 @@
         this.init();
       }
 
+    $scope.calculateNumInfuzioni = function () {        
+        
+        if($scope.eForm.data_sospensione==null)
+              $scope.eForm.data_sospensione = new Date();
+            var dt_sosp = $scope.eForm.data_sospensione;   
+      
+        $http.get("/data/pazienti/" + $routeParams.idPaziente 
+                + "/sospensioni/tempo",{params: {datasospensione:$scope.eForm.data_sospensione}})
+          .success(function(data, status, headers, config) {
+         
+            if(data.length>0) {
+                $scope.eForm.num_infusioni_fatte = data[0].numero_infusioni;
+                console.log("numero infusioni:");
+                console.log(data[0].numero_infusioni);
+              }
+          })
+          .error(function(data, status, headers, config) {
+            growl.addErrorMessage("Errore nella lettura del numero delle infusioni del paziente.\nControlla la connessione al server!");
+          });      
+      }
+      
+     $scope.calculateFollowUp = function () {        
+        if($scope.eForm.data_sospensione==null)
+              $scope.eForm.data_sospensione = new Date();
+            var dt_sosp = $scope.eForm.data_sospensione;   
+            var num_mesi =0;      
+          
+          $http.get("/data/pazienti/" + $routeParams.idPaziente 
+                + "/sospensioni/tempomesi",{params: {datasospensione:$scope.eForm.data_sospensione}})
+          .success(function(data, status, headers, config) {
+         
+            if(data.length>0) {
+                $scope.eForm.follow_up = data[0].mesi;
+                console.log("numero mesi:");
+                console.log(data[0].mesi);
+              }
+          })
+          .error(function(data, status, headers, config) {
+            growl.addErrorMessage("Errore nella lettura del numero delle infusioni del paziente.\nControlla la connessione al server!");
+          }); 
+             
+      }
+
+
+
       editForm.prototype.init = function() {
         this.idterapia_sospensione = null;
         this.cod_tipo_sospensione = "t";
@@ -32,7 +77,7 @@
       };
 
       editForm.prototype.edit = function(sosp) {
-        debugger;
+
         this.idterapia_sospensione = sosp.idterapia_sospensione;
         this.cod_tipo_sospensione = sosp.cod_tipo_sospensione;
         this.id_motivo_sospensione = sosp.id_sospensione;
@@ -40,7 +85,9 @@
         this.data_sospensione = sosp.data_inizio;
         this.data_fine_sospensione = sosp.data_fine;
         this.annotazioni = sosp.note;
+        if(sosp.num_infusioni_fatte==null)sosp.num_infusioni_fatte=0;
         this.num_infusioni_fatte = sosp.num_infusioni_fatte;
+        if(sosp.follow_up == null)sosp.follow_up =0;
         this.follow_up = sosp.follow_up;
       };
 
@@ -50,7 +97,6 @@
 
       var dataUrl = {};
       $scope.eForm = new editForm();
-
       
 
       //----- sospensioniMngr -----
@@ -82,6 +128,8 @@
         };
 
         res.prototype.getSospensione = function() {
+          if(this.edit.num_infusioni_fatte==null)this.edit.num_infusioni_fatte=0
+          if(this.edit.follow_up==null)this.edit.follow_up=0
           var sosp = {};
           sosp.idterapia_sospensione    = this.edit.idterapia_sospensione;
           sosp.tipo_sospensione         = this.edit.cod_tipo_sospensione;

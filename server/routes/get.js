@@ -146,7 +146,12 @@
         nome_parametro: 'paziente_modifica',
         qry: 'select  * from paziente ' +
              ' where idPaziente = ?'
+      },{
+        nome_parametro: 'sospensioni_tempo',
+        qry: 'select  * from paziente ' +
+             ' where idPaziente = ?'
       }
+
     ];
 
     _.each(qry_paziente, add_paziente_simple_get);
