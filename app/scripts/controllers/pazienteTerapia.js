@@ -46,10 +46,8 @@ var TerapiaEditCtrl = [
     };
 
     var initTerapieConcomitantiForm = function() {
-      var form_data = $scope.tc_aggiungi;
-      _.forOwn(form_data, function(v,k,o) {
-        o[k] = null;
-      });
+      $scope.tc_aggiungi = {}
+      $scope.formState.visible = false;
     };
 
     $scope.initForm = initTerapieConcomitantiForm;
@@ -70,7 +68,9 @@ var TerapiaEditCtrl = [
       initTerapieConcomitantiForm();
 
       $scope.formState.saving = false;
-      $scope.tc_aggiungi = {};
+      $scope.formState.visible = false;
+      
+      $scope.tc_aggiungi = {};      
     }
 
 

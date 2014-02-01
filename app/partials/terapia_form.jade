@@ -21,11 +21,20 @@ div(ng-controller='TerapiaEditCtrl')
     //- -------------------------------------------------------------
     h4 Terapia concomitante al Tocilizumab - DMARD
     //- -------------------------------------------------------------
+    div(ng-include="'/partials/terapia_concomitante_canc_form.html'")
+    .row(ng-show='formState.visible')
+      .col-md-12
+        div(ng-include="'/partials/terapia_concomitante_form.html'")
     .row
-      .col-md-6(ng-hide='(terapie_concomitanti).length == 0')
+      .col-md-3
         h5 elementi esistenti 
           span.badge {{(terapie_concomitanti).length}}
-          
+      .col
+        button.btn.btn-default( ng-hide='formState.visible', ng-click='formState.visible=true' )
+          i.glyphicon.glyphicon-plus-sign
+          | &nbsp; Aggiungi
+    .row
+      .col-md-12(ng-hide='(terapie_concomitanti).length == 0')    
         table.table-striped.table-bordered.table-hover
           thead
             tr
@@ -41,29 +50,23 @@ div(ng-controller='TerapiaEditCtrl')
               th Note              
           tbody
             tr(ng-repeat='t in terapie_concomitanti')
-              td.col-md-1 {{t.tempo}}
+              td {{t.tempo}}
               td.col-md-1 {{t.d_inizio | date:"dd/MM/yyyy"}}
               td.col-md-1 {{t.nome}}
               td.col-md-1(align='right')   {{t.dose | number:2}}
               td.col-md-1 {{t.d_fine | date:"dd/MM/yyyy"}}
-              td.col-md-1 {{t.motivo_sospensione}}
-              td.col-md-1 {{t.note}}
-              td
+              td.col-md-2 {{t.motivo_sospensione}}
+              td.col-md-4 {{t.note}}
+              td(style='width: 58px;')
                 button.btn.btn-default.btn-xs(ng-click='modifica_tc(t)') 
                   i.glyphicon.glyphicon-pencil
-                button.btn.btn-danger.btn-xs(ng-click='elimina_tc(t)') 
+                button.btn.btn-danger.btn-xs(
+                  ng-click='formState.tc_da_cancellare = t'
+                  data-toggle="modal"
+                  data-target="#cancella_tc_dlg" ) 
                   i.glyphicon.glyphicon-trash
 
-      .col-md-5
-        div(ng-include="'/partials/terapia_concomitante_form.html'")
-
-        
       
-                
-     br 
-     br 
-     br 
-
   .modal-footer
     button.btn.btn-default(
       ng-disabled='terapie_concomitanti.unchanged()'
