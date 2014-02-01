@@ -149,7 +149,7 @@
           qry +=' WHERE ';
           qry +=' idterapia_concomitante = ?';
           par = [req.body.id_terapia , req.body.id_tipo_farmaco ,req.body.dose ,req.body.id_paziente 
-                ,req.body.tempo ,req.body.d_inizio ,req.body.d_fine ,req.body.note ,req.body.id_tipo_motivo_sospensione 
+                ,req.body.tempo ,req.body.d_inizio ,req.body.d_fine ,req.body.note ,req.body.idtipo_motivo_sospensione 
                 ,req.body.idterapia_concomitante];
 
           return save(qry,par);
@@ -161,7 +161,7 @@
         qry += '  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
         par = [ req.body.id_terapia , req.body.id_tipo_farmaco ,req.body.dose ,req.body.id_paziente 
                 ,req.body.tempo ,req.body.d_inizio ,req.body.d_fine ,req.body.note 
-                ,req.body.id_tipo_motivo_sospensione ];
+                ,req.body.idtipo_motivo_sospensione ];
 
         return save(qry,par);
 
