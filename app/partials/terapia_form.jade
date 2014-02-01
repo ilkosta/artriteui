@@ -12,9 +12,18 @@ div(ng-controller='TerapiaEditCtrl')
                     datepicker-options='dateOptions'
                     ng-required='true'
                     ng-model='terapia.data_inizio')
+        button.btn.btn-xs.btn-success(
+          ng-hide='terapia.data_inizio == terapia.data_inizio_ori'
+          ng-click='salva_inizio_terapia()')
+          | &nbsp; Salva
+
         label(ng-show="terapia.data_inizio")
           | &nbsp;&nbsp;&nbsp;&nbsp; FollowUp Mesi &nbsp;
           span.badge {{terapia.data_inizio | monthsFromNow }}  
+      
+        
+
+
       br
       br
 
@@ -22,14 +31,13 @@ div(ng-controller='TerapiaEditCtrl')
     h4 Terapia concomitante al Tocilizumab - DMARD
     //- -------------------------------------------------------------
     div(ng-include="'/partials/terapia_concomitante_canc_form.html'")
-    .row(ng-show='formState.visible')
-      .col-md-12
-        div(ng-include="'/partials/terapia_concomitante_form.html'")
+    .row(ng-show='formState.visible')    
+      div(ng-include="'/partials/terapia_concomitante_form.html'")
     .row
-      .col-md-3
+      .col-xs-12.col-sm-5.col-md-3.col-lg-3
         h5 elementi esistenti 
           span.badge {{(terapie_concomitanti).length}}
-      .col
+      .col-xs-3.col-sm-3.col-md-3.col-lg-3
         button.btn.btn-default( ng-hide='formState.visible', ng-click='formState.visible=true' )
           i.glyphicon.glyphicon-plus-sign
           | &nbsp; Aggiungi
@@ -64,12 +72,3 @@ div(ng-controller='TerapiaEditCtrl')
                   data-toggle="modal"
                   data-target="#cancella_tc_dlg" ) 
                   i.glyphicon.glyphicon-trash
-
-      
-  .modal-footer
-    button.btn.btn-default(
-      ng-disabled='terapie_concomitanti.unchanged()'
-      ng-click='Cancel()') Annulla
-    button.btn.btn-primary(
-      ng-click='Save()') Salva      
-    

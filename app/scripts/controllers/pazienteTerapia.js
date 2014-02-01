@@ -21,10 +21,15 @@ var TerapiaEditCtrl = [
           $scope.terapia = {
             data_inizio: new Date()
           }; // inizializzo la data a oggi
+
           if (data.length > 0) {
             $scope.master = data[0];
             $scope.terapia = data[0];
+
+            $scope.terapia.data_inizio_ori = angular.copy($scope.terapia.data_inizio);
           }
+
+
         })
         .error(function(data, status, headers, config) {
           $log.error('lettura di Terapia Paziente non riuscita!');
@@ -73,13 +78,10 @@ var TerapiaEditCtrl = [
       $scope.tc_aggiungi = {};      
     }
 
-
-
     // ----------------------------------------------------------------------
-    // interazioni della form ...
+    // interazioni della form della terpia TCZ
     // ----------------------------------------------------------------------
-    $scope.formState = {};
-    $scope.Save = function() {
+    $scope.salva_inizio_terapia = function() {
       $scope.formState.saving = true;
       // fai controlli di validità
       if (!$scope.terapia.data_inizio) {
@@ -89,6 +91,10 @@ var TerapiaEditCtrl = [
         return false;
       }
 
+      // fix della data -------------------
+      $scope.terapia.data_inizio = moment($scope.terapia.data_inizio).format('YYYY-MM-DD');
+      // ----------------------------------
+
       if (!$scope.terapia.id_paziente) {
         $scope.terapia.id_paziente = $routeParams.idPaziente;
       }
@@ -96,23 +102,23 @@ var TerapiaEditCtrl = [
         $http.put('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco', $scope.terapia)
           .success(function(data, status, headers, config) {
             $log.info('Aggiornamento avvenuto con successo');
-            growl.addSuccessMessage("Aggiornamento avvenuto con successo");
-            salvaTerapiaConcomitante($scope.terapia.idterapia);
+            initPazienti();
           })
           .error(function(data, status, headers, config) {
             $log.error('Aggiornamento non riuscito per la terapia del paziente :' + $scope.terapia.id_paziente);
+            $log.log({data: data, status: status, headers: headers, config: config});
             growl.addErrorMessage('Aggiornamento non riuscito per la terapia del paziente :' + $scope.terapia.id_paziente);
             init();
           });
       } else {
         $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapia_farmaco', $scope.terapia)
           .success(function(data, status, headers, config) {
-            $log.info('salvataggio avvenuto con successo');
-            growl.addSuccessMessage("Aggiornamento TERAPIA FARMACOLOGICA avvenuta con successo");
-            salvaTerapiaConcomitante(data.insertId);
+            $log.info('salvataggio avvenuto con successo');   
+            initPazienti();         
           })
           .error(function(data, status, headers, config) {
             $log.error('salvataggio non riuscito: ');
+            $log.log({data: data, status: status, headers: headers, config: config});
             growl.addErrorMessage('Aggiornamento non riuscito per la terapia farmaco del paziente :' + $scope.terapia.id_paziente);
             init();
           });
@@ -120,33 +126,12 @@ var TerapiaEditCtrl = [
       // allinea gli ultimi valori prima del salvataggio
     };
 
-    var salvaTerapiaConcomitante = function(idTerapia) {
-      var terapie_concomitanti = _.map($scope.terapie_concomitanti, function(it) {
-        it.id_terapia = idTerapia;
-        return it;
-      });
 
-      if (terapie_concomitanti.length > 0)
-        $http.post('/data/pazienti/' + $routeParams.idPaziente + '/terapie_concomitanti', terapie_concomitanti)
-          .success(function(data, status, headers, config) {
-            $log.info('salvataggio avvenuto con successo');
-            init();
-          })
-          .error(function(data, status, headers, config) {
-            $log.error('salvataggio non riuscito: ');
-            $log.error(data);
-            $log.error(status);
-            growl.addErrorMessage('salvataggio della terapia concomitante non riuscito');
-            init();
-          });
-    }
-
-
-    $scope.Cancel = function() {
-      $scope.terapie_concomitanti = Restangular.copy($scope.master_tc);
-      $scope.terapie_concomitanti.unchanged = tc_unchanged;
-    };
-
+    // ----------------------------------------------------------------------
+    // interazioni della form di terpia concomitante
+    // ----------------------------------------------------------------------
+    $scope.formState = {};
+    
 
     $scope.aggiungi_tc = function() {
       // requisiti da controllare....
