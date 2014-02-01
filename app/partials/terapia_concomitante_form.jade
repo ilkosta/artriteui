@@ -1,0 +1,62 @@
+form(novalidate , name='form_concomitante')        
+  .form-group               
+    .row          
+      label.inline-field Tempo
+        input(type='number', min ='0', max='600', step='1',ng-required='true', ng-model ='tv_aggiungi.tempo')
+
+      label Data Inizio
+        .form-horizontal
+          input(  type='text'
+                  ng-required='true'
+                  datepicker-popup='dd-MM-yyyy'
+                  datepicker-options='dateOptions'
+                  ng-model='tc_aggiungi.d_inizio')
+
+      label Data Fine
+        .form-horizontal
+          input(  type='text'
+                  ng-required='false'
+                  datepicker-popup='dd-MM-yyyy'
+                  datepicker-options='dateOptions'
+                  ng-model='tc_aggiungi.d_fine')
+
+    .row
+      label.inline-field Farmaco
+        select.form-control(
+          ng-options='farmaco.idtipo_farmaco as farmaco.nome for farmaco in farmaci_dimard'
+          ng-model='tc_aggiungi.id_tipo_farmaco')
+      
+      label.inline-field Dose (mg)
+        br
+        input(type='number',min='0.0000',max='1000', step='0.05'
+          ng-model ='tc_aggiungi.dose' )
+
+      label.inline-field Motivo Sospensione
+        select.form-control(
+          ng-options='motivo.idtipo_motivo_sospensione as motivo.descrizione for motivo in tipo_sospensione_dimard'
+          ng-model='tc_aggiungi.idtipo_motivo_sospensione'
+          ng-required='false')
+
+      label Annotazioni
+        textarea(type='text', row='10', cols="50"
+          ng-model='tc_aggiungi.note', ng-required='false')
+    .row
+      button.btn.btn-success.inline-field(
+          ng-click='aggiungi_tc()'
+          ng-hide='tc_aggiungi.idterapia_concomitante'
+          ng-disabled='!tc_aggiungi.id_tipo_farmaco || !tc_aggiungi.dose'
+        )
+        i.glyphicon.glyphicon-plus-sign
+        | &nbsp; Aggiungi
+
+      button.btn.btn-primary.inline-field(
+          ng-click='aggiungi_tc()'
+          ng-show='tc_aggiungi.idterapia_concomitante'
+          ng-disabled='!tc_aggiungi.id_tipo_farmaco || !tc_aggiungi.dose'
+        )
+        i.glyphicon.glyphicon-pencil
+        | &nbsp; Modifica
+
+      buntto.btn.btn-default.inline-field(
+          ng-click='initForm()'
+        ) Annulla

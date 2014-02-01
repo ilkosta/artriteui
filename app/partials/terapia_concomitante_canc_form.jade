@@ -1,0 +1,39 @@
+#cancella_tc_dlg.modal.fade(
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="cancella_tc_title"
+  aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button", data-dismiss="modal", aria-hidden="true")&times;
+        h4#cancella_tc_title.modal-title Cancellazione terapia DMARD
+      .modal-body
+        p Sei sicuro di voler cancellare la terapia {{formState.tc_da_cancellare.nome}} del {{formState.tc_da_cancellare.d_inizio | date:"dd/MM/yyyy" }} ?
+
+        //- p Riepilogo dei dati che si stanno cancellando:
+        dl.dl-horizontal
+          dt tempo
+          dd {{formState.tc_da_cancellare.tempo}}
+          
+          dt nome
+          dd {{formState.tc_da_cancellare.nome}}
+
+          dt iniziata
+          dd {{formState.tc_da_cancellare.d_inizio | date:"dd/MM/yyyy"  }} ({{formState.tc_da_cancellare.d_inizio | fromNowPrecisely}})
+          
+          dt(ng-show='formState.tc_da_cancellare.d_fine') sospesa il
+          dd(ng-show='formState.tc_da_cancellare.d_fine') {{formState.tc_da_cancellare.d_fine | date:"dd/MM/yyyy"  }} ({{formState.tc_da_cancellare.d_fine | fromNowPrecisely}})
+
+          dt(ng-show='formState.tc_da_cancellare.motivo_sospensione') perchè
+          dd(ng-show='formState.tc_da_cancellare.motivo_sospensione') {{formState.tc_da_cancellare.motivo_sospensione}}
+
+          dt(ng-show='formState.tc_da_cancellare.note') annotazioni
+          dd(ng-show='formState.tc_da_cancellare.note') {{formState.tc_da_cancellare.note}}
+
+
+      .modal-footer
+        button.btn.btn-default(data-dismiss="modal") Annulla
+        button.btn.btn-danger(data-dismiss="modal", ng-click="elimina_tc(formState.tc_da_cancellare)") 
+          i.glyphicon.glyphicon-trash
+          | &nbsp; Elimina
