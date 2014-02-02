@@ -1,0 +1,19 @@
+.div(ng-controller='PazienteDettaglioCtrl')
+  .page-header
+    .row
+      h1
+        i.glyphicon.glyphicon-user
+        | &nbsp;&nbsp;
+        | {{ paziente.NOME }} {{ paziente.COGNOME }}
+        br
+        small Dati Anagrafici
+
+  div(ng-include="'/partials/dati_anagrafici.html'")  
+  br
+
+  //- utilizzo di bootstrap nudo e crudo
+  //- ul.nav.nav-pills
+  ul.nav.nav-tabs
+    each title, page in { diagnosi: "Diagnosi", anamnesi: "Anamnesi", fattori_rischio: "Fattori di rischio", terapie_pre: "Terapie farmacologie pre" , terapia: "Terapia", terapia_val: "Terapia valutazione", sospensioni: "Sospensioni" }
+      li(ng-class="getClass('/" +  page + "')")
+        a(href="#/pazienti/{{paziente.idPAZIENTE}}/" + page)= title
