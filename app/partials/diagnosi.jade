@@ -1,5 +1,20 @@
 include _date
 include _paziente_head
+
+mixin choiseBtn(parObj)
+  label=parObj.label
+  br
+  span(ng-repeat='item in ' + parObj.collection)
+    - var itemId =  "item['" + parObj.val + "']"
+    - var itemDesc = "{{item['" + parObj.desc + "']}}"
+
+    button.btn.btn-primary(
+      type='button'
+      ng-model=parObj.model
+      btn-radio=itemId
+      ng-click=onclick
+      )= itemDesc
+
 div( ng-controller='PazienteDiagnosiEditCtrl' )
   .content
     br
@@ -10,32 +25,32 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             .row 
                 +date("Data diagnosi", 'diagnosi.data_diagnosi', 'dataDiagnosiValida($value)')
                   span &nbsp; ({{ diagnosi.data_diagnosi | fromNowPrecisely }})
-            br
+            
             .row
-              
-                label.inline-field Malattia
-                  select.selectpicker.form-control(
-                    ng-required='true'
-                    ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ric'
-                    ng-model='diagnosi.cod_malattia')
-                    //-option(value='') ----------  
-                //-.form-group    
-                label.inline-field Fattore Reumatoide
-                  select.selectpicker.form-control(
-                    class='selectpicker'
-                    ng-required='true'
-                    ng-options='tipo_risp.idtipo_risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
-                    ng-model='diagnosi.fattore_reumatoide')
-                    //-option(value='') ----------            
+                +choiseBtn({
+                  label:"Malattia", 
+                  model:'diagnosi.cod_malattia', 
+                  collection:'malattia_ric', 
+                  val: 'idtipo_malattia', 
+                  desc: 'descrizione'})
 
-                //-.form-group
-                label.inline-field Anticorpi ANTI-CCP
-                  select.selectpicker.form-control(
-                    class='selectpicker'
-                    ng-required='true'
-                    ng-options='tipo_risp.idtipo_risposta as tipo_risp.risposta for tipo_risp in tipo_risposta'
-                    ng-model='diagnosi.anticorpi')
-                    //-option(value='') ----------          
+            .row
+                //-.form-group    
+                +choiseBtn({
+                  label:"Fattore Reumatoide", 
+                  model:'diagnosi.fattore_reumatoide', 
+                  collection:'tipo_risposta', 
+                  val: 'idtipo_risposta', 
+                  desc: 'risposta'})       
+
+            .row
+                +choiseBtn({
+                  label:"Anticorpi ANTI-CCP", 
+                  model:'diagnosi.anticorpi', 
+                  collection:'tipo_risposta', 
+                  val: 'idtipo_risposta', 
+                  desc: 'risposta'})
+
             .row
               .col-xs-12.col-md-11(ng-include="'/partials/diagnosi_footer.html'")
 
