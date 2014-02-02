@@ -14,10 +14,8 @@ var App = angular.module('app',
 //    'app.filters', 
 //    'app.services', 
 // ----- external ------
-    'restangular',
     'ui.bootstrap',
     'angular-growl',
-//    'ui.event',
 
 // ----- custom -------
     'utils',
@@ -33,14 +31,11 @@ angular.module('utils_forms',[]);
 var utils = angular.module('utils', []);
 
 App.config([
-  '$routeProvider', '$locationProvider', 'RestangularProvider', 'growlProvider', 'datepickerPopupConfig',
-  function($routeProvider, $locationProvider, RestangularProvider, growlProvider, datepickerPopupConfig, config) {
+  '$routeProvider', '$locationProvider', 'growlProvider', 'datepickerPopupConfig',
+  function($routeProvider, $locationProvider, growlProvider, datepickerPopupConfig, config) {
 
     growlProvider.globalTimeToLive(10000);
 
-    RestangularProvider.setBaseUrl('/data');
-    RestangularProvider.setErrorInterceptor(utils.checkServer);
-    
     datepickerPopupConfig.dateFormat = 'dd-MM-yyyy';
     datepickerPopupConfig.currentText = 'Oggi';
     datepickerPopupConfig.toggleWeeksText = 'Sett.';
