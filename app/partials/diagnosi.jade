@@ -2,18 +2,19 @@ include _date
 include _paziente_head
 
 mixin choiseBtn(parObj)
-  label=parObj.label
-  br
-  span(ng-repeat='item in ' + parObj.collection)
-    - var itemId =  "item['" + parObj.val + "']"
-    - var itemDesc = "{{item['" + parObj.desc + "']}}"
+  .from-group
+    label=parObj.label
+    p
+      span(ng-repeat='item in ' + parObj.collection)
+        - var itemId =  "item['" + parObj.val + "']"
+        - var itemDesc = "{{item['" + parObj.desc + "']}}"
 
-    button.btn.btn-primary(
-      type='button'
-      ng-model=parObj.model
-      btn-radio=itemId
-      ng-click=onclick
-      )= itemDesc
+        button.btn.btn-primary(
+          type='button'
+          ng-model=parObj.model
+          btn-radio=itemId
+          ng-click=onclick
+          )= itemDesc
 
 div( ng-controller='PazienteDiagnosiEditCtrl' )
   .content
@@ -26,13 +27,18 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                 +date("Data diagnosi", 'diagnosi.data_diagnosi', 'dataDiagnosiValida($value)')
                   span &nbsp; ({{ diagnosi.data_diagnosi | fromNowPrecisely }})
             
-            .row
+            .row              
                 +choiseBtn({
                   label:"Malattia", 
                   model:'diagnosi.cod_malattia', 
                   collection:'malattia_ric', 
                   val: 'idtipo_malattia', 
                   desc: 'descrizione'})
+                //-   onclick: 'malattiaChanged()'
+                //- .alert.alert-danger(ng-show='formState.malattia_err')
+                //-   strong Errore!
+                //-   | durante il salvataggio della malattia
+                //-   button.btn.btn-xs.btn-default(ng-click='init()') x
 
             .row
                 //-.form-group    
@@ -56,13 +62,6 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
 
           .col-xs-12.col-md-5
             .row 
-              //- button.btn(
-              //-     ng-hide='inQuestoMese(infusioni[0].data_infusione) || formState.ins_infusione'
-              //-     ng-click='formState.ins_infusione = true'
-              //-     )
-              //-   i.glyphicon.glyphicon-plus-sign
-              //-   | &nbsp;
-              //-   | Aggiungi Infusione
               button.btn(
                   ng-hide='formState.ins_infusione'
                   ng-click='formState.ins_infusione = true'
