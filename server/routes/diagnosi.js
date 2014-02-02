@@ -27,6 +27,16 @@
 		mysql_conn.end();
 	};
 
+
+  var setMalattia = function(req, res, next) {
+
+    if(!req.body.idPaziente || !req.params.idPaziente)
+      return notify_problem('errore nel passaggio dei parametri (idPaziente)');
+
+    if (req.params.idPaziente != req.body.idPaziente)
+      return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
+  }
+
 	exports.set = function(req, res, next) {
 		// controllo dei dati ricevuti
 		//debugger;
@@ -48,7 +58,7 @@
 			return mysql_conn;
 		}
 
-		if (req.params.idPaziente === req.body.idPaziente)
+		if (req.params.idPaziente != req.body.idPaziente)
 			return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
 
 

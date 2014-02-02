@@ -36,6 +36,8 @@ app.post('/data/pazienti/:idPaziente/paziente_modifica', paziente_mod.del);
 var diagnosi = require('./routes/diagnosi.js');
 app.get('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.get );
 app.post('/data/pazienti/:idPaziente/diagnosimalattia', diagnosi.set);
+//app.post('/data/pazienti/:idPaziente/diagnosi/malattia', diagnosi.setMalattia);
+
 
 // infusioni
 var infusioni = require('./routes/infusioni.js');

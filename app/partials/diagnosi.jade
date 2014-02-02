@@ -1,5 +1,4 @@
 include _date
-include _paziente_head
 
 mixin choiseBtn(parObj)
   .from-group
@@ -15,6 +14,8 @@ mixin choiseBtn(parObj)
           btn-radio=itemId
           ng-click=onclick
           )= itemDesc
+
+ng-include(src="'/partials/paziente_head.html'" , scope="" , onload="")
 
 div( ng-controller='PazienteDiagnosiEditCtrl' )
   .content
