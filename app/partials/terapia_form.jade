@@ -6,7 +6,7 @@ div(ng-controller='TerapiaEditCtrl')
     br
     form( novalidate , name ='formTerapia')
       fieldset
-        +date('Data Inizio Terapia con TCZ', 'terapia.data_inizio')
+        +date({label:'Data Inizio Terapia con TCZ', model:'terapia.data_inizio'})
         
         button.btn.btn-xs.btn-success(
           ng-hide='terapia.data_inizio == terapia.data_inizio_ori'

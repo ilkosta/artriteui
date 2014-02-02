@@ -1,12 +1,16 @@
-mixin date(label, model, validate)
-  label.inline-field= label
+//- paramObj = {
+//-   label: label string
+//-   model: model variable string
+//-   validate: string call to the validation method
+//- }
+mixin date(paramObj)
+  label.inline-field= paramObj.label
     .form-horizontal
       input( 
         type="text"
-        datepicker-popup='dd-MM-yyyy'
-        datepicker-options='dateOptions'    
-        ng-model=model 
-        ui-validate=validate
-        )
+        datepicker-popup= 'dd-MM-yyyy'
+        datepicker-options= 'dateOptions'    
+        ng-model= paramObj.model 
+        ui-validate= paramObj.validate )
       if block
           block

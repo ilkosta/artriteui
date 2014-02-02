@@ -2,7 +2,7 @@ include _date
 
 mixin choiseBtn(parObj)
   .from-group
-    label=parObj.label
+    label=parObj.label      
     p
       span(ng-repeat='item in ' + parObj.collection)
         - var itemId =  "item['" + parObj.val + "']"
@@ -25,7 +25,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
         .row
           .col-xs-12.col-md-6(style="margin-left:20px;")
             .row 
-                +date("Data diagnosi", 'diagnosi.data_diagnosi', 'dataDiagnosiValida($value)')
+                +date({label:"Data diagnosi", model:'diagnosi.data_diagnosi', validate:'dataDiagnosiValida($value)'})
                   span &nbsp; ({{ diagnosi.data_diagnosi | fromNowPrecisely }})
             
             .row              
@@ -73,7 +73,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
 
 
               div(ng-show='formState.ins_infusione')
-                +date("Data infusione", 'nuova_infusione')
+                +date({label:"Data infusione", model:'nuova_infusione'})
                   button.btn.btn-xs.btn-success(
                     ng-click='add_infusione()') ok
                   button.btn.btn-xs.btn-default(

@@ -97,10 +97,10 @@ div( ng-controller='SospensioniCtrl' )
             br
             .row
               .col-md-5
-                +date('Data inizio sospensione', 'eForm.data_sospensione')
+                +date({label:'Data inizio sospensione', model:'eForm.data_sospensione'})
 
               .col-md-5
-                +date('Data fine sospensione', 'eForm.data_fine_sospensione')
+                +date({label:'Data fine sospensione', model:'eForm.data_fine_sospensione'})
 
             .row              
               .col-md-5
