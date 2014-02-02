@@ -67,31 +67,31 @@ App.config([
     })
 
     .when('/pazienti/:idPaziente/diagnosi', {
-      templateUrl: '/partials/pazientedettaglio.html'      
+      templateUrl: '/partials/diagnosi.html'      
     })
 
     .when('/pazienti/:idPaziente/terapia', {
-      templateUrl: '/partials/pazientedettaglio.html'      
+      templateUrl: '/partials/terapia_form.html'      
     })
 
     .when('/pazienti/:idPaziente/terapia_val', {
-      templateUrl: '/partials/pazientedettaglio.html'  
+      templateUrl: '/partials/terapia_valutazione_form.html'  
     })
 
     .when('/pazienti/:idPaziente/anamnesi', {
-      templateUrl: '/partials/pazientedettaglio.html'  
+      templateUrl: '/partials/anamnesi.html'  
     })
 
     .when('/pazienti/:idPaziente/fattori_rischio', {
-      templateUrl: '/partials/pazientedettaglio.html'   
+      templateUrl: '/partials/fattori_rischio.html'   
     })
 
     .when('/pazienti/:idPaziente/sospensioni', {
-      templateUrl: '/partials/pazientedettaglio.html'   
+      templateUrl: '/partials/sospensioni.html'   
     })
 
     .when('/pazienti/:idPaziente/terapie_pre', {
-      templateUrl: '/partials/pazientedettaglio.html'   
+      templateUrl: '/partials/terapie_pre.html'   
     })
 
     .when('/no_connessione', {
