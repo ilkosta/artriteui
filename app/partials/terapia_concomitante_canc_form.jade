@@ -15,8 +15,8 @@
 
         //- p Riepilogo dei dati che si stanno cancellando:
         dl.dl-horizontal
-          dt tempo
-          dd {{formState.tc_da_cancellare.tempo}}
+          dt(ng-show='formState.tc_da_cancellare.tempo') tempo
+          dd(ng-show='formState.tc_da_cancellare.tempo') {{formState.tc_da_cancellare.tempo}}
           
           dt nome
           dd {{formState.tc_da_cancellare.nome}}
