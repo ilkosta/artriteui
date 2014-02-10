@@ -9,12 +9,13 @@ var App = angular.module('app',
   [ 'ngSanitize',
     'ngLocale',
     'ngResource',
+    'ngRoute',
     'app.controllers', 
 //    'app.directives', 
 //    'app.filters', 
 //    'app.services', 
 // ----- external ------
-    'restangular',
+
     'ui.bootstrap',
     'angular-growl',
 //    'ui.event',
@@ -33,13 +34,14 @@ angular.module('utils_forms',[]);
 var utils = angular.module('utils', []);
 
 App.config([
-  '$routeProvider', '$locationProvider', 'RestangularProvider', 'growlProvider', 'datepickerPopupConfig',
-  function($routeProvider, $locationProvider, RestangularProvider, growlProvider, datepickerPopupConfig, config) {
+//  '$routeProvider', '$locationProvider', 'growlProvider', 'datepickerPopupConfig',
+//  function($routeProvider, $locationProvider, growlProvider, datepickerPopupConfig, config) {
 
-    growlProvider.globalTimeToLive(10000);
+  '$routeProvider', '$locationProvider', 'datepickerPopupConfig',
+  function($routeProvider, $locationProvider, datepickerPopupConfig, config) {
 
-    RestangularProvider.setBaseUrl('/data');
-    RestangularProvider.setErrorInterceptor(utils.checkServer);
+
+    //growlProvider.globalTimeToLive(10000);
     
     datepickerPopupConfig.dateFormat = 'dd-MM-yyyy';
     datepickerPopupConfig.currentText = 'Oggi';
@@ -105,7 +107,7 @@ App.config([
     .otherwise({
       redirectTo: '/pazienti'
     });
-    $locationProvider.html5Mode(false);
+    //$locationProvider.html5Mode(false);
   }
 ]);
 
