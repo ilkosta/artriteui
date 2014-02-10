@@ -10,7 +10,6 @@
   ],
   "dependencies": {
     "console-polyfill": "~0.1.0",
-    "jquery": "*",
     "angular": "~1.2.12",
     "angular-bootstrap": "*",
     "angular-cookies": "*",
@@ -24,7 +23,7 @@
     "moment": "*",
     "lodash": ">=2.4.1",
     "angular-ui-bootstrap": "*",
-    "bootstrap": ">=3.0.0"
+    "bootstrap-css": ">=3.0.0"
   },
   "overrides": {
     "angular-i18n": {
@@ -75,6 +74,11 @@
     },
     "restangular": {
       "main": "./dist/restangular.js"
+    },
+    "bootstrap-css": {
+      "main": [
+        "css/bootstrap.css"
+      ]
     }
   }
 }
