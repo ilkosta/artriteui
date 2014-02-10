@@ -4,10 +4,10 @@
   mod.controller('TerapiaEditCtrl', [
     '$scope', '$routeParams',
     '$timeout', 'calendar', '$http', 'loadDataListIntoScope',
-    '$log', 'growl', '$modal', '$templateCache',
+    '$log', 'growl', '$modal', 
     function($scope, $routeParams,
       $timeout, calendar, $http, loadDataListIntoScope,
-      $log, growl, $modal, $templateCache) {
+      $log, growl, $modal) {
 
       calendar().init($scope);
 
@@ -110,7 +110,8 @@
         ];
 
         var modalInstance = $modal.open({
-          template: $templateCache.get('/partials/terapia_concomitante_canc_form.html'),
+          //template: $templateCache.get('/partials/terapia_concomitante_canc_form.html'),
+          templateUrl: '/partials/terapia_concomitante_canc_form.html',
           controller: TerapiaConcomitanteCancelDlgIstance,
           resolve: {
             tcToDelete: function() {
