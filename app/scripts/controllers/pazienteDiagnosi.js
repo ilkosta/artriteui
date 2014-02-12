@@ -5,11 +5,11 @@
   mod.controller('PazienteDiagnosiEditCtrl', [
     '$scope', '$routeParams',
     '$http', '$log','calendar' , 'growl', 
-    'loadDataListIntoScope',
+    'loadDataListIntoScope', '$modal', 
     function(
         $scope, $routeParams,
         $http, $log, calendar, growl,
-        loadDataListIntoScope) {
+        loadDataListIntoScope, $modal) {
 
       $scope.formState = {};
       calendar().init($scope);
@@ -150,26 +150,52 @@
           });
       }
 
-      $scope.setInfToDelete = function(i) { $scope.formState.infusione_da_cancellare = i; }
+      $scope.openInfToDeleteDlg = function(infToDelete) {
 
-      $scope.cancellaInfusione = function() {
-        var da_cancellare = $scope.infusioni[$scope.formState.infusione_da_cancellare];
+        var InfToDeleteDlgIstance = [
+          '$scope', '$modalInstance', 'toDel',
+          function($scope, $modalInstance, toDel) {
 
-        $http.post(dataUrl.del_infusione, da_cancellare)
-          .success(function(data, status,heades,config) {
-            $log.info('cancellazione Infusione avvenuto con successo: ' + da_cancellare);
+            $scope.toDel = toDel;
 
-            //growl.addSuccessMessage("infusioni aggiornate");
+            $scope.ok = function() {
+              $modalInstance.close($http.post(dataUrl.del_infusione, toDel));
+            };
+
+            $scope.cancel = function() {
+              $modalInstance.dismiss('cancel');
+            };
+
+          }
+        ];
+
+        var modalInstance = $modal.open({
+          //template: $templateCache.get('/partials/terapia_concomitante_canc_form.html'),
+          templateUrl: '/partials/diagnosi_canc_infusione.html',
+          controller: InfToDeleteDlgIstance,
+          resolve: {
+            toDel: function() {
+              return infToDelete;
+            }
+          }
+        });
+
+        modalInstance.result.then(function(httpDelPromise) {
+          if (httpDelPromise.status == 200) {
+            $log.info('cancellazione avvenuta con successo, di');
+            debugger;
             initInfusioni();
-          })
-          .error(function(data, status, headers, config) {
-            var msg  = "Aggiornamento delle infusioni fallito!";
-                msg += ", data:   " + data;
-                msg += ", status: " + status;
-            growl.addErrorMessage(msg);
+          } else {
+            $log.error('cancellazione non riuscita: ');
+            $log.error(httpDelPromise);
+            growl.addErrorMessage('Cancellazione non riuscita per l\'infusione');
             initInfusioni();
-          });
-      }
+          }
+
+        }, function() {
+          // do nothing  
+        });
+      };
 
       $scope.add_infusione = function() {
         save_infusione({data_infusione:$scope.nuova_infusione});

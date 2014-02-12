@@ -63,7 +63,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
 
           .col-xs-12.col-md-5
             .row 
-              button.btn(
+              button.btn.btn-default(
                   ng-hide='formState.ins_infusione'
                   ng-click='formState.ins_infusione = true'
                   )
@@ -111,9 +111,7 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                     span.lead {{ infusioni[0].data_infusione | date:'EEEE dd/MM/yyyy'}}
                   p ({{ infusioni[0].data_infusione | fromNowPrecisely }})
                     button.btn.btn-xs.btn-danger(
-                      ng-click="setInfToDelete(0)"
-                      data-toggle="modal"
-                      data-target="#cancella_infusione_dlg")
+                      ng-click="openInfToDeleteDlg(infusioni[0])" )
                       //i.glyphicon.glyphicon-minus-sign
                       i.glyphicon.glyphicon-trash
                   
@@ -130,28 +128,6 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
                         li(ng-repeat='i in infusioni',style="padding-right:10px;")
                           {{infusioni.length - $index}}) {{i.data_infusione | date:'dd/MM/yyyy'}}
                           button.btn.btn-xs.btn-danger(
-                            ng-click="setInfToDelete($index)"
-                            data-toggle="modal"
-                            data-target="#cancella_infusione_dlg")
-                            //i.glyphicon.glyphicon-minus-sign
+                            ng-click="openInfToDeleteDlg(i)" )
                             i.glyphicon.glyphicon-trash
                   
-            
-
-  #cancella_infusione_dlg.modal.fade(
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="cancella_infusione_title"
-    aria-hidden="true")
-    .modal-dialog
-      .modal-content
-        .modal-header
-          button.close(type="button", data-dismiss="modal", aria-hidden="true")&times;
-          h4#cancella_infusione_title.modal-title Cancellazione infusione
-        .modal-body
-          p Sei sicuro di voler cancellare l'infusione di 
-            strong {{ infusioni[formState.infusione_da_cancellare].data_infusione | date:"EEEE dd/MM/yyyy"}} 
-            | ?
-        .modal-footer
-          button.btn.btn-default(data-dismiss="modal") Annulla
-          button.btn.btn-danger(data-dismiss="modal", ng-click="cancellaInfusione()") Elimina

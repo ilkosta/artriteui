@@ -4,10 +4,10 @@
   
   mod.controller('PazienteModificaCtrl', [
     '$scope', '$location', '$routeParams',
-    'Restangular', '$http', 'calendar','$log', 'checkCF','growl',
+    '$http', 'calendar','$log', 'checkCF','growl',
     function(
         $scope,$location, $routeParams,
-        Restangular, $http, calendar,$log, checkCF, growl) {
+        $http, calendar,$log, checkCF, growl) {
         
       init(); 
   

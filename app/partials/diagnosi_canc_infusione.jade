@@ -1,0 +1,10 @@
+.modal-header
+  button.close(type="button", ng-click='cancel()', aria-hidden="true")&times;
+  h4.modal-title Cancellazione infusione
+.modal-body
+  p Sei sicuro di voler cancellare l'infusione di 
+    strong {{ toDel.data_infusione | date:"EEEE dd/MM/yyyy"}} 
+    | ?
+.modal-footer
+  button.btn.btn-default(ng-click='cancel()') Annulla
+  button.btn.btn-danger(ng-click="ok()") Elimina
