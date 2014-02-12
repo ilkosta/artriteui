@@ -1,0 +1,103 @@
+include _date
+include _choiseBtn
+
+//- form(novalidate, role="form", name="form", ng-show="eForm.visible")      
+form(novalidate, role="form", name="form")
+  fieldset
+    .form-group
+      .row
+        .col-md-6
+          label Caratteristiche della sospensione
+      .row
+        .col-md-6
+          +choiseBtn({
+            model:      'eForm.cod_tipo_sospensione', 
+            collection :'cod_tipo_sospensione', 
+            val:        'cod_tipo_sospensione', 
+            desc:       'descrizione' })
+
+      br
+      .row
+        .col-md-6
+          label Infusioni somministrate
+            input(
+              name='numero_infusioni'
+              type='number'
+              min='0'
+              max='1000'
+              step='1' 
+              ng-required='true'
+              ng-model='eForm.num_infusioni_fatte' 
+              style = 'width :80px'                 
+              )
+
+            button(ng-click='calculateNumInfusioni()')                   
+              i.glyphicon.glyphicon-repeat
+           
+        .col-md-6
+          label Follow up
+            br
+            input(
+              name='mesi_followup'
+              type='number'
+              min='0'
+              max='1000'
+              step='1' 
+              ng-required='true'
+              ng-model='eForm.follow_up' 
+              style = 'width :80px'                   
+              )   
+            button(ng-click='calculateFollowUp()')                   
+              i.glyphicon.glyphicon-repeat 
+      br
+      .row
+        .col-md-5
+          +date({label:'Data inizio sospensione', model:'eForm.data_sospensione'})
+
+        .col-md-5
+          +date({label:'Data fine sospensione', model:'eForm.data_fine_sospensione'})
+
+      .row              
+        .col-md-6
+          +choiseBtn({
+            label:        'Motivo',
+            orientation:  'vertical',
+            model:        'eForm.id_motivo_sospensione', 
+            collection :  'motiviSospensione', 
+            val:          'id', 
+            desc:         'desc' })
+        
+        .col-md-5
+          +choiseBtn({
+            show:  'tipoSospensioneById[eForm.id_motivo_sospensione].length > 1',
+            label:        'Dettagli',
+            orientation:  'vertical',
+            model:        'eForm.id_sospensione_dettaglio', 
+            collection :  'tipoSospensioneById[eForm.id_motivo_sospensione]', 
+            val:          'id_sospensione_dettaglio', 
+            desc:         'sospensione_dettaglio' })
+
+      .row
+        .col-md-12
+          label Annotazioni
+            br
+            textarea(type='text', row='10', cols="50", ng-model ='eForm.annotazioni' )
+      .row
+        .col-md-2.col-md-offset-6
+          button.btn.btn-default(
+              ng-click="eForm.init()") Annulla
+        .col-md-3
+          button.btn.btn-success(
+              ng-show="eForm.idterapia_sospensione", 
+              ng-click="aggiungiSospensione()"
+              ng-disabled="!eForm.id_motivo_sospensione || !eForm.data_sospensione"
+              )
+            i.glyphicon.glyphicon-ok-sign(  ng-show="eForm.idterapia_sospensione")
+            | &nbsp;Modifica
+          button.btn.btn-success(
+              ng-hide="eForm.idterapia_sospensione", 
+              ng-click="aggiungiSospensione()"
+              ng-disabled="!eForm.id_motivo_sospensione || !eForm.data_sospensione")
+            i.glyphicon.glyphicon-plus-sign
+            | &nbsp;Aggiungi
+        
