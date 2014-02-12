@@ -125,9 +125,10 @@
           // allineo la desc. della sospensione (non serve ed è pure costoso :) ... per trasparenza
           if ($scope.eForm.id_sospensione_dettaglio &&
             $scope.tipoSospensioneById[$scope.eForm.id_motivo_sospensione].length > 0) {
-            sosp.dettaglio = _.find(dett_sospensioni, function(s) {
-              return s.id_sospensione_dettaglio == self.edit.id_sospensione_dettaglio;
-            }).sospensione_dettaglio;
+            sosp.dettaglio = _.find($scope.tipoSospensioneById[$scope.eForm.id_motivo_sospensione],
+              function(s) {
+                return s.id_sospensione_dettaglio == $scope.eForm.id_sospensione_dettaglio;
+              }).sospensione_dettaglio;
           }
 
 
@@ -135,7 +136,7 @@
         };
 
         var url = "/data/pazienti/" + $routeParams.idPaziente + '/sospensioni/';
-        if ($scope.eForm.idterapia_sospensione) {  
+        if ($scope.eForm.idterapia_sospensione) {
           // aggiorna la sospensione
 
           url += $scope.eForm.idterapia_sospensione;
@@ -150,22 +151,22 @@
               msg += "codice: " + status;
               growl.addErrorMessage(msg);
             });
-        } else { 
+        } else {
           // inserisce la sospensione
           if (!$scope.eForm.data_sospensione || !$scope.eForm.id_motivo_sospensione)
             return;
 
           url += 'inserisci';
           $http.post(url, getSospensioneFromForm())
-          .success(function(data, status, headers, config) {
-            //growl.addSuccessMessage("Sospensione salvata con successo");
-            init();
-          })
-          .error(function(data, status, headers, config) {
-            var msg = "Salvataggio della sospensione fallito!";
-            msg += "codice: " + status;
-            growl.addErrorMessage(msg);
-          });
+            .success(function(data, status, headers, config) {
+              //growl.addSuccessMessage("Sospensione salvata con successo");
+              init();
+            })
+            .error(function(data, status, headers, config) {
+              var msg = "Salvataggio della sospensione fallito!";
+              msg += "codice: " + status;
+              growl.addErrorMessage(msg);
+            });
         }
       };
 
