@@ -13,24 +13,22 @@
     "test": "node_modules/.bin/karma start test/karma.conf.js"
   },
   "dependencies": {
-    "jade": "~0.33",
-    "brunch": "~1.7",
-    "javascript-brunch": ">= 1.0 < 1.8",
+    "jade": "*",
+    "brunch": "*",
+    "javascript-brunch": "*",
     "jshint-brunch": "*",
-    "coffee-script-brunch": ">= 1.0 < 1.8",
-    "css-brunch": ">= 1.0 < 1.8",
-    "less-brunch": ">= 1.0 < 1.8",
-    "stylus-brunch": ">= 1.0 < 1.8",
-    "auto-reload-brunch": ">= 1.0 < 1.8",
-    "uglify-js-brunch": ">= 1.0 < 1.8",
-    "clean-css-brunch": ">= 1.0 < 1.8",
+    "css-brunch": "*",
+    "auto-reload-brunch": "*",
+    "uglify-js-brunch": "*",
+    "clean-css-brunch": "*",
     "bower": "*",
-    "jade-angularjs-brunch": "~0.0.5",
-    "karma": "~0.9.4",
-    "karma-coffee-preprocessor": "~0.0.2",
+    "jade-angularjs-brunch": "*",
+    "karma": "*",
     "karma-firefox-launcher": "*",
-    "karma-ng-scenario": "~0.0.2",
-    "rmdir":"*",
-    "directory-copy":"*"
+    "karma-ng-scenario": "*",
+    "karma-growl-reporter": "*",
+    "rmdir": "*",
+    "directory-copy": "*",
+    "protractor": "~0.18.1"
   }
 }
