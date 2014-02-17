@@ -1,5 +1,3 @@
-
-include _date
 ng-include(src="'/partials/paziente_head.html'" , scope="" , onload="")
 
 div( ng-controller='SospensioniCtrl' )
@@ -35,113 +33,21 @@ div( ng-controller='SospensioniCtrl' )
               span(data-placement="bottom", tooltip="{{sosp.data_fine | fromNow }}")
                 {{sosp.data_fine | date:"dd/MM/yyyy"}}
             td
-              button.btn.btn-xs.btn-default(ng-click="editSospensione(sosp.idterapia_sospensione)")
+              button.btn.btn-xs.btn-default(ng-click="editSospensione(sosp)")
                 i.glyphicon.glyphicon-pencil
               button.btn.btn-xs.btn-danger(ng-click="cancellaSospensione(sosp.idterapia_sospensione)")
                 i.glyphicon.glyphicon-trash
 
-
+      pre
+        {{eForm|json}}
+        {{motiviSospensione|json}}
+      
     .col-xs-12.col-md-5
       button.btn.btn-default(
         ng-click="eForm.visible = true"
         ng-hide="eForm.visible") 
         i.glyphicon.glyphicon-plus-sign
         | &nbsp;Aggiungi Sospensione
+      ng-include(src="'/partials/sospensioni_form.html'" , autoscroll="")
+      
 
-      form(novalidate, role="form", name="form", ng-show="eForm.visible")      
-        fieldset
-          .form-group
-            .row
-              .col-md-6
-                label Caratteristiche della sospensione
-            .row
-              .col-md-6
-                select.selectpicker.form-control(
-                    ng-required='true'
-                    ng-options='tipo.cod_tipo_sospensione as tipo.descrizione for tipo in cod_tipo_sospensione'
-                    ng-model='eForm.cod_tipo_sospensione')
-
-            br
-            .row
-              .col-md-6
-                label Infusioni somministrate
-                  input(
-                    name='numero_infusioni'
-                    type='number'
-                    min='0'
-                    max='1000'
-                    step='1' 
-                    ng-required='true'
-                    ng-model='eForm.num_infusioni_fatte' 
-                    style = 'width :80px'                 
-                    )
-
-                  button(ng-click='calculateNumInfusioni()')                   
-                    i.glyphicon.glyphicon-repeat
-                 
-              .col-md-6
-                label Follow up
-                  br
-                  input(
-                    name='mesi_followup'
-                    type='number'
-                    min='0'
-                    max='1000'
-                    step='1' 
-                    ng-required='true'
-                    ng-model='eForm.follow_up' 
-                    style = 'width :80px'                   
-                    )   
-                  button(ng-click='calculateFollowUp()')                   
-                    i.glyphicon.glyphicon-repeat 
-            br
-            .row
-              .col-md-5
-                +date({label:'Data inizio sospensione', model:'eForm.data_sospensione'})
-
-              .col-md-5
-                +date({label:'Data fine sospensione', model:'eForm.data_fine_sospensione'})
-
-            .row              
-              .col-md-5
-                label Motivo
-                  select.selectpicker.form-control(
-                    ng-required='true'
-                    ng-options='sosp.id as sosp.desc for sosp in tipo_sospensione.motiviSospensione'
-                    ng-model='eForm.id_motivo_sospensione'
-                    ng-change='tipo_sospensione.reloadMotiviSospensioneDett()'
-                    )
-                    //-option(value='') ----------  
-              
-              .col-md-6
-                //label(ng-show="tipo_sospensione.getMotiviSospensione2().length > 0") Dettagli
-                label Dettagli
-                  select.selectpicker.form-control(
-                    ng-required='true'
-                    ng-options='sosp.id as sosp.desc for sosp in tipo_sospensione.motiviSospensioneDett'
-                    ng-model='eForm.id_sospensione_dettaglio')
-                    //-option(value='') ---------- 
-            .row
-              .col-md-12
-                label Annotazioni
-                  br
-                  textarea(type='text', row='10', cols="50", ng-model ='eForm.annotazioni' )
-            .row
-              .col-md-2.col-md-offset-6
-                button.btn.btn-default(
-                    ng-click="eForm.init()") Annulla
-              .col-md-3
-                button.btn.btn-success(
-                    ng-show="eForm.idterapia_sospensione", 
-                    ng-click="aggiungiSospensione()"
-                    ng-disabled="!eForm.id_motivo_sospensione || !eForm.data_sospensione"
-                    )
-                  i.glyphicon.glyphicon-ok-sign(  ng-show="eForm.idterapia_sospensione")
-                  | &nbsp;Modifica
-                button.btn.btn-success(
-                    ng-hide="eForm.idterapia_sospensione", 
-                    ng-click="aggiungiSospensione()"
-                    ng-disabled="!eForm.id_motivo_sospensione || !eForm.data_sospensione")
-                  i.glyphicon.glyphicon-plus-sign
-                  | &nbsp;Aggiungi
-              

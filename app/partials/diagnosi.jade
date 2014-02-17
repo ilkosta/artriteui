@@ -1,19 +1,6 @@
 include _date
 
-mixin choiseBtn(parObj)
-  .from-group
-    label=parObj.label      
-    p
-      span(ng-repeat='item in ' + parObj.collection)
-        - var itemId =  "item['" + parObj.val + "']"
-        - var itemDesc = "{{item['" + parObj.desc + "']}}"
-
-        button.btn.btn-default(
-          type='button'
-          ng-model=parObj.model
-          btn-radio=itemId
-          ng-click=onclick
-          )= itemDesc
+include _choiseBtn
 
 ng-include(src="'/partials/paziente_head.html'" , scope="" , onload="")
 
@@ -30,11 +17,11 @@ div( ng-controller='PazienteDiagnosiEditCtrl' )
             
             .row              
                 +choiseBtn({
-                  label:"Malattia", 
-                  model:'diagnosi.cod_malattia', 
-                  collection:'malattia_ric', 
-                  val: 'idtipo_malattia', 
-                  desc: 'descrizione'})
+                  label:      'Malattia', 
+                  model:      'diagnosi.cod_malattia', 
+                  collection :'malattia_ric', 
+                  val:        'idtipo_malattia', 
+                  desc:       'descrizione' })
                 //-   onclick: 'malattiaChanged()'
                 //- .alert.alert-danger(ng-show='formState.malattia_err')
                 //-   strong Errore!

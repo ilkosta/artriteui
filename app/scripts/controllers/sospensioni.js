@@ -1,286 +1,219 @@
-(function (){
+(function() {
+  'use strict';
+
   var mod = angular.module('app.controllers');
 
-  mod.controller('SospensioniCtrl', [
-    '$scope', '$routeParams',
-    '$http', 'calendar' , 'growl', 
-    'loadDataListIntoScope',
-    function(
-        $scope,$routeParams,
-        $http, calendar, growl,
-        loadDataListIntoScope) {
+  mod.controller('SospensioniCtrl', ['$scope', '$routeParams', '$http', 'calendar', 'loadDataListIntoScope',
+    function($scope, $routeParams, $http, calendar, loadDataListIntoScope) {
 
       calendar().init($scope);
-      
-      // ---- editForm ------
-      function editForm() {
-        this.init();
-      }
 
-    $scope.calculateNumInfusioni = function () {        
-        
-        if($scope.eForm.data_sospensione==null)
-              $scope.eForm.data_sospensione = new Date();
-            var dt_sosp = $scope.eForm.data_sospensione;   
-      
-        $http.get("/data/pazienti/" + $routeParams.idPaziente 
-                + "/sospensioni/tempo",{params: {datasospensione:$scope.eForm.data_sospensione}})
-          .success(function(data, status, headers, config) {
-         
-            if(data.length>0) {
-                $scope.eForm.num_infusioni_fatte = data[0].numero_infusioni;
-                console.log("numero infusioni:");
-                console.log(data[0].numero_infusioni);
-              }
-          })
-          .error(function(data, status, headers, config) {
-            growl.addErrorMessage("Errore nella lettura del numero delle infusioni del paziente.\nControlla la connessione al server!");
-          });      
-      }
-      
-     $scope.calculateFollowUp = function () {        
-        if($scope.eForm.data_sospensione==null)
-              $scope.eForm.data_sospensione = new Date();
-            var dt_sosp = $scope.eForm.data_sospensione;   
-            var num_mesi =0;      
-          
-          $http.get("/data/pazienti/" + $routeParams.idPaziente 
-                + "/sospensioni/tempomesi",{params: {datasospensione:$scope.eForm.data_sospensione}})
-          .success(function(data, status, headers, config) {
-         
-            if(data.length>0) {
-                $scope.eForm.follow_up = data[0].mesi;
-                console.log("numero mesi:");
-                console.log(data[0].mesi);
-              }
-          })
-          .error(function(data, status, headers, config) {
-            growl.addErrorMessage("Errore nella lettura del numero delle infusioni del paziente.\nControlla la connessione al server!");
-          }); 
-             
-      }
+      var EForm = (function() {
 
-
-
-      editForm.prototype.init = function() {
-        this.idterapia_sospensione = null;
-        this.cod_tipo_sospensione = "t";
-        this.id_motivo_sospensione = null;
-        this.id_sospensione_dettaglio = null;
-        this.data_sospensione = null;
-        this.data_fine_sospensione = null;
-        this.annotazioni = null;
-        this.num_infusioni_fatte = null;
-        this.follow_up = null;
-
-        this.visible = false;
-      };
-
-      editForm.prototype.edit = function(sosp) {
-
-        this.idterapia_sospensione = sosp.idterapia_sospensione;
-        this.cod_tipo_sospensione = sosp.cod_tipo_sospensione;
-        this.id_motivo_sospensione = sosp.id_sospensione;
-        this.id_sospensione_dettaglio = sosp.id_sospensione_dettaglio;
-        this.data_sospensione = sosp.data_inizio;
-        this.data_fine_sospensione = sosp.data_fine;
-        this.annotazioni = sosp.note;
-        if(sosp.num_infusioni_fatte==null)sosp.num_infusioni_fatte=0;
-        this.num_infusioni_fatte = sosp.num_infusioni_fatte;
-        if(sosp.follow_up == null)sosp.follow_up =0;
-        this.follow_up = sosp.follow_up;
-      };
-
-
-      editForm.prototype.setMotivoSospensione = function(v) { this.id_motivo_sospensione = v; };
-      editForm.prototype.setMotivoSospensione2 = function(v) { this.id_sospensione_dettaglio = v; };
-
-      var dataUrl = {};
-      $scope.eForm = new editForm();
-      
-
-      //----- sospensioniMngr -----
-      function sospensioniMngr(data) {
-        var grouped = _.groupBy(data,'idtipo_motivo_sospensione');
-        console.log("sospensioniMngr:grouped");
-        console.log(grouped);
-
-        var res = function() {
-          this.edit = $scope.eForm;
-          this.motiviSospensioneDett = [];
-          this.motiviSospensione = _(grouped).keys().map(function(k) {
-            return {id: k, desc: grouped[k][0].sospensione };
-          }).value(); 
-        };
-
-        
-
-        res.prototype.reloadMotiviSospensioneDett = function() { 
-          if(!this.edit.id_motivo_sospensione) {
-            this.motiviSospensioneDett = [];
-            return;
+        function EForm() {
+          // enforces new
+          if (!(this instanceof EForm)) {
+            return new EForm();
           }
-          var ret = _(grouped[this.edit.id_motivo_sospensione])
-            .filter(function(i){ return i.id_sospensione_dettaglio !== null; })
-            .map(function(i) { return {id: i.id_sospensione_dettaglio, desc: i.sospensione_dettaglio}; })
-            .value();
-          this.motiviSospensioneDett =  ret;
-        };
 
-        res.prototype.getSospensione = function() {
-          if(this.edit.num_infusioni_fatte==null)this.edit.num_infusioni_fatte=0
-          if(this.edit.follow_up==null)this.edit.follow_up=0
-          var sosp = {};
-          sosp.idterapia_sospensione    = this.edit.idterapia_sospensione;
-          sosp.tipo_sospensione         = this.edit.cod_tipo_sospensione;
-          sosp.id_sospensione           = this.edit.id_motivo_sospensione;
-          sosp.id_sospensione_dettaglio = this.edit.id_sospensione_dettaglio;
-          sosp.data_inizio              = this.edit.data_sospensione;
-          sosp.data_fine                = this.edit.data_fine_sospensione;
-          sosp.note                     = this.edit.annotazioni;    
-          sosp.num_infusioni_fatte      = this.edit.num_infusioni_fatte;
-          sosp.follow_up                = this.edit.follow_up ;      
-
-          var dett_sospensioni = grouped[this.edit.id_motivo_sospensione];
-          sosp.sospensione = dett_sospensioni[0].sospensione;
-          var self = this;
-          sosp.dettaglio = (this.edit.id_sospensione_dettaglio && dett_sospensioni.length >0 ) 
-            ? _.find( dett_sospensioni, function(s) {
-                return s.id_sospensione_dettaglio == self.edit.id_sospensione_dettaglio;
-              }).sospensione_dettaglio 
-            : null;
-
-
-          return sosp;
-
-        };
-
-        return res;
-      }
-
-      $scope.editSospensione = function(idterapia_sospensione) {
-        var sosp = _.find($scope.sospensioni, function(s) {
-          return s.idterapia_sospensione == idterapia_sospensione;
-        });
-        if(sosp) {
-          sosp.class = "warning";
-          $scope.eForm.edit(sosp);
-          $scope.eForm.visible = true;
-          $scope.tipo_sospensione.reloadMotiviSospensioneDett();
+          this.init();
         }
-      };
-      
-      var loadData = function() {
-        dataUrl = {
-          sospensioni: '/data/pazienti/' + $routeParams.idPaziente + '/sospensioni'
+
+        EForm.prototype.init = function() {
+          _.forOwn(this, function(v, k, o) {
+            o[k] = null;
+          });
+          this.cod_tipo_sospensione = "t";
+          this.data_sospensione = new Date();
+          this.data_fine_sospensione = null;
+
         };
 
-        // init di $scope.sospensioni
-        $http.get(dataUrl.sospensioni)
-          .success(function(data, status, headers, config) {
-            $scope.sospensioni = data || [];
-            console.log("sospensioni:");
-            console.log($scope.sospensioni);
-          })
-          .error(function(data, status, headers, config) {
-            growl.addErrorMessage("Errore nella lettura delle sospensioni del paziente.\nControlla la connessione al server!");
-            $scope.sospensioni = [];
-          });
+        EForm.prototype.edit = function(sosp) {
+          this.idterapia_sospensione = sosp.idterapia_sospensione;
+          this.cod_tipo_sospensione = sosp.cod_tipo_sospensione;
+          this.id_motivo_sospensione = sosp.id_sospensione;
+          this.id_sospensione_dettaglio = sosp.id_sospensione_dettaglio;
+          this.data_sospensione = sosp.data_inizio;
+          this.data_fine_sospensione = sosp.data_fine;
+          this.annotazioni = sosp.note;
+          this.num_infusioni_fatte = sosp.num_infusioni_fatte || 0;
+          this.follow_up = sosp.follow_up || 0;
+        };
+
+        return EForm;
+
+      }());
+
+      // ------------------------------------------
+      //    init
+      // ------------------------------------------
+      var init = function() {
+        $scope.eForm = new EForm();
+
+        loadParameters();
+        loadData();
+
       };
 
       var loadParameters = function() {
-        loadDataListIntoScope(
-          $scope,
-          [ 'cod_tipo_sospensione'],
-          function(p) { return '/data/_' + p;}
-        ); 
+        loadDataListIntoScope($scope, [
+          'cod_tipo_sospensione'
+        ], function(p) {
+          return '/data/_' + p;
+        });
 
         $http.get('/data/_tipo_sospensione')
           .success(function(data, status, headers, config) {
-            $scope.tipo_sospensione = new (sospensioniMngr(data))();
-            console.log("tipo sospensione:");
-            console.log($scope.tipo_sospensione);
+            $scope.tipo_sospensione = data;
+            $scope.tipoSospensioneById = _.groupBy(data, 'idtipo_motivo_sospensione');
+            $scope.motiviSospensione = _($scope.tipoSospensioneById)
+              .keys().map(function(k) {
+                return {
+                  id: +k, // cast to int
+                  desc: $scope.tipoSospensioneById[k][0].sospensione
+                };
+              }).value();
+
           })
           .error(function(data, status, headers, config) {
             growl.addErrorMessage("Errore nella lettura delle sospensioni del paziente.\nControlla la connessione al server!");
             $scope.tipo_sospensione = {};
           });
+
       };
 
-      var init = function() {
-        $scope.eForm.init();
-
-        loadParameters();
-        loadData();
-     
+      var loadData = function() {
+        $scope.sospensioni = null;
+        loadDataListIntoScope($scope, ['sospensioni'], function(p) {
+          return '/data/pazienti/' + $routeParams.idPaziente + '/' + p
+        });
       };
 
 
-      var inserisciSospensione = function() {
-        if(!$scope.eForm.data_sospensione ||
-           !$scope.eForm.id_motivo_sospensione )
-          return;
 
-        $http.post("/data/pazienti/" + $routeParams.idPaziente + "/sospensioni/inserisci", $scope.tipo_sospensione.getSospensione())
-          .success(function(data, status, headers, config) {
-            //growl.addSuccessMessage("Sospensione salvata con successo");
-            init();
-          })
-          .error(function(data, status, headers, config) {
-            var msg  = "Salvataggio della sospensione fallito!";
-                msg += "codice: " + status;
-            growl.addErrorMessage(msg);                
-          });
-      }
+      // -----------------------------------------
+      // eventi della lista
+      // -----------------------------------------
+      $scope.editSospensione = function(sosp) {
+        sosp.class = "warning";
+        $scope.eForm.edit(sosp);
+        $scope.eForm.visible = true;
+      };
 
 
-      var aggiornaSospensione = function() {
-        var url = "/data/pazienti/" + $routeParams.idPaziente;
-          url += "/sospensioni/" ;
+      // -----------------------------------------
+      // eventi della form
+      // -----------------------------------------
+      $scope.aggiungiSospensione = function() {
+        var getSospensioneFromForm = function() {
+
+          var sosp = {
+            idterapia_sospensione: $scope.eForm.idterapia_sospensione,
+            tipo_sospensione: $scope.eForm.cod_tipo_sospensione,
+            id_sospensione: $scope.eForm.id_motivo_sospensione,
+            id_sospensione_dettaglio: $scope.eForm.id_sospensione_dettaglio,
+            data_inizio: $scope.eForm.data_sospensione,
+            data_fine: $scope.eForm.data_fine_sospensione,
+            note: $scope.eForm.annotazioni,
+            num_infusioni_fatte: $scope.eForm.num_infusioni_fatte || 0,
+            follow_up: $scope.eForm.follow_up || 0,
+            sospensione: $scope.tipoSospensioneById[$scope.eForm.id_motivo_sospensione][0].sospensione
+
+          };
+
+          // allineo la desc. della sospensione (non serve ed è pure costoso :) ... per trasparenza
+          if ($scope.eForm.id_sospensione_dettaglio &&
+            $scope.tipoSospensioneById[$scope.eForm.id_motivo_sospensione].length > 0) {
+            sosp.dettaglio = _.find($scope.tipoSospensioneById[$scope.eForm.id_motivo_sospensione],
+              function(s) {
+                return s.id_sospensione_dettaglio == $scope.eForm.id_sospensione_dettaglio;
+              }).sospensione_dettaglio;
+          }
+
+
+          return sosp;
+        };
+
+        var url = "/data/pazienti/" + $routeParams.idPaziente + '/sospensioni/';
+        if ($scope.eForm.idterapia_sospensione) {
+          // aggiorna la sospensione
+
           url += $scope.eForm.idterapia_sospensione;
           url += "/aggiorna";
 
-        $http.post(url, $scope.tipo_sospensione.getSospensione())
-          .success(function(data, status, headers, config) {
-            init();
-          })
-          .error(function(data, status, headers, config) {
-            var msg  = "Salvataggio della sospensione fallito!";
-                msg += "codice: " + status;
-            growl.addErrorMessage(msg);                
-          });
-      }
+          $http.post(url, getSospensioneFromForm())
+            .success(function(data, status, headers, config) {
+              init();
+            })
+            .error(function(data, status, headers, config) {
+              var msg = "Salvataggio della sospensione fallito!";
+              msg += "codice: " + status;
+              growl.addErrorMessage(msg);
+            });
+        } else {
+          // inserisce la sospensione
+          if (!$scope.eForm.data_sospensione || !$scope.eForm.id_motivo_sospensione)
+            return;
 
-      $scope.cancellaSospensione = function(idterapia_sospensione) {
-        var url = "/data/pazienti/" + $routeParams.idPaziente;
-          url += "/sospensioni/" ;
-          url += idterapia_sospensione;
-          url += "/cancella";
-
-        var sospensione = _.find($scope.sospensioni, function(s) { return s.idterapia_sospensione == idterapia_sospensione});
-        $http.post(url, sospensione)
-          .success(function(data, status, headers, config) {
-            init();
-          })
-          .error(function(data, status, headers, config) {
-            var msg  = "Salvataggio della sospensione fallito!";
-                msg += "codice: " + status;
-            growl.addErrorMessage(msg);                
-          });
-      }
-
-
-
-      $scope.aggiungiSospensione = function() {
-        if($scope.eForm.idterapia_sospensione)
-          aggiornaSospensione();
-        else
-          inserisciSospensione();
+          url += 'inserisci';
+          $http.post(url, getSospensioneFromForm())
+            .success(function(data, status, headers, config) {
+              //growl.addSuccessMessage("Sospensione salvata con successo");
+              init();
+            })
+            .error(function(data, status, headers, config) {
+              var msg = "Salvataggio della sospensione fallito!";
+              msg += "codice: " + status;
+              growl.addErrorMessage(msg);
+            });
+        }
       };
 
-      init();
 
+      var getDataFromSospensioni = function(what, params) {
+        return $http.get("/data/pazienti/" + $routeParams.idPaziente + "/sospensioni/" + what, {
+          params: params
+        });
+      };
+
+      $scope.calculateNumInfusioni = function() {
+
+        var dt = $scope.eForm.data_sospensione || new Date();
+        var res = getDataFromSospensioni('tempo', {
+          datasospensione: dt
+        });
+
+        if (res.satus != 200)
+          growl.addErrorMessage("Errore nella lettura del numero delle infusioni del paziente.\nControlla la connessione al server!");
+        else
+        if (res.data.length > 0) {
+          $scope.eForm.num_infusioni_fatte = res.data[0].numero_infusioni;
+          console.log("numero infusioni:");
+          console.log(data[0].numero_infusioni);
+        }
+      }
+
+      $scope.calculateFollowUp = function() {
+        var dt = $scope.eForm.data_sospensione || new Date();
+        var res = getDataFromSospensioni('tempomesi', {
+          datasospensione: dt
+        });
+
+        if (res.satus != 200)
+          growl.addErrorMessage("Errore nella lettura del numero delle infusioni del paziente.\nControlla la connessione al server!");
+
+        else
+        if (res.data.length > 0) {
+          $scope.eForm.follow_up = res.data[0].mesi;
+          console.log("numero mesi:");
+          console.log(res.data[0].mesi);
+        }
+
+      }
+
+
+      init();
     }
   ]);
-})();
-
+}());

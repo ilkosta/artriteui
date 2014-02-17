@@ -4,8 +4,10 @@
 .modal-body
   p Sei sicuro di voler cancellare la terapia 
     strong {{tcToDelete.nome}} 
-    | del {{tcToDelete.d_inizio | date:"dd/MM/yyyy" }} ?
+    | del {{tcToDelete.d_inizio | date:"dd/MM/yyyy" }} &nbsp;
+    span.badge.bg-danger(style="background-color: rgb(210, 50, 45);") ?
 
+  
   //- p Riepilogo dei dati che si stanno cancellando:
   dl.dl-horizontal
     dt(ng-show='tcToDelete.tempo') tempo
@@ -25,6 +27,7 @@
 
     dt(ng-show='tcToDelete.note') annotazioni
     dd(ng-show='tcToDelete.note') {{tcToDelete.note}}
+
 
 
 .modal-footer

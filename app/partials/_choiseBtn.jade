@@ -1,0 +1,15 @@
+mixin choiseBtn(parObj)
+  label(ng-show=parObj.show
+        ng-hide=parObj.hide
+        style="margin-bottom:2px;margin-top:5px;")=parObj.label
+  br
+  div(class=(parObj.orientation == 'vertical')?'btn-group-vertical':'btn-group')
+    button.btn.btn-default(
+      type='button'
+      ng-repeat='item in ' + parObj.collection
+      ng-model=parObj.model
+      btn-radio="item['" + parObj.val + "']"
+      ng-click=parObj.onclick
+      ng-show=parObj.show
+      ng-hide=parObj.hide
+      )= "{{item['" + parObj.desc + "']}}"
