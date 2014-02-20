@@ -85,9 +85,11 @@
 
       var loadData = function() {
         $scope.sospensioni = null;
-        loadDataListIntoScope($scope, ['sospensioni'], function(p) {
-          return '/data/pazienti/' + $routeParams.idPaziente + '/' + p
-        });
+        $http.get('/data/pazienti/' + $routeParams.idPaziente + '/sospensioni')
+          .success(function(data, status, headers, config) {
+            $scope.sospensioni = data;
+          })
+          .error(function(data, status, headers, config) {});
       };
 
 
@@ -212,6 +214,18 @@
 
       }
 
+
+      $scope.cancellaSospensione = function(sosp) {
+        $http.post('/data/pazienti/' + $routeParams.idPaziente + '/sospensioni/' + sosp.idterapia_sospensione + '/cancella', sosp)
+          .success(function(data, status, headers, config) {
+            loadData();
+          })
+          .error(function(data, status, headers, config) {
+            var msg = "cancellazione della sospensione fallita!";
+            msg += "codice: " + status;
+            growl.addErrorMessage(msg);
+          })
+      };
 
       init();
     }

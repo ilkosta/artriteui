@@ -1,4 +1,4 @@
-ng-include(src="'/partials/paziente_head.html'" , scope="" , onload="")
+ng-include(src="'app/partials/paziente_head.jade'" , scope="" , onload="")
 
 div( ng-controller='SospensioniCtrl' )
   .content
@@ -35,12 +35,12 @@ div( ng-controller='SospensioniCtrl' )
             td
               button.btn.btn-xs.btn-default(ng-click="editSospensione(sosp)")
                 i.glyphicon.glyphicon-pencil
-              button.btn.btn-xs.btn-danger(ng-click="cancellaSospensione(sosp.idterapia_sospensione)")
+              button.btn.btn-xs.btn-danger(ng-click="cancellaSospensione(sosp)")
                 i.glyphicon.glyphicon-trash
 
-      pre
-        {{eForm|json}}
-        {{motiviSospensione|json}}
+      //- pre
+      //-   {{eForm|json}}
+      //-   {{motiviSospensione|json}}
       
     .col-xs-12.col-md-5
       button.btn.btn-default(
@@ -48,6 +48,6 @@ div( ng-controller='SospensioniCtrl' )
         ng-hide="eForm.visible") 
         i.glyphicon.glyphicon-plus-sign
         | &nbsp;Aggiungi Sospensione
-      ng-include(src="'/partials/sospensioni_form.html'" , autoscroll="")
+      ng-include(src="'app/partials/sospensioni_form.jade'" , autoscroll="")
       
 

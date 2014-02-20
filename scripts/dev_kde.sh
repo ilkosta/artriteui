@@ -11,8 +11,11 @@ export NODE_ENV=development
 ps ax | grep mysql | grep -v grep | grep -v akonadi >/dev/null 2>/dev/null || sudo service mysql start
 
 npm install
+
+webdriver-manager update &
+
 bower install
-ps ax | grep brunch | grep -v grep >/dev/null 2>/dev/null || $TE -e brunch w &
+ps ax | grep brunch | grep -v grep >/dev/null 2>/dev/null || $TE -e sh scripts/start_brunch.sh &
 
 cd server
 npm install

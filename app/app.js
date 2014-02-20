@@ -24,7 +24,7 @@ var App = angular.module('app',
     'utils',
     'utils_forms',
     'utils_bootstrap',
-    'partials'
+    'app.templates'
 // custom filters
   , 'momentFilters'
   ]);
@@ -53,61 +53,61 @@ App.config([
     datepickerPopupConfig.showButtonBar = true;
 
     $routeProvider.when('/pazienti', {
-      templateUrl: '/partials/pazienti.html'
+      templateUrl: 'app/partials/pazienti.jade'
     })
 
     .when('/nuovopaziente', {
-      templateUrl: '/partials/nuovopaziente.html'
+      templateUrl: 'app/partials/nuovopaziente.jade'
     })
     
     .when('/pazienti/:idPaziente/paziente_modifica', {
-      templateUrl: '/partials/paziente_modifica.html'      
+      templateUrl: 'app/partials/paziente_modifica.jade'      
     })
 
     .when('/utenti', {
-      templateUrl: '/partials/utenti.html'
+      templateUrl: 'app/partials/utenti.jade'
     })
 
     .when('/pazienti/:idPaziente/diagnosi', {
-      templateUrl: '/partials/diagnosi.html'      
+      templateUrl: 'app/partials/diagnosi.jade'      
     })
 
     .when('/pazienti/:idPaziente/terapia', {
-      templateUrl: '/partials/terapia_form.html'      
+      templateUrl: 'app/partials/terapia_form.jade'      
     })
 
     .when('/pazienti/:idPaziente/terapia_val', {
-      templateUrl: '/partials/terapia_valutazione_form.html'  
+      templateUrl: 'app/partials/terapia_valutazione_form.jade'  
     })
 
     .when('/pazienti/:idPaziente/anamnesi', {
-      templateUrl: '/partials/anamnesi.html'  
+      templateUrl: 'app/partials/anamnesi.jade'  
     })
 
     .when('/pazienti/:idPaziente/fattori_rischio', {
-      templateUrl: '/partials/fattori_rischio.html'   
+      templateUrl: 'app/partials/fattori_rischio.jade'   
     })
 
     .when('/pazienti/:idPaziente/sospensioni', {
-      templateUrl: '/partials/sospensioni.html'   
+      templateUrl: 'app/partials/sospensioni.jade'   
     })
 
     .when('/pazienti/:idPaziente/terapie_pre', {
-      templateUrl: '/partials/terapie_pre.html'   
+      templateUrl: 'app/partials/terapie_pre.jade'   
     })
 
     .when('/no_connessione', {
-      templateUrl: '/partials/no_connessione.html'      
+      templateUrl: 'app/partials/no_connessione.jade'      
     })
 
     .when('/no_db', {
-      templateUrl: '/partials/no_connessione_DB.html'      
+      templateUrl: 'app/partials/no_connessione_DB.jade'      
     })
 
     .otherwise({
       redirectTo: '/pazienti'
     });
-    //$locationProvider.html5Mode(false);
+    //$locationProvider.jade5Mode(false);
   }
 ]);
 

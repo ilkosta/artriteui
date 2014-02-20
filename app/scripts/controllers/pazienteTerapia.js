@@ -110,8 +110,8 @@
         ];
 
         var modalInstance = $modal.open({
-          //template: $templateCache.get('/partials/terapia_concomitante_canc_form.html'),
-          templateUrl: '/partials/terapia_concomitante_canc_form.html',
+          //template: $templateCache.get('/app.templates/terapia_concomitante_canc_form.html'),
+          templateUrl: 'app/partials/terapia_concomitante_canc_form.jade',
           controller: TerapiaConcomitanteCancelDlgIstance,
           resolve: {
             tcToDelete: function() {

@@ -1,5 +1,5 @@
 include _date
-ng-include(src="'/partials/paziente_head.html'" , scope="" , onload="")
+ng-include(src="'app/partials/paziente_head.jade'" , scope="" , onload="")
 
 div(ng-controller='TerapiaEditCtrl')
   .content
@@ -31,7 +31,7 @@ div(ng-controller='TerapiaEditCtrl')
     h4 Terapia concomitante al Tocilizumab - DMARD
     //- -------------------------------------------------------------
     .row(ng-show='formState.visible')    
-      div(ng-include="'/partials/terapia_concomitante_form.html'")
+      div(ng-include="'app/partials/terapia_concomitante_form.jade'")
     .row
       .col-xs-12.col-sm-5.col-md-3.col-lg-3
         h5 elementi esistenti 
@@ -41,7 +41,7 @@ div(ng-controller='TerapiaEditCtrl')
           i.glyphicon.glyphicon-plus-sign
           | &nbsp; Aggiungi
     .row
-      .col-md-12(ng-hide='(terapie_concomitanti).length == 0')    
+      .col-md-12(ng-hide='(terapie_concomitanti).length == 0')
         table.table-striped.table-bordered.table-hover
           thead
             tr

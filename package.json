@@ -28,7 +28,6 @@
     "karma-ng-scenario": "*",
     "karma-growl-reporter": "*",
     "rmdir": "*",
-    "directory-copy": "*",
     "protractor": "~0.18.1"
   }
 }
