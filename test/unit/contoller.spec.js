@@ -38,7 +38,7 @@
     });
 
 
-    describe('PazienteDettaglioCtrl', function() {
+    xdescribe('PazienteDettaglioCtrl', function() {
       it('utilizza scope.getClass per sapere quale è la tab attiva in base alla rotta', inject( 
         function($rootScope, $controller) {
           var ctrl, scope;

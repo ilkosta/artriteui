@@ -12,8 +12,8 @@ var App = angular.module('app',
     'ngRoute',
     'app.controllers', 
 //    'app.directives', 
-//    'app.filters', 
-//    'app.services', 
+    'app.filters', 
+    'app.services', 
 // ----- external ------
 
     'ui.bootstrap',
