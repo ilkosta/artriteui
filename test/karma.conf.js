@@ -14,17 +14,18 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'server/public/js/vendor.js', 
+      'server/public/js/vendor.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'server/public/js/app.templates.js', 
-      'server/public/js/app.js', 
+      'node_modules/ng-midway-tester/src/ngMidwayTester.js',
+      'server/public/js/app.templates.js',
+      'server/public/js/app.js',
       'test/unit/*.spec.js'
     ],
 
 
     // list of files to exclude
     exclude: [
-      
+
     ],
 
 
@@ -59,9 +60,9 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: [
-    //    'Firefox', 
-    //    'Chrome', 
-        'PhantomJS'
+      //    'Firefox', 
+      //    'Chrome', 
+      'PhantomJS'
     ],
 
 
@@ -71,6 +72,14 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
+
+
+    proxies: {
+      //point this to the root of where your AngularJS application
+      //is being hosted locally
+      '/': 'http://localhost:3000/'
+    }
+
   });
 };
