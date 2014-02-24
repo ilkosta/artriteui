@@ -16,11 +16,16 @@ module.exports = function(config) {
     files: [
       'server/public/js/vendor.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'node_modules/ng-midway-tester/src/ngMidwayTester.js',
+      'node_modules/ng-midway-tester/src/ngMidwayTester.js',      
+      
       'server/public/js/app.templates.js',
       'server/public/js/app.js',
-      'test/unit/*.spec.js'
+
+      'test/dependency_tests.js',
+      'test/unit/*.spec.js',
+      'test/dependencies/*.spec.js'
     ],
+
 
 
     // list of files to exclude
@@ -60,11 +65,18 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: [
-      //    'Firefox', 
-      //    'Chrome', 
-      'PhantomJS'
+      'Firefox'
+      //,    'Chrome'
+      //,'PhantomJS'
     ],
 
+
+
+    proxies: {
+      //point this to the root of where your AngularJS application
+      //is being hosted locally
+      '/': 'http://localhost:3000/'
+    },
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,
@@ -72,14 +84,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false,
-
-
-    proxies: {
-      //point this to the root of where your AngularJS application
-      //is being hosted locally
-      '/': 'http://localhost:3000/'
-    }
-
+    singleRun: false
   });
 };

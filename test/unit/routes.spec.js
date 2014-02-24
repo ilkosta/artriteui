@@ -3,7 +3,7 @@
   'use strict';
 
   // When testing routes we want to ensure that the routes we're focussed on are routed properly in our application. Therefore we will need to check where the route is routed to and if the route itself is redirected or not found. A 404 page should be displayed and a $routeChangeError event should be fired if a route is not found. We should also check to see if the template is loaded for the route within the view. The best types of tests for this are Midway tests and E2E tests. 
-  ddescribe('routing', function() {
+  describe('routing', function() {
     var tester;
     beforeEach(function() {
       tester = ngMidwayTester('app');

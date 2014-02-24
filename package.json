@@ -29,6 +29,7 @@
     "karma-growl-reporter": "*",
     "rmdir": "*",
     "protractor": "~0.18.1",
-    "ng-midway-tester": "~2.0.5"
+    "ng-midway-tester": "~2.0.5",
+    "after-brunch": "0.0.4"
   }
 }
