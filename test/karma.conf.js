@@ -23,7 +23,7 @@ module.exports = function(config) {
 
       'test/dependency_tests.js',
       'test/unit/*.spec.js',
-      'test/dependencies/*.spec.js'
+      'test/unit/*/*.spec.js'
     ],
 
 

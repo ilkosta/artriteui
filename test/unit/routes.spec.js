@@ -28,6 +28,9 @@
         expect(tester.path()).toEqual('/pazienti');
         expect(tester.viewElement().html()).toContain('Elenco dei pazienti');
         //var scope = tester.viewScope();
+        var current = tester.inject('$route').current;
+        var scope = current.scope;
+        // expect(controller).toEqual('PazientiElencoCtrl');
       });
       
     });
@@ -49,6 +52,8 @@
       });
       
     });
+
+
 
 
   });
