@@ -13,7 +13,8 @@ exports.config = {
 
   // Capabilities to be passed to the webdriver instance.
   capabilities: {
-    'browserName': 'chrome'
+    //'browserName': 'chrome'
+    'browserName': 'firefox'
   },
 
   // Spec patterns are relative to the current working directly when
