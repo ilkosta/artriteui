@@ -67,7 +67,7 @@
         
       };
 
-      $scope.init = Init();
+      $scope.init = Init;
 
       $scope.getTipiRisposta = function() {
         var tipi_risp = _.map($scope.tipo_risposta, function(ts) {
