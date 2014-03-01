@@ -22,6 +22,7 @@ module.exports = function(config) {
       'server/public/js/app.js',
 
       'test/dependency_tests.js',
+      'test/unit/mocks/*_mock.js',
       'test/unit/*.spec.js',
       'test/unit/*/*.spec.js'
     ],
