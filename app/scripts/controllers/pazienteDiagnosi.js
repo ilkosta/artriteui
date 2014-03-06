@@ -170,8 +170,8 @@
         ];
 
         var modalInstance = $modal.open({
-          //template: $templateCache.get('/partials/terapia_concomitante_canc_form.html'),
-          templateUrl: '/partials/diagnosi_canc_infusione.html',
+          //template: $templateCache.get('/app.templates/terapia_concomitante_canc_form.html'),
+          templateUrl: 'app/partials/diagnosi_canc_infusione.jade',
           controller: InfToDeleteDlgIstance,
           resolve: {
             toDel: function() {
@@ -183,7 +183,6 @@
         modalInstance.result.then(function(httpDelPromise) {
           if (httpDelPromise.status == 200) {
             $log.info('cancellazione avvenuta con successo, di');
-            debugger;
             initInfusioni();
           } else {
             $log.error('cancellazione non riuscita: ');

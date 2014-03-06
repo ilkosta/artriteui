@@ -1,4 +1,6 @@
-ng-include(src="'/partials/paziente_head.html'" , scope="" , onload="")
+include _choiseBtn
+
+ng-include(src="'app/partials/paziente_head.jade'" , scope="" , onload="")
 
 div(ng-controller='anamnesiCtrl')
   .content
@@ -11,9 +13,13 @@ div(ng-controller='anamnesiCtrl')
             .col-xs-7
               .control-group              
                 label.horizontal-field Patologie concomitanti
-                  select.form-control(
-                    ng-options='malattia.idtipo_malattia as malattia.descrizione for malattia in malattia_ptc'
-                    ng-model='tc_aggiungi.idtipo_malattia')
+                +choiseBtn({
+                           lable:'Patologie concomitanti',
+                           collection:'malattia_ptc',
+                           model:'tc_aggiungi.idtipo_malattia',
+                           val:'idtipo_malattia',
+                           desc:'descrizione'})
+
               .control-group
                 br
                 label.horizontal-field Descrizione 

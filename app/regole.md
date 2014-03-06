@@ -15,7 +15,7 @@ Se per fare una cosa puoi usare 2 strumenti, di cui uno è fichissimo e fa un sa
 
 **Usa quello più semplice per raggiungere l'obbiettivo.**
 
-Le funzionalità in più non importano, a meno che queste non siano d'aiuto per il test ed il debug.
+Le funzionalità in più non importano, a meno che queste non ò siano d'aiuto per il test ed il debug.
 
 
 ## 2. tenere i cotroller più semplici possibili
@@ -39,3 +39,10 @@ Deriva dal punto precedente
 
 Se senti il bisogno di usare jquery e simili per fare qualcosa con il dom... sbagli candeggio, devi usare le direttive.
 
+### 4. cose che non vanno attualmente
+
+* all'interno di un controller, ci sono diversi punti in cui può avvenire il caricamento dei dati
+** occorre:
+*** fare in modo che i controller carichino i dati direttamente da dei servizi
+*** cambiare la logica dei controller, possibilmente togliendola
+*** testare ciascun servizio

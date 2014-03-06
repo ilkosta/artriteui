@@ -1,3 +1,14 @@
+
+.navbar.navbar-inverse.navbar-fixed-top {
+  border-color: rgb(0,12,104);
+  background-color: rgb(0,12,104);
+}
+.navbar-inverse .navbar-nav > .active > a, 
+.navbar-inverse .navbar-nav > .active > a:hover, 
+.navbar-inverse .navbar-nav > .active > a:focus {
+  background-color: rgba(91, 99, 162, 1);
+}
+
 .inline-field {
 	padding-right: 10px;	
 }

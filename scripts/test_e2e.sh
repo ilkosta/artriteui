@@ -1,10 +1,9 @@
 #!/bin/sh
 
-sleep $1
+echo "PWD=$PWD"
 
-# dalla dir `server`
-cd ..
+sleep 10
 
-protractor test/protractor.conf.js
+node_modules/protractor/bin/protractor test/protractor.conf.js
 
 sleep 10

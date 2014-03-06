@@ -34,3 +34,5 @@ chestavofacendo.txt
 *.bz2
 *.xz
 
+# test stuff - autogenerati
+test/dependency_tests.js

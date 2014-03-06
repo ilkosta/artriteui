@@ -1,10 +1,11 @@
 // Karma configuration
+// Generated on Fri Feb 21 2014 17:31:12 GMT+0100 (CET)
 
-module.exports = function(karma) {
-  karma.configure({
+module.exports = function(config) {
+  config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: '../',
+    basePath: '..',
 
 
     // frameworks to use
@@ -13,22 +14,23 @@ module.exports = function(karma) {
 
     // list of files / patterns to load in the browser
     files: [
-
-      // Program files
-      '_public/js/vendor.js',
-      '_public/js/app.js',
-
-      // Specs
-
-      // Load mocks directly from bower
+      'server/public/js/vendor.js',
       'bower_components/angular-mocks/angular-mocks.js',
+      'node_modules/ng-midway-tester/src/ngMidwayTester.js',      
+      
+      'server/public/js/app.templates.js',
+      'server/public/js/app.js',
 
-      'test/unit/**/*.spec.*'
+      'test/dependency_tests.js',
+      'test/unit/*.spec.js',
+      'test/unit/*/*.spec.js'
     ],
+
 
 
     // list of files to exclude
     exclude: [
+
     ],
 
 
@@ -41,17 +43,13 @@ module.exports = function(karma) {
     port: 9876,
 
 
-    // cli runner port
-    runnerPort: 9100,
-
-
     // enable / disable colors in the output (reporters and logs)
     colors: true,
 
 
     // level of logging
-    // possible values: karma.LOG_DISABLE || karma.LOG_ERROR || karma.LOG_WARN || karma.LOG_INFO || karma.LOG_DEBUG
-    logLevel: karma.LOG_INFO,
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    logLevel: config.LOG_INFO,
 
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -62,23 +60,26 @@ module.exports = function(karma) {
     // - Chrome
     // - ChromeCanary
     // - Firefox
-    // - Opera
-    // - Safari (only Mac)
+    // - Opera (has to be installed with `npm install karma-opera-launcher`)
+    // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
-    // - IE (only Windows)
-    browsers: ['Chrome'],
+    // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
+    browsers: [
+      'Firefox'
+      //,    'Chrome'
+      //,'PhantomJS'
+    ],
 
+
+
+    proxies: {
+      //point this to the root of where your AngularJS application
+      //is being hosted locally
+      '/': 'http://localhost:3000/'
+    },
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 60000,
-
-
-    // Plugins to load
-    plugins: [
-      'karma-jasmine',
-      'karma-coffee-preprocessor',
-      'karma-chrome-launcher'
-    ],
 
 
     // Continuous Integration mode

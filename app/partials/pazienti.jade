@@ -1,3 +1,12 @@
+mixin tooltip(val)
+  span(
+    tooltip-placement='left'
+    tooltip=val
+    tooltip-append-to-body='true')
+    
+    if block
+      block
+
 div
   .page-header
     .row
@@ -30,17 +39,17 @@ div
           td.col-md-1(align='center')  {{paziente.idPAZIENTE}}
           td                  {{ paziente.NOME }} {{ paziente.COGNOME }}
           td.col-md-1(align='right')   
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_NASCITA | date:"dd/MM/yyyy" }}')
+            +tooltip('{{ paziente.DATA_NASCITA | date:"dd/MM/yyyy" }}')
               {{paziente.eta}} anni
           td.col-md-1 &nbsp;
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_DIAGNOSI | fromNow }}')
+            +tooltip('{{ paziente.DATA_DIAGNOSI | fromNow }}')
               {{ paziente.DATA_DIAGNOSI | date:"dd/MM/yyyy"}}
           td.col-md-2 &nbsp;     {{paziente.MALATTIA}}
           td.col-md-1(align='right')
-            span(tooltip-placement='left', tooltip='{{ paziente.DATA_TERAPIA | fromNow }}')
+            +tooltip('{{ paziente.DATA_TERAPIA | fromNow }}')
               {{ paziente.DATA_TERAPIA | date:"dd/MM/yyyy"}}
           td.col-md-1(align='right')
-            span(tooltip-placement='left', tooltip='{{ paziente.data_infusione | fromNow }}')
+            +tooltip('{{ paziente.data_infusione | fromNow }}')
               {{ paziente.data_infusione | date:"dd/MM/yyyy"}}
           td.col-md-1(align='center') 
             a(ng-href='#/pazienti/{{paziente.idPAZIENTE}}/diagnosi') dettaglio

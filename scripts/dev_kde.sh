@@ -11,14 +11,19 @@ export NODE_ENV=development
 ps ax | grep mysql | grep -v grep | grep -v akonadi >/dev/null 2>/dev/null || sudo service mysql start
 
 npm install
+
+webdriver-manager update &
+
 bower install
-ps ax | grep brunch | grep -v grep >/dev/null 2>/dev/null || $TE -e brunch w &
+ps ax | grep brunch | grep -v grep >/dev/null 2>/dev/null || $TE -e sh scripts/start_brunch.sh &
+
+ps ax | grep karma | grep -v karma >/dev/null 2>/dev/null || $TE -e sh scripts/start_karma.sh &
 
 cd server
 npm install
 ps ax | grep node-inspector | grep -v grep >/dev/null 2>/dev/null ||  node-inspector &
 
-ps ax | grep protractor | grep -v grep >/dev/null 2>/dev/null ||  $TE -e sh ../scripts/test_e2e.sh 5 &
+#ps ax | grep protractor | grep -v grep >/dev/null 2>/dev/null ||  $TE -e sh ../scripts/test_e2e.sh 5 &
 
 DEBUG=express:* node-dev --debug server.js
 

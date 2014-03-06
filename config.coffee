@@ -39,6 +39,9 @@ exports.config =
     jade_angular:
       modules_folder: 'partials'
       locals: {}
+    afterBrunch: [
+      'node test/mk_dependency_tests.js'
+    ]
 
   # Enable or disable minifying of result js / css files.
   # minify: true

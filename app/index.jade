@@ -9,18 +9,6 @@ html(lang='en', ng-app='app')
     title(ng-bind-template='{{pageTitle}}')
     link(rel='stylesheet', href='/css/app.css')
     //-script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
-    //if lte IE 7
-      script(src='http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js')
-    //if lte IE 8
-      script(src='//html5shiv.googlecode.com/svn/trunk/html5.js')
-    script.
-      window.brunch = window.brunch || {};
-      window.brunch['auto-reload'] = {
-        enabled: true
-      };      
-    script(src='/js/vendor.js')
-    script(src='/js/partials.js')
-    script(src='/js/app.js')
 
   body(ng-controller='AppCtrl')
     
@@ -35,7 +23,7 @@ html(lang='en', ng-app='app')
             span.icon-bar
           a(href='/index.html').navbar-brand Studio Tocilizumab
         nav.collapse.navbar-collapse.bs-navbar-collapse(role='navigation')
-          div(ng-include="'/partials/nav.html'")
+          div(ng-include="'app/partials/nav.jade'")
 
     .container.main-content
       div(growl)
@@ -45,4 +33,15 @@ html(lang='en', ng-app='app')
     footer.footer
       .container
     
-
+    //- //if lte IE 7
+    //-   script(src='http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js')
+    //- //if lte IE 8
+    //-   script(src='//html5shiv.googlecode.com/svn/trunk/html5.js')
+    script.
+      window.brunch = window.brunch || {};
+      window.brunch['auto-reload'] = {
+        enabled: true
+      };      
+    script(src='/js/vendor.js')
+    script(src='/js/app.templates.js')
+    script(src='/js/app.js')
