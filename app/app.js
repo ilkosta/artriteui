@@ -96,6 +96,12 @@ App.config([
       templateUrl: '/partials/terapie_pre.html'   
     })
 
+    .when('/pazienti/:idPaziente/esami_laboratorio', {
+      templateUrl: '/partials/esami_laboratorio.html'   
+    })
+
+
+
     .when('/no_connessione', {
       templateUrl: '/partials/no_connessione.html'      
     })
