@@ -65,6 +65,11 @@ app.post ('/data/pazienti/:idPaziente/cancella/terapie_concomitanti/dmard/:idTer
 app.post ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.ins);
 app.put ('/data/pazienti/:idPaziente/terapia_farmaco' , terapia_farmaco.upd);
 
+// esami_laboratorio
+var esamilaboratorio = require('./routes/esamilaboratorio.js');
+app.post('/data/pazienti/:idPaziente/esami_laboratorio', esamilaboratorio.ins);
+app.post('/data/pazienti/:idPaziente/esami_laboratorio/:tempo/cancella', esamilaboratorio.del);
+
 // terapia valutazione
 var terapia_valutazione = require('./routes/terapia_valutazione.js');
 app.post('/data/pazienti/:idPaziente/terapia_valutazione/:tempo/cancella' , terapia_valutazione.del);

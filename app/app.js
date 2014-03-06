@@ -97,7 +97,7 @@ App.config([
     })
 
     .when('/pazienti/:idPaziente/esami_laboratorio', {
-      templateUrl: '/partials/esami_laboratorio.html'   
+      templateUrl: 'app/partials/esami_laboratorio.jade'   
     })
 
 
