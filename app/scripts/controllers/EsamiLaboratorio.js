@@ -4,9 +4,9 @@ var mod = angular.module('app.controllers');
   mod.controller('EsamiLaboratorioCtrl', [
   '$scope','$routeParams', 
   '$timeout', '$http','loadDataListIntoScope',
-  '$window','$log', 'growl', 
+  '$window','$log', 'growl', 'calendar',
     function($scope, $routeParams, $timeout, $http, loadDataListIntoScope,
-        $window, $log, growl) {
+        $window, $log, growl,calendar) {
 
       var url_el = '/data/pazienti/' + $routeParams.idPaziente + '/esami_laboratorio';
 
@@ -14,7 +14,7 @@ var mod = angular.module('app.controllers');
       function init() {
         $scope.formState    = {};
         $scope.el_aggiungi  = {};
-
+        calendar().init($scope);
         $http.get(url_el)
               .success(function(data, status, headers, config) {
                 $scope.esami_laboratorio = data;
@@ -59,7 +59,7 @@ var mod = angular.module('app.controllers');
 
          var obbligatori = [];
         if( $window._.some(obbligatori, function(v) { return v == null; })) {
-          notify_err('ci sono valori obbligatori assenti');
+          notify_err('Ci sono valori obbligatori assenti');
           return false;
         }
 

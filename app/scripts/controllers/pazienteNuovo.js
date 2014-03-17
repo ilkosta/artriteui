@@ -4,14 +4,14 @@
   
   mod.controller('PazientiNuovoCtrl', [
     '$scope', '$location', '$routeParams',
-    '$http', 'calendar','$log', 'checkCF','growl',
+    '$http', 'calendar','$log', 'checkCF','growl','calendar',
     function(
         $scope,$location, $routeParams,
-        $http, calendar,$log, checkCF, growl) {
+        $http, calendar,$log, checkCF, growl, calendar) {
         
       $scope.master = {};
       $scope.formState = {};
-
+      calendar().init($scope);
       $scope.update = function(user) {
         $scope.save(user);         
       };
