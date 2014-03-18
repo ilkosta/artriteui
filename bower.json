@@ -23,7 +23,8 @@
     "moment": "*",
     "lodash": ">=2.4.1",
     "angular-ui-bootstrap": "*",
-    "bootstrap-css": ">=3.0.0"
+    "bootstrap-css": ">=3.0.0",
+    "angular-growl": "*"
   },
   "overrides": {
     "angular-i18n": {
@@ -80,5 +81,8 @@
         "css/bootstrap.css"
       ]
     }
+  },
+  "resolutions": {
+    "angular": "~1.2.12"
   }
 }

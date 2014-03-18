@@ -34,14 +34,14 @@ angular.module('utils_forms',[]);
 var utils = angular.module('utils', []);
 
 App.config([
-//  '$routeProvider', '$locationProvider', 'growlProvider', 'datepickerPopupConfig',
-//  function($routeProvider, $locationProvider, growlProvider, datepickerPopupConfig, config) {
+ '$routeProvider', '$locationProvider', 'growlProvider', 'datepickerPopupConfig',
+ function($routeProvider, $locationProvider, growlProvider, datepickerPopupConfig, config) {
 
-  '$routeProvider', '$locationProvider', 'datepickerPopupConfig',
-  function($routeProvider, $locationProvider, datepickerPopupConfig, config) {
+  // '$routeProvider', '$locationProvider', 'datepickerPopupConfig',
+  // function($routeProvider, $locationProvider, datepickerPopupConfig, config) {
 
 
-    //growlProvider.globalTimeToLive(10000);
+    growlProvider.globalTimeToLive(10000);
     
     datepickerPopupConfig.dateFormat = 'dd-MM-yyyy';
     datepickerPopupConfig.currentText = 'Oggi';
