@@ -104,7 +104,7 @@ div(ng-controller='EsamiLaboratorioCtrl')
             span.badge {{(esami_laboratorio).length}}
             | &nbsp; esami:
 
-          table.table-striped.table-bordered.table-hover
+          table.table-bordered
             thead
               tr
                 th Tempo
@@ -127,15 +127,21 @@ div(ng-controller='EsamiLaboratorioCtrl')
                 td.col-md-1(align='center')  {{t.data_esame | date:"dd/MM/yyyy"}}
                 td.col-md-1(align='right', ng-class="{red: t.hb < 11}") {{t.hb | number:2}}
                 td.col-md-1(align='right', ng-class="{red:t.wbc > 6000 || t.wbc < 3000 }") {{t.wbc | number:2 }}
-                td.col-md-1(align='right', ng-class="{red:t.neutrofili < 1500}") {{t.neutrofili | number:2}}
-                td.col-md-1(align='right')   {{t.ast | number:2}}
-                td.col-md-1(align='right')   {{t.alt | number:2}}
+                td.col-md-1(align='right'
+                  ng-class="{ lieve: 1000 < t.neutrofili || t.neutrofili < 1500, moderata: 500 < t.neutrofili || t.neutrofili < 1000, severa: t.neutrofili < 500}") 
+                  {{t.neutrofili | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.ast > 40}')   {{t.ast | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.alt > 40}')   {{t.alt | number:2}}
                 td.col-md-1(align='right')   {{t.ves | number:2}}
                 td.col-md-1(align='right')   {{t.pcr | number:2}}
-                td.col-md-1(align='right')   {{t.colesterolo | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.colesterolo > 200}')   {{t.colesterolo | number:2}}
                 td.col-md-1(align='right')   {{t.c_hdl | number:2}}
                 td.col-md-1(align='right')   {{t.c_ldl | number:2}}
-                td.col-md-1(align='right')   {{t.trigliceridi | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.trigliceridi > 150}')   {{t.trigliceridi | number:2}}
                 td.col-md-1(align='center') 
                   button.btn.btn-danger.btn-xs(ng-click='elimina_el(t)') 
                     i.glyphicon.glyphicon-trash
