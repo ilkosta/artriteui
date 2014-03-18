@@ -82,25 +82,30 @@ var mod = angular.module('app.controllers');
         $scope.formState.saving = true;
 
         $scope.el_aggiungi.id_paziente = $routeParams.idPaziente;
-        
-        var msg = '';
-        $http.post(url_el, $scope.el_aggiungi ).
-            success(function(data, status, headers, config) {
-              msg = 'salvataggio avvenuto con successo del tempo ' + $scope.el_aggiungi.tempo;
-              $log.info(msg);
-              //growl.addSuccessMessage(msg);
+        if($scope.el_aggiungi.tempo != null)
+          {  
+          
+          var msg = '';
+          $http.post(url_el, $scope.el_aggiungi ).
+              success(function(data, status, headers, config) {
+                msg = 'salvataggio avvenuto con successo del tempo ' + $scope.el_aggiungi.tempo;
+                $log.info(msg);
+                growl.addSuccessMessage(msg);
 
-              $scope.formState.saving = false;              
-              init();
-            }).
-            error(function(data, status, headers, config) {   
-              msg = "salvataggio non riuscito del tempo " + $scope.el_aggiungi.tempo ;
-              growl.addErrorMessage(msg);
-              $log.error(msg);
-              $log.error($scope.el_aggiungi);
+                $scope.formState.saving = false;              
+                init();
+              }).
+              error(function(data, status, headers, config) {   
+                msg = "salvataggio non riuscito del tempo " + $scope.el_aggiungi.tempo ;
+                growl.addErrorMessage(msg);
+                $log.error(msg);
+                $log.error($scope.el_aggiungi);
 
-              $scope.formState.saving = false;
-            });
+                $scope.formState.saving = false;
+              });
+          }else{growl.addErrorMessage("Impossibile salvare. TEMPO obbligatorio.");
+          $log.error("Impossibile salvare. TEMPO obbligatorio.");
+          $scope.formState.saving = false;}
       };
 
 

@@ -58,11 +58,6 @@
 			return mysql_conn;
 		}
 
-		//debugger;
-		//if (req.params.idPaziente != req.body.idPaziente)
-		//	return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
-
-
 		var risposte_usate = _(['fattore_reumatoide', 'anticorpi'])
 			.map(function(a) {
 				return req.body[a];
