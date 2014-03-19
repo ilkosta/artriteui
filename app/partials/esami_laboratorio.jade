@@ -128,7 +128,7 @@ div(ng-controller='EsamiLaboratorioCtrl')
                 td.col-md-1(align='right', ng-class="{red: t.hb < 11}") {{t.hb | number:2}}
                 td.col-md-1(align='right', ng-class="{red:t.wbc > 6000 || t.wbc < 3000 }") {{t.wbc | number:2 }}
                 td.col-md-1(align='right'
-                  ng-class="{ lieve: 1000 < t.neutrofili || t.neutrofili < 1500, moderata: 500 < t.neutrofili || t.neutrofili < 1000, severa: t.neutrofili < 500}") 
+                  ng-class="{ lieve: 1000 <= t.neutrofili && t.neutrofili < 1500, moderata: 500 <= t.neutrofili && t.neutrofili < 1000, severa: t.neutrofili < 500}") 
                   {{t.neutrofili | number:2}}
                 td.col-md-1(align='right'
                   ng-class='{red: t.ast > 40}')   {{t.ast | number:2}}
