@@ -1,5 +1,3 @@
-
-
 (function() {
 	'use strict';
 
@@ -20,7 +18,7 @@
 			$scope = $rootScope.$new();
 			var emptyFn = function() {};
 			calObj = getCalMock();
-                
+
 			ctrl = $controller('PazienteDiagnosiEditCtrl', {
 				$scope: $scope,
 				$routeParams: $routeParams,
@@ -41,22 +39,18 @@
 			expect(ctrl).not.toBeUndefined();
 
 		});
-		
-    describe('utilizzo di calendar', function() {
-    	beforeEach(function() {
-    		//calObj = new Calendar();
-    		//spyOn(calObj, 'init');
-    	});
-    	
-    	it("deve chiamare calendar().init all'avvio", function() {
-    		expect(calObj.init).toHaveBeenCalled();
-    	});
 
-    	it('calendar().init deve essere chiamata passandogli lo scope', function() {
-    		expect(calObj.init).toHaveBeenCalledWith($scope);
-    	});
-    });
-		
+		describe('utilizzo di calendar', function() {
+
+			it("deve chiamare calendar().init all'avvio", function() {
+				expect(calObj.init).toHaveBeenCalled();
+			});
+
+			it('calendar().init deve essere chiamata passandogli lo scope', function() {
+				expect(calObj.init).toHaveBeenCalledWith($scope);
+			});
+		});
+
 
 		describe('$scope.', function() {
 			var scopeFn = ['init', 'add_infusione', 'getTipiRisposta',
@@ -80,16 +74,149 @@
 				it('deve ripristinare lo $scope iniziale', function() {});
 			});
 
-			describe('dataDiagnosiValida', function() {
-            describe('con data formattata male deve tornare false', function() {
-            });
+			ddescribe('dataDiagnosiValida', function() {
+				var fn;
+
+				beforeEach(function() {
+					fn = $scope.dataDiagnosiValida;
+				});
+
+				describe('con data invalida torna false', function() {
+
+					it('la data dd-MM-yyyy deve risultare corretta', function() {
+						expect(fn(moment().format('DD-MM-YYYY'))).toEqual(true);
+					});
+
+					it('la data dd/MM/yyyy non deve risultare corretta', function() {
+						debugger;
+						expect(fn(moment().format('DD/MM/YYYY'))).toEqual(false);
+					});
+
+					it('la data dd/MM/yy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD/MM/YY'))).toEqual(false);
+					});
+
+					it('la data dd-MM-yy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD-MM-YY'))).toEqual(false);
+					});
+
+					it('la data yyyy/MM/dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YYYY/MM/DD'))).toEqual(false);
+					});
+
+					it('la data yyyy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YYYY-MM-DD'))).toEqual(false);
+					});
+
+					it('la data yy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YY-MM-DD'))).toEqual(false);
+					});
+
+					it('la data yy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YY/MM/DD'))).toEqual(false);
+					});
+
+				});
+				it('non deve accettare date più vecchie di 10 anni', function() {});
+				it('non deve accettare date nel futuro', function() {});
+
+			});
+
+			xdescribe('dataDiagnosiValida', function() {
+				dump(ctrl);
+				dump($scope);
+
+				var fn = $scope.dataDiagnosiValida;
+
+				describe('con data invalida torna false', function() {
+
+					it('la data dd-MM-yyyy deve risultare corretta', function() {
+						expect(fn(moment().format('DD-MM-YYYY'))).toEqual(true);
+					});
+
+					it('la data dd/MM/yyyy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD/MM/YYYY'))).toEqual(false);
+					});
+
+					it('la data dd/MM/yy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD/MM/YY'))).toEqual(false);
+
+					});
+
+					it('la data dd-MM-yy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD-MM-YY'))).toEqual(false);
+
+					});
+
+					it('la data yyyy/MM/dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YYYY/MM/DD'))).toEqual(false);
+
+					});
+
+					it('la data yyyy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YYYY-MM-DD'))).toEqual(false);
+
+					});
+
+					it('la data yy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YY-MM-DD'))).toEqual(false);
+
+					});
+
+					it('la data yy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YY/MM/DD'))).toEqual(false);
+
+					});
+
+				});
 				it('non deve accettare date più vecchie di 10 anni', function() {});
 				it('non deve accettare date nel futuro', function() {});
 			});
 
-			describe('inQuestoMese', function() {
-                describe('con data formattata male deve tornare false', function() {
-                });
+			xdescribe('inQuestoMese', function() {
+				var fn = $scope.inQuestoMese;
+
+				describe('con data invalida torna false', function() {
+
+					it('la data dd-MM-yyyy deve risultare corretta', function() {
+						expect(fn(moment().format('DD-MM-YYYY'))).toEqual(true);
+					});
+
+					it('la data dd/MM/yyyy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD/MM/YYYY'))).toEqual(false);
+					});
+
+					it('la data dd/MM/yy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD/MM/YY'))).toEqual(false);
+
+					});
+
+					it('la data dd-MM-yy non deve risultare corretta', function() {
+						expect(fn(moment().format('DD-MM-YY'))).toEqual(false);
+
+					});
+
+					it('la data yyyy/MM/dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YYYY/MM/DD'))).toEqual(false);
+
+					});
+
+					it('la data yyyy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YYYY-MM-DD'))).toEqual(false);
+
+					});
+
+					it('la data yy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YY-MM-DD'))).toEqual(false);
+
+					});
+
+					it('la data yy-MM-dd non deve risultare corretta', function() {
+						expect(fn(moment().format('YY/MM/DD'))).toEqual(false);
+
+					});
+
+				});
 				it('non deve accettare date più vecchie di 30gg', function() {});
 				it('non deve accettare date nel futuro', function() {});
 			});
