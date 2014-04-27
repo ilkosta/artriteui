@@ -4,10 +4,10 @@
   
   mod.controller('PazienteModificaCtrl', [
     '$scope', '$location', '$routeParams',
-    '$http', 'calendar','$log', 'checkCF','growl',
+    '$http', 'calendar','$log', 'checkCF','growl','calendar',
     function(
         $scope,$location, $routeParams,
-        $http, calendar,$log, checkCF, growl) {
+        $http, calendar,$log, checkCF, growl,calendar) {
         
       init(); 
   
@@ -15,6 +15,7 @@
     function init() {
       $scope.master = {};
       $scope.formState = {};
+      calendar().init($scope);
 
     // load paziente (da pazienti/:id/paziente_modifica)
       $http.get('data/pazienti/' + $routeParams.idPaziente + '/paziente_modifica')

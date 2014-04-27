@@ -29,12 +29,12 @@
 
 
   var setMalattia = function(req, res, next) {
+	
+    //if(!req.body.idPaziente || !req.params.idPaziente)
+      //return notify_problem('errore nel passaggio dei parametri (idPaziente)');
 
-    if(!req.body.idPaziente || !req.params.idPaziente)
-      return notify_problem('errore nel passaggio dei parametri (idPaziente)');
-
-    if (req.params.idPaziente != req.body.idPaziente)
-      return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
+    // if (req.params.idPaziente != req.body.idPaziente)
+      //return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
   }
 
 	exports.set = function(req, res, next) {
@@ -57,10 +57,6 @@
 			mysql_conn.connect();
 			return mysql_conn;
 		}
-
-		if (req.params.idPaziente != req.body.idPaziente)
-			return notify_problem('nel json ricevuto l\'idPaziente non coincide con quello el PUT');
-
 
 		var risposte_usate = _(['fattore_reumatoide', 'anticorpi'])
 			.map(function(a) {

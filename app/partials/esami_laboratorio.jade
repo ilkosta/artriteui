@@ -1,0 +1,147 @@
+
+ng-include(src="'app/partials/paziente_head.jade'" , scope="" , onload="")
+
+br
+h4.strong ESAMI DI LABORATORIO
+div(ng-controller='EsamiLaboratorioCtrl')
+  .content
+    br
+    .row
+      form.col-md-5.form-horizontal( novalidate , name ='formEsamiLaboratorio')
+        fieldset
+          .form-group
+            .col-md-4
+              label Tempo
+            .col-md-3
+                input(type='number', min ='0', max='600', step='6',ng-required='true', ng-model ='el_aggiungi.tempo')
+          .form-group
+            .col-md-4
+              label Data Esame
+            .col-md-3
+                input(
+                  type='text'
+                  datepicker-popup='dd-MM-yyyy'
+                  datepicker-options='dateOptions'
+                  ng-required='true'
+                  placeholder='Data analisi'
+                  open='calendarOpened'
+                  ng-model='el_aggiungi.data_esame')
+          
+          .form-group
+            .col-md-4
+              label
+          .form-group
+            .col-md-4
+              label Hb (g/dl):  
+            .col-md-4
+              input(type='number',  step='1',ng-model ='el_aggiungi.hb')
+          .form-group
+            .col-md-4
+              label WBC(/mmc):
+            .col-md-4
+              input(type='number', step='1',ng-model ='el_aggiungi.wbc')
+          .form-group
+            .col-md-4
+              label Neutrofili(valore assoluto /mmc):
+            .col-md-4
+              input(type='number',  step='0.1',ng-model ='el_aggiungi.neutrofili')
+          .form-group
+            .col-md-4
+              label AST (U/l):
+            .col-md-4
+              input(type='number',  step='0.1',ng-model ='el_aggiungi.ast')
+          .form-group
+            .col-md-4
+              label ALT(U/l):
+            .col-md-4
+              input(type='number', step='0.1',ng-required='true',ng-model ='el_aggiungi.alt')
+          .form-group
+            .col-md-4
+              label VES (mm/h):
+            .col-md-4
+              input(type='number', step='0.1',ng-required='true',ng-model ='el_aggiungi.ves')
+          .form-group
+            .col-md-4
+              label PCR (mg/dl):
+            .col-md-4
+              input(type='number', step='0.1',ng-required='true',ng-model ='el_aggiungi.pcr')    
+          .form-group
+            .col-md-4
+              label Colesterolo totale: 
+            .col-md-4
+              input(type='number', step='0.1',ng-model ='el_aggiungi.colesterolo')
+          .form-group
+            .col-md-4
+              label Colesterolo HDL:
+            .col-md-4
+              input(type='number', step='0.1',ng-model ='el_aggiungi.c_hdl')
+          .form-group
+            .col-md-4
+              label Colesterolo LDL:
+            .col-md-4
+              input(type='number', step='0.1',ng-model ='el_aggiungi.c_ldl')
+          .form-group
+            .col-md-4
+              label Trigliceridi:
+            .col-md-4
+              input(type='number',  step='0.1',ng-model ='el_aggiungi.trigliceridi')
+
+          .form-group 
+            .col-md-offset-3
+            
+              button.btn.btn-success.pull-right(
+                  ng-click='save()'
+                  ng-disabled='formState.saving || !canSave()')
+                i.glyphicon.glyphicon-plus-sign
+                  | &nbsp;Aggiungi
+
+      .col-md-4
+        h4 Elenco Analisi 
+        p(ng-show="esami_laboratorio.length == 0") 
+          | Il paziente non ha fatto esami di laboratorio
+        div(ng-show="esami_laboratorio.length > 0")
+          p Il paziente presenta &nbsp;
+            span.badge {{(esami_laboratorio).length}}
+            | &nbsp; esami:
+
+          table.table-bordered
+            thead
+              tr
+                th Tempo
+                th Data Esame
+                th Hb (g/dl)
+                th WBC (/mmc)
+                th Neutrofili (/mmc)
+                th AST (U/l)
+                th ALT (U/l)
+                th VES (mm/h)
+                th PCR (mg/dl)
+                th Colesterolo TOT.
+                th HDL
+                th LDL
+                th Trigliceridi
+                th 
+            tbody
+              tr(ng-repeat='t in esami_laboratorio')
+                td.col-md-1(align='center')  {{t.tempo}}
+                td.col-md-1(align='center')  {{t.data_esame | date:"dd/MM/yyyy"}}
+                td.col-md-1(align='right', ng-class="{red: t.hb < 11}") {{t.hb | number:2}}
+                td.col-md-1(align='right', ng-class="{red:t.wbc > 6000 || t.wbc < 3000 }") {{t.wbc | number:2 }}
+                td.col-md-1(align='right'
+                  ng-class="{ lieve: 1000 <= t.neutrofili && t.neutrofili < 1500, moderata: 500 <= t.neutrofili && t.neutrofili < 1000, severa: t.neutrofili < 500}") 
+                  {{t.neutrofili | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.ast > 40}')   {{t.ast | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.alt > 40}')   {{t.alt | number:2}}
+                td.col-md-1(align='right')   {{t.ves | number:2}}
+                td.col-md-1(align='right')   {{t.pcr | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.colesterolo > 200}')   {{t.colesterolo | number:2}}
+                td.col-md-1(align='right')   {{t.c_hdl | number:2}}
+                td.col-md-1(align='right')   {{t.c_ldl | number:2}}
+                td.col-md-1(align='right'
+                  ng-class='{red: t.trigliceridi > 150}')   {{t.trigliceridi | number:2}}
+                td.col-md-1(align='center') 
+                  button.btn.btn-danger.btn-xs(ng-click='elimina_el(t)') 
+                    i.glyphicon.glyphicon-trash

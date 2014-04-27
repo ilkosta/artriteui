@@ -116,7 +116,8 @@
         // allign the values
         var malattie = _.groupBy($scope.malattia_ric,"idtipo_malattia");
 
-        $scope.diagnosi.malattia = (_.groupBy($scope.malattia_ric,"idtipo_malattia")[$scope.diagnosi.cod_malattia][0]).descrizione;
+        $scope.diagnosi.malattia = $scope.diagnosi.cod_malattia && 
+          (_.groupBy($scope.malattia_ric,"idtipo_malattia")[$scope.diagnosi.cod_malattia][0]).descrizione;
         
         $http.post(dataUrl.diagnosi, $scope.diagnosi)
           .success(function(data, status, headers, config) {

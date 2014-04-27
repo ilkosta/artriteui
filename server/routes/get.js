@@ -150,7 +150,11 @@
         nome_parametro: 'sospensioni_tempo',
         qry: 'select  * from paziente ' +
              ' where idPaziente = ?'
+      },{
+        nome_parametro: 'esami_laboratorio',
+        qry: 'SELECT el.* FROM artrite.esami_laboratorio el where el.id_paziente=? order by el.tempo'
       }
+
 
     ];
 

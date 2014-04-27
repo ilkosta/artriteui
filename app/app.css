@@ -17,3 +17,23 @@
 /*thead { background-color: rgba(82, 168, 236, 0.8); }*/
 
 th { padding-left: 3px; }
+
+.red { 
+	background-color: red;
+	color: white;
+}
+
+.lieve {
+	background-color: rgba(222, 150, 24, 1);
+	/*color: white;*/
+}
+
+.moderata {
+	background-color: rgba(222, 94, 24, 1);
+	color: white;
+}
+
+.severa {
+	background-color: red;
+	color: white;	
+}

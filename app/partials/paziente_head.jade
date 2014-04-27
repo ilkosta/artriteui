@@ -14,6 +14,6 @@
   //- utilizzo di bootstrap nudo e crudo
   //- ul.nav.nav-pills
   ul.nav.nav-tabs
-    each title, page in { diagnosi: "Diagnosi", anamnesi: "Anamnesi", fattori_rischio: "Fattori di rischio", terapie_pre: "Terapie farmacologie pre" , terapia: "Terapia", terapia_val: "Terapia valutazione", sospensioni: "Sospensioni" }
+    each title, page in { diagnosi: "Diagnosi", anamnesi: "Anamnesi", fattori_rischio: "Fattori di rischio", terapie_pre: "Terapie farmacologie pre" , terapia: "Terapia", esami_laboratorio :"Esami Laboratorio",terapia_val: "Terapia valutazione", sospensioni: "Sospensioni" }
       li(ng-class="getClass('/" +  page + "')")
         a(href="#/pazienti/{{paziente.idPAZIENTE}}/" + page)= title
