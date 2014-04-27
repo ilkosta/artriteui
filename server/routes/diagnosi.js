@@ -62,6 +62,7 @@
 			.map(function(a) {
 				return req.body[a];
 			})
+      .filter(function(a) { return typeof a != 'undefined'; })
 			.uniq().value();
 
 		// apertura connessione db
